@@ -1,25 +1,9 @@
-import {Injector, provide} from 'angular2/core';
+import {Injector} from 'angular2/core';
 import {DelugeService} from 'app/services/deluge.js';
-// import {Observable} from 'rxjs/Rx';
 
 var injector = Injector.resolveAndCreate([
-  provide(DelugeService, {
-    useFactory: () => {
-      var ds = new DelugeService();
-      var s = localStorage.getItem('serverURL');
-      var pw = localStorage.getItem('password');
-
-      if (s && pw)
-        ds.auth(s, pw);
-
-      return ds;
-    },
-  }),
+  DelugeService,
 ]);
-
-// var p = Observable.just(100).toPromise()
-//   .then(function (value) { console.log('Value: %s', s); });
-
 
 describe('deluge service', () => {
   var ds;
