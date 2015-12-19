@@ -1,4 +1,3 @@
-import {Http, Response} from 'angular2/http';
 import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Rx';
@@ -18,8 +17,6 @@ export class DelugeService {
 
   // Not really used, but required for a uniq val in rpc request.
   id: number = 0;
-
-  constructor(public http: Http) {}
 
   // Calls a method on the remote using the rpc protocol over json.
   // TODO: Support Sockets for Native App
@@ -46,27 +43,6 @@ export class DelugeService {
         else
           return Promise.resolve(d.result)
       });
-
-    // var x:Observable<Response> = this.http.post(
-    //   (serverURL ? serverURL : this.serverURL),
-    //   JSON.stringify({
-    //     method: method,
-    //     params: payload,
-    //     id: this.id++,
-    //   }), {
-    //     headers: headers,
-    //   }
-    // )
-
-    // return x
-    //   .map(d => d.json())
-    //   .toPromise()
-    //   .then(d => {
-    //     if (d.error)
-    //       return Promise.reject(d.error)
-    //     else
-    //       return Promise.resolve(d.result)
-    //   });
   }
 
   // Authenticates the client with the server, configuring the session.

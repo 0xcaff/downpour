@@ -1,12 +1,8 @@
-// import {HTTP_PROVIDERS, Http} from 'angular2/http';
-// import {MockBackend} from 'angular2/http/testing';
 import {Injector, provide} from 'angular2/core';
-
 import {DelugeService} from 'app/services/deluge.js';
 // import {Observable} from 'rxjs/Rx';
 
 var injector = Injector.resolveAndCreate([
-  // HTTP_PROVIDERS,
   provide(DelugeService, {
     useFactory: () => {
       var ds = new DelugeService();
@@ -18,7 +14,6 @@ var injector = Injector.resolveAndCreate([
 
       return ds;
     },
-    // deps: [Http],
   }),
 ]);
 
