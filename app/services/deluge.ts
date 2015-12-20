@@ -21,7 +21,7 @@ export class DelugeService {
   // Calls a method on the remote using the rpc protocol over json.
   // TODO: Support Sockets for Native App
   // TODO: Use Fetch for CORS?
-  rpc(method: string, payload:any, serverURL?: string): Promise<any> {
+  rpc(method: string, payload: any, serverURL?: string): Promise<any> {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 

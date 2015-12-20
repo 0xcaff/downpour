@@ -9,18 +9,20 @@ import {AppComponent} from './app';
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,
+  DelugeService,
 
-  provide(DelugeService, {
-    useFactory: () => {
-      var ds = new DelugeService();
-      var s = localStorage.getItem('serverURL');
-      var pw = localStorage.getItem('password');
+  // provide(DelugeService, {
+  //   useFactory: () => {
+  //     var ds = new DelugeService();
+  //     var s = localStorage.getItem('serverURL');
+  //     var pw = localStorage.getItem('password');
 
-      if (s && pw)
-        ds.auth(s, pw);
-
-      return ds;
-    },
-  }),
+  //     if (s && pw)
+  //       return ds.auth(s, pw)
+  //         .then(() => ds)
+  //     else
+  //       return ds;
+  //   },
+  // }),
 ]);
 
