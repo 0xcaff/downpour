@@ -21,7 +21,7 @@ export class DelugeService {
   // Calls a method on the remote using the rpc protocol over json.
   // TODO: Support Sockets for Native App
   // TODO: Use Fetch for CORS?
-  rpc(method: string, payload: any, serverURL?: string): Promise<any> {
+  rpc(method: string, payload: any, serverURL?: string): Promise<string|Object> {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -38,7 +38,22 @@ export class DelugeService {
         credentials: 'include',
       }
     )
+      .then(r => {
+        if (r.ok)
+          return Promise.resolve(r)
+        else
+          return Promise.reject(r)
+      })
+      .catch(_ => Promise.reject('Request Failed'))
+
       .then(d => d.json())
+      .catch(d => {
+        if (d)
+          return Promise.reject(d);
+        else
+          Promise.reject("Failed to parse JSON")
+      })
+
       .then(d => {
         if (d.error)
           return Promise.reject(d.error)
@@ -48,12 +63,12 @@ export class DelugeService {
   }
 
   // Authenticates the client with the server, configuring the session.
-  auth(serverURL: string, password: string): Promise<any> {
+  auth(serverURL: string, password: string): Promise<string> {
     return this.rpc('auth.login', [password], serverURL)
       .then(
         d => {
           if (!d) {
-            return Promise.reject()
+            return Promise.reject("Authentication Failed")
           } else {
             this.serverURL = serverURL;
             this.authenticated = true;

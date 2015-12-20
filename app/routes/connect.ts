@@ -11,15 +11,32 @@ export class ConnectComponent {
 
   serverURL: string;
   password: string;
+  pending: boolean;
+
+  err: string;
+  failed: boolean;
+  failedServer: string;
+
   connect() {
+    this.pending = true;
     console.log(`URL: ${this.serverURL}, Password: ${this.password}`);
+
     this.ds.auth(this.serverURL, this.password)
       .then(() => {
+        this.pending = false;
         localStorage.setItem('serverURL', this.serverURL);
         localStorage.setItem('password', this.password);
         this.r.navigate(['Torrents']);
       })
-      // TODO: Handle Fail
+      .catch(d => {
+        this.pending = false;
+        this.failed = true;
+        this.failedServer = this.serverURL;
+
+        if (d) {
+          this.err = d;
+        }
+      });
   }
 }
 

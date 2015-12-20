@@ -1,9 +1,15 @@
 <div class="col-md-6" style="margin: 0 auto; float: none;">
+<h1>Login</h1>
+<hr />
+
+<div class="alert alert-danger" role="alert" *ngIf='failed'>
+  <span>Failed to Connect to <strong>{{failedServer}}</strong></span>
+  <span *ngIf='err'>with error <strong>{{err}}</strong></span>
+</div>
+
 <!-- TODO: Input Validation -->
 <form (ngSubmit)="connect()">
-  <h1>Login</h1>
-  <hr />
-    <div class="form-group has-feedback">
+    <div class="form-group">
       <label for="serverURL">Server URL</label>
       <input
         class='form-control'
@@ -11,11 +17,9 @@
         placeholder="http://localhost:8112"
         [(ngModel)]='serverURL'
         required/>
-      <!--<span class="form-control-feedback"><i class="fa fa-spinner
-          fa-spin"></i></span>-->
     </div>
 
-    <div class="form-group has-feedback">
+    <div class="form-group">
       <label for="password">Password</label>
       <input
         class='form-control'
@@ -23,9 +27,8 @@
         placeholder="deluge"
         [(ngModel)]='password'
         required/>
-      <!--<span class="form-control-feedback"><i class="fa fa-spinner
-          fa-spin"></i></span>-->
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
+    <i *ngIf='pending' class="fa fa-circle-o-notch fa-spin" style="margin: 1em;"></i>
 </form>
 </div>

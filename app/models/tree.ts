@@ -1,11 +1,11 @@
 export class File {
-  download: boolean,
+  download: boolean;
 
   // Length of File in bytes
-  len: number,
-  index: number,
-  path?: string,
-  name: string,
+  len: number;
+  index: number;
+  path: string;
+  name: string;
 
   constructor(o: any, public name: string) {
     this.download = o['download'];
