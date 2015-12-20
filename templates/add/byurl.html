@@ -1,2 +1,9 @@
-TASD
+<div class="input-group">
+  <input type="text" class="form-control" [(ngModel)]='url' placeholder="link to .torrent or magnet" />
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)='getTorrent()'>Get Information</button>
+  </span>
+</div>
+
+<tree-view *ngIf='tree' [tree]='tree'></tree-view>
 

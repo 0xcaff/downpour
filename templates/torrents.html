@@ -1,2 +1,34 @@
-Torrents
+<h4>Torrents</h4>
+
+<div class="search-bar form-group has-feedback">
+  <input placeholder="Search..." type="text" class="form-control" />
+  <!--<span class="form-control-feedback "><i class="fa fa-refresh fa-spin"></i></span>-->
+</div>
+
+<div class="table-responsive">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <!--
+      <th {{action 'sortBy' 'name'}} class="name">Name</th>
+      <th {{action 'sortBy' 'progress'}} class="prog">Progress</th>
+      <th {{action 'sortBy' 'ratio'}} class="ratio">Ratio</th>
+      -->
+    </tr>
+  </thead>
+  <tbody>
+    <!--
+    {{#each-keys object=model.torrents sortby=sorter filter=filter as |torrent|}}
+    <tr>
+      <td>{{#link-to 'torrent' torrent.hash}}{{torrent.name}}{{/link-to}}</td>
+      <td>{{bootstrap-progress progress=torrent.progress }}</td>
+      <td>{{round-decimal torrent.ratio }}</td>
+    </tr>
+    {{/each-keys}}
+    -->
+  </tbody>
+
+</table>
+</div>
+
 

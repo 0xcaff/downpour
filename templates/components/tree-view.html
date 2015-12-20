@@ -1,0 +1,11 @@
+{{ tree.name }}
+<ul>
+  <li *ngFor='#t of tree.files'>
+    {{t.name}}
+  </li>
+
+  <li *ngFor='#t of tree.directories'>
+    <tree-view [tree]="t"></tree-view>
+  </li>
+</ul>
+
