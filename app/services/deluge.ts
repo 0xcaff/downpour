@@ -26,7 +26,8 @@ export class DelugeService {
     headers.append('Content-Type', 'application/json');
 
     return fetch(
-      (serverURL ? serverURL : this.serverURL), {
+      (serverURL ? serverURL : this.serverURL),
+      {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
@@ -35,8 +36,9 @@ export class DelugeService {
           id: this.id++,
         }),
         credentials: 'include',
-    })
-      .then(d => return d.json())
+      }
+    )
+      .then(d => d.json())
       .then(d => {
         if (d.error)
           return Promise.reject(d.error)
