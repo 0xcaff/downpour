@@ -18,7 +18,7 @@ export class AuthenticatedRoute {
           .catch(() => this.r.navigate(['Connect']))
       else
         this.r.navigate(['Connect']);
-    },
+    }
   }
 }
 
