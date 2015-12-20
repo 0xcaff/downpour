@@ -5,7 +5,7 @@ import {provide} from 'angular2/core';
 
 import {DelugeService} from './services/deluge';
 
-import {AppComponent} from './app.component';
+import {AppComponent} from './app';
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,

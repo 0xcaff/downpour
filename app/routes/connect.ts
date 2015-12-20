@@ -4,3 +4,4 @@ import {Component} from 'angular2/core';
   templateUrl: 'templates/connect.html',
 })
 export class ConnectComponent {}
+
