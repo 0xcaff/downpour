@@ -63,7 +63,7 @@ export class DelugeService {
   }
 
   // Authenticates the client with the server, configuring the session.
-  auth(serverURL: string, password: string): Promise<string> {
+  auth(serverURL: string, password: string): Promise<string|void> {
     return this.rpc('auth.login', [password], serverURL)
       .then(
         d => {
