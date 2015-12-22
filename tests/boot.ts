@@ -1,7 +1,7 @@
-import './services/deluge.js';
+import './services/deluge';
 
-import './models/tree.js';
-import './models/serializable.js';
+import './models/tree';
+import './models/serializable';
 
-import './pipes/bytes.js';
+import './pipes/bytes';
 

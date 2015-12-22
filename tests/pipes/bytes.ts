@@ -1,4 +1,4 @@
-import {BytesPipe} from 'app/pipes/bytes.js';
+import {BytesPipe} from 'app/pipes/bytes';
 
 describe('bytes pipe', () => {
   var bp = new BytesPipe();

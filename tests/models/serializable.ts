@@ -1,4 +1,4 @@
-import {prop, Serializable} from 'app/models/serializable.js';
+import {prop, Serializable} from 'app/models/serializable';
 
 class Test extends Serializable {
   @prop('special') t: number;

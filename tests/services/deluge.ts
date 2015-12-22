@@ -1,12 +1,12 @@
 import {Injector} from 'angular2/core';
-import {DelugeService} from 'app/services/deluge.js';
-
-var injector = Injector.resolveAndCreate([
-  DelugeService,
-]);
+import {DelugeService} from 'app/services/deluge';
 
 describe('deluge service', () => {
   var ds;
+
+  var injector = Injector.resolveAndCreate([
+    DelugeService,
+  ]);
 
   it('should create', () => {
     ds = injector.get(DelugeService);

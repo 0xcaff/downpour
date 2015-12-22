@@ -1,5 +1,5 @@
-import {MockTree} from 'app/mock/tree.js';
-import {Directory} from 'app/models/tree.js';
+import {MockTree} from 'app/mock/tree';
+import {Directory} from 'app/models/tree';
 
 describe('tree model', () => {
   var tree: Directory;

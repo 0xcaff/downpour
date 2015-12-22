@@ -1,4 +1,4 @@
-import {Serializable, prop} from './serializable.js';
+import {Serializable, prop} from './serializable';
 
 export class File extends Serializable {
   // Used to store whether or not the file should be downloaded, when

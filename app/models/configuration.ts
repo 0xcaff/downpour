@@ -1,4 +1,4 @@
-import {Serializable, prop} from './serializable.js';
+import {Serializable, prop} from './serializable';
 
 export class Configuration extends Serializable {
   /////////////// CONNECTIONS
