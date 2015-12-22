@@ -32,5 +32,37 @@ describe('tree model', () => {
   it('should name directories correctly', () => {
     expect(tree.directories[0].name).toEqual('Artwork');
   });
+
+  it('should analyze download property correctly for directories', () => {
+    expect(tree.directories[0].download).toEqual(true);
+  });
+
+  it('should analyze download property correctly for files', () => {
+    expect(tree.files[0].download).toEqual(true);
+  });
+
+  it('should mark all children when an ancestor is marked', () => {
+    tree.download = false;
+    expect(tree.files[0].download).toEqual(false);
+    expect(tree.directories[0].download).toEqual(false);
+    expect(tree.directories[0].files[0].download).toEqual(false);
+  });
+
+  it('should be able to flatten to the correct length', () => {
+    expect(tree.flatten().length).toEqual(17);
+  });
+
+  it('should be able to flatten a directory correctly', () => {
+    var files = tree.flatten()
+    for (var i = 0; i < files.length; i++) {
+      expect(files[i].index).toEqual(i);
+    }
+  });
+
+  it('should be able to get the length of its children', () => {
+    expect(tree.len).toEqual(230566199);
+    expect(tree.directories[0].len).toEqual(49940930);
+  });
+
 });
 

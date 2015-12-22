@@ -1,0 +1,33 @@
+input.tree[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] {
+  margin: 0;
+}
+
+input.tree[type='checkbox']:checked ~ ul {
+  display: none;
+}
+
+label {
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-left: 1em;
+}
+
+.fa {
+  width: 1em;
+  vertical-align: text-top;
+  color: #555;
+}
+
+span.name {
+  vertical-align: text-bottom;
+}
+

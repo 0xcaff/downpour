@@ -1,3 +1,5 @@
+<h3 style='margin-top:0;'>Download Torrent</h3>
+
 <div class="input-group">
   <input type="text" class="form-control" [(ngModel)]='url' placeholder="link to .torrent or magnet" />
   <span class="input-group-btn">
@@ -5,5 +7,26 @@
   </span>
 </div>
 
-<tree-view *ngIf='tree' [tree]='tree'></tree-view>
+<div *ngIf='tree || file'>
+  <div class="panel panel-default" style='margin-top:2em'>
+    <div class="panel-heading">
+      <h3 class="panel-title">Files</h3>
+    </div>
+
+    <div class="panel-body">
+      <tree-view [tree]='tree'></tree-view>
+    </div>
+  </div>
+
+  <div class="panel panel-default" style='margin-top:2em'>
+    <div class="panel-heading">
+      <h3 class="panel-title">Options</h3>
+    </div>
+
+    <div class="panel-body">
+      {{ config | json }}
+    </div>
+  </div>
+  <button class="btn btn-default pull-right" type="button" (click)='addTorrent()'>Continue</button>
+</div>
 

@@ -1,11 +1,26 @@
-{{ tree.name }}
-<ul>
-  <li *ngFor='#t of tree.files'>
-    {{t.name}}
-  </li>
+<label>
+  <input type='checkbox' class='tree' [(ngModel)]='tree.open' />
 
-  <li *ngFor='#t of tree.directories'>
-    <tree-view [tree]="t"></tree-view>
-  </li>
-</ul>
+  <i *ngIf='tree.open' class="fa fa-folder"></i>
+  <i *ngIf='!tree.open' class="fa fa-folder-open"></i>
+
+  <input type='checkbox' [(ngModel)]='tree.download'/>
+  <span class='name'>{{ tree.name }}</span>
+  <span class='size text-muted'>({{ tree.len | bytes:2 }})</span>
+
+  <ul>
+    <li *ngFor='#t of tree.directories'>
+      <tree-view [tree]="t"></tree-view>
+    </li>
+
+    <li *ngFor='#t of tree.files'>
+      <label>
+        <i class='fa fa-file'></i>
+        <input type='checkbox' [(ngModel)]='t.download'/>
+        <span class='name'>{{ t.name }}</span>
+        <span class='size text-muted'>({{ t.len | bytes:2 }})</span>
+      </label>
+    </li>
+  </ul>
+</label>
 
