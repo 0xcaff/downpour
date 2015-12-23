@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 
 import {Torrent} from '../models/torrent';
 import {ValueMap} from '../models/map';
+import {TorrentRequest, TorrentType} from '../models/torrent_request';
 
 @Injectable()
 export class DelugeService {
@@ -140,6 +141,45 @@ export class DelugeService {
           }
         });
       });
+  }
+
+  pause(hashes: string[]): Promise<any> {
+    return this.rpc('core.pause_torrent', [hashes])
+  }
+
+  resume(hashes: string[]): Promise<any> {
+    return this.rpc('core.resume_torrent', [hashes]);
+  }
+
+  // Takes a URL, Magnet Link, or location on the remote server and returns a
+  // TorrentRequest.
+  getInfo(url: string, serverFile: boolean = false): Promise<TorrentRequest> {
+    var ti = new TorrentRequest();
+    return (() => {
+      if (url.startsWith('magnet') && !serverFile) {
+        ti.format = TorrentType.Magnet;
+        ti.path = url;
+        return this.rpc('web.get_magnet_info', [url]);
+      } else {
+        ti.format = TorrentType.File;
+
+        return (() => {
+          if (!serverFile) {
+            return this.rpc('web.download_torrent_from_url', [url])
+          } else {
+            return Promise.resolve(url);
+          }
+        })()
+        .then(d => {
+          ti.path = d
+          return this.rpc('web.get_torrent_info', [d])
+        })
+      }
+    })()
+    .then(d => {
+      ti.unmarshall(d)
+      return ti;
+    })
   }
 }
 

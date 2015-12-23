@@ -31,7 +31,7 @@ export class Serializable {
     this.unmarshall(o);
   }
 
-  unmarshall(o: Object) {
+  unmarshall(o: Object = {}) {
     var ks = Object.keys(o);
     for (var i = 0; i < ks.length; i++) {
       var k = ks[i];

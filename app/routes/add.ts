@@ -4,8 +4,8 @@ import {Router} from 'angular2/router';
 import {DelugeService} from '../services/deluge';
 import {TreeComponent} from '../components/tree';
 import {FileView} from '../components/file';
-import {Directory, File} from '../models/tree';
 import {Configuration} from '../models/configuration';
+import {TorrentRequest, TorrentType} from '../models/torrent_request';
 import {AuthenticatedRoute} from './authenticated';
 
 @Component({
@@ -14,72 +14,59 @@ import {AuthenticatedRoute} from './authenticated';
   directives: [TreeComponent, FileView],
 })
 export class AddTorrent extends AuthenticatedRoute {
-  // url: string = 'http://releases.ubuntu.com/15.10/ubuntu-15.10-desktop-amd64.iso.torrent';
-  // url: string = 'http://torrent.unix-ag.uni-kl.de/torrents/KNOPPIX_V7.6.0DVD-2015-11-21-EN.torrent';
-  url: string = 'magnet:?xt=urn:btih:08515290D557A2A313DB61C2ED2765E9CB845839&dn=the+hateful+eight+2015+dvdscr+xvid+ac3+hq+hive+cm8&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80%2Fannounce&tr=udp%3A%2F%2Fglotorrents.pw%3A6969%2Fannounce'
+  url: string;
+  formDisabled: boolean;
 
-  tree: Directory;
-  file: File;
-
-  temporaryLocation: string;
+  torrentRequest: TorrentRequest;
   config: Configuration;
-  name: string;
-  hash: string;
 
   constructor(public ds: DelugeService, public r: Router) {
     super(ds, r);
   }
 
-  getTorrent() {
-    this.ds.rpc('core.get_config_values', [config_values])
+  ngOnInit() {
+    super.ngOnInit()
+      .then(ds => ds.rpc('core.get_config_values', [config_values]))
       .then(d => this.config = new Configuration(d));
+  }
 
-    (() => {
-      if (this.url.startsWith('magnet')) {
-        return this.ds.rpc('web.get_magnet_info', [this.url])
-          .then(d => { console.log(d); return d; });
-      } else {
-        return this.ds.rpc('web.download_torrent_from_url', [this.url])
-          .then(d => {
-            this.temporaryLocation = d;
-            return this.ds.rpc('web.get_torrent_info', [d]);
-          })
-          .then(d => {
-            var keys = Object.keys(d['files_tree']['contents']);
-            var o = d['files_tree']['contents'][keys[0]];
+  // TODO: Multiple Uploads at Once Support
+  getTorrentFromFile(e: Event) {
+    var f: File;
+    if (e.type == 'change' && e.target.files[0]) {
+      f = e.target.files[0];
+    } else if (e.type == 'drop' && e.dataTransfer.files[0]) {
+      f = e.dataTransfer.files[0];
+    } else {
+      return;
+    }
 
-            if (o['type'] == 'file') {
-              this.file = new File(o, keys[0]);
-            } else if (o['type'] == 'dir') {
-              this.tree = new Directory(d['files_tree']['contents']);
-            }
-          })
-      }
-    })()
-      .then(d => {
-        this.hash = d['info_hash'];
-        this.name = d['name'];
-      });
+    this.url = f.name;
+    this.formDisabled = true;
+
+    var fd = new FormData();
+    fd.append('file', f);
+
+    return fetch(this.ds.serverURL + '/../upload', {
+      method: 'POST',
+      body: fd,
+      mode: 'cors',
+      credentials: 'include',
+    })
+      .then(d => d.json())
+      .then(d => this.ds.getInfo(d['files'][0], true))
+      .then(d => this.torrentRequest = d)
+  }
+
+  getTorrent() {
+    if (this.url && !this.formDisabled) {
+      this.ds.getInfo(this.url)
+        .then(d => this.torrentRequest = d)
+    }
   }
 
   addTorrent() {
-    var priorities: boolean[];
-    if (this.tree) {
-      priorities = this.tree.flatten().map((d) => +d.download);
-    } else if (this.file) {
-      priorities = [+this.file.download];
-    } else if (this.url.startsWith('magnet')) {
-      priorities = [];
-    }
-
-    var r = {};
-    if (!this.tree && !this.file) {
-      r.path = this.url;
-    } else {
-      r.path = this.temporaryLocation;
-    }
-    r.options = this.config.marshall();
-    r.options.file_priorities = priorities;
+    var r = this.torrentRequest.marshall(this.config);
 
     this.ds.rpc('web.add_torrents', [[r]])
       .then(_ => this.r.navigate(['Torrents']));
