@@ -22,43 +22,61 @@ export class ByURLComponent {
 
   temporaryLocation: string;
   config: Configuration;
+  name: string;
+  hash: string;
 
   constructor(public ds: DelugeService, public r: Router) {}
 
   getTorrent() {
-    // TODO: Modifyable Configuration
     this.ds.rpc('core.get_config_values', [config_values])
       .then(d => this.config = new Configuration(d));
 
-    if (this.url.startsWith('magnet') {
-      this.ds.rpc('web.get_magnet_info', [this.url])
-    } else {
-      this.ds.rpc('web.download_torrent_from_url', [this.url])
-        .then(d => {
-          this.temporaryLocation = d;
-          return this.ds.rpc('web.get_torrent_info', [d]);
-        })
-        .then(d => {
-          var keys = Object.keys(d['files_tree']['contents']);
-          var o = d['files_tree']['contents'][keys[0]];
+    (() => {
+      if (this.url.startsWith('magnet')) {
+        return this.ds.rpc('web.get_magnet_info', [this.url])
+          .then(d => { console.log(d); return d; });
+      } else {
+        return this.ds.rpc('web.download_torrent_from_url', [this.url])
+          .then(d => {
+            this.temporaryLocation = d;
+            return this.ds.rpc('web.get_torrent_info', [d]);
+          })
+          .then(d => {
+            var keys = Object.keys(d['files_tree']['contents']);
+            var o = d['files_tree']['contents'][keys[0]];
 
-          // TODO: Implement singe file support
-          if (o['type'] == 'file') {
-            this.file = new File(o, keys[0]);
-          } else if (o['type'] == 'dir') {
-            this.tree = new Directory(d['files_tree']['contents']);
-          }
-        })
-    }
+            if (o['type'] == 'file') {
+              this.file = new File(o, keys[0]);
+            } else if (o['type'] == 'dir') {
+              this.tree = new Directory(d['files_tree']['contents']);
+            }
+          })
+      }
+    })()
+      .then(d => {
+        this.hash = d['info_hash'];
+        this.name = d['name'];
+      });
   }
 
   addTorrent() {
-    var file_priorities = this.tree.flatten().map((d) => +d.download);
-    var r = {
-      path: this.temporaryLocation,
-    };
+    var priorities: boolean[];
+    if (this.tree) {
+      priorities = this.tree.flatten().map((d) => +d.download);
+    } else if (this.file) {
+      priorities = [+this.file.download];
+    } else if (this.url.startsWith('magnet')) {
+      priorities = [];
+    }
+
+    var r = {};
+    if (!this.tree && !this.file) {
+      r.path = this.url;
+    } else {
+      r.path = this.temporaryLocation;
+    }
     r.options = this.config.marshall();
-    r.options.file_priorities = file_priorities;
+    r.options.file_priorities = priorities;
 
     this.ds.rpc('web.add_torrents', [[r]])
       // TODO: make this work
