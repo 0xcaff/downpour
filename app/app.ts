@@ -26,7 +26,7 @@ import {DelugeService} from './services/deluge';
     component: AddComponent,
   },
   {
-    path: '/torrents/:id',
+    path: '/torrents/:hash',
     name: 'TorrentDetail',
     component: TorrentDetailComponent,
   },
