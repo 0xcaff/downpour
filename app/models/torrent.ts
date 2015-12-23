@@ -1,32 +1,21 @@
-export interface Torrent {
+import {Serializable, prop} from './serializable';
+
+export class Torrent extends Serializable {
+  // The SHA-1 has of the torrent's bencoded information section. Commonly used
+  // to refer to the torrent.
   hash: string;
-  peers: number;
-  ratio: number;
-  label: string;
-  state: string;
-  progress: number;
-  tracker: string;
-  name: string;
-};
 
-export function marshall(hash: string, o: Object): Torrent {
-  return {
-    hash: hash,
-    peers: o['num_peers'],
-    ratio: o['ratio'],
-    label: o['label'],
-    state: o['state'],
-    progress: o['progress'],
-    tracker: o['tracker_host'],
-    name: o['name']
+  @prop('num_peers') peersCount: number;
+  @prop ratio: number;
+  @prop progress: number;
+  @prop label: string;
+  @prop state: string;
+  @prop progress: number;
+  @prop('tracker_host') tracker: string;
+  @prop name: string;
+
+  constructor(o: Object, public hash: string) {
+    super(o);
   }
-}
-
-// TODO: Use this
-// enum State {
-//   Seeding,
-//   Uploading,
-//   Downloading,
-//   Errored,
-// }
+};
 

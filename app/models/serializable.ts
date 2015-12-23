@@ -28,6 +28,10 @@ export class Serializable {
   __serialization__: Object;
 
   constructor(o: Object) {
+    this.unmarshall(o);
+  }
+
+  unmarshall(o: Object) {
     var ks = Object.keys(o);
     for (var i = 0; i < ks.length; i++) {
       var k = ks[i];
