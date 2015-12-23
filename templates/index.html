@@ -17,18 +17,8 @@
     </div>
     <div class='collapse navbar-collapse' id='navigation' *ngIf='ds.authenticated'>
       <ul class='navbar-nav nav'>
-        <li class="dropdown">
-          <a href="#"
-             class="dropdown-toggle"
-             data-toggle="dropdown">Add <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a [routerLink]="['AddTorrent', 'Torrent']">Add by .torrent file</a>
-              </li>
-              <li>
-                <a [routerLink]="['AddTorrent', 'URL']">Add by URL</a>
-              </li>
-            </ul>
+        <li>
+          <a [routerLink]="['AddTorrent']">Add Torrent</a>
         </li>
         <li>
           <a [routerLink]="['Configuration']">Configuration</a>

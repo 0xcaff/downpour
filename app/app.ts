@@ -2,7 +2,7 @@ import {Component} from 'angular2/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {ConnectComponent} from './routes/connect';
-import {AddComponent} from './routes/add';
+import {AddTorrent} from './routes/add';
 import {TorrentDetailComponent} from './routes/detail';
 import {TorrentsComponent} from './routes/torrents';
 import {ConfigurationComponent} from './routes/configuration';
@@ -21,9 +21,9 @@ import {DelugeService} from './services/deluge';
     component: ConnectComponent,
   },
   {
-    path: '/add/...',
+    path: '/add',
     name: 'AddTorrent',
-    component: AddComponent,
+    component: AddTorrent,
   },
   {
     path: '/torrents/:hash',
