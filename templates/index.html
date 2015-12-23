@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">
+      <a class="navbar-brand" [routerLink]="['Torrents']">
         <img src="assets/deluge.svg" style="
           height: 100%;
           display :inline;
@@ -15,7 +15,7 @@
         Deluge
       </a>
     </div>
-    <div class='collapse navbar-collapse' id='navigation'>
+    <div class='collapse navbar-collapse' id='navigation' *ngIf='ds.authenticated'>
       <ul class='navbar-nav nav'>
         <li class="dropdown">
           <a href="#"

@@ -5,6 +5,7 @@ import {ConnectComponent} from './routes/connect';
 import {AddComponent} from './routes/add';
 import {TorrentDetailComponent} from './routes/detail';
 import {TorrentsComponent} from './routes/torrents';
+import {DelugeService} from './services/deluge';
 
 @Component({
   selector: 'deluge-app',
@@ -34,5 +35,7 @@ import {TorrentsComponent} from './routes/torrents';
     useAsDefault: true,
   }
 ])
-export class AppComponent { }
+export class AppComponent {
+  constructor(public ds: DelugeService) { }
+}
 
