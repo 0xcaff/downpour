@@ -28,7 +28,7 @@ describe('deluge service', () => {
   it('should sync', (done) => {
     ds.sync()
       .catch(fail)
-      .then(d => expect(ds.torrents.size).toBeGreaterThan(0))
+      .then(d => expect(ds.torrents.values.length).toBeGreaterThan(0))
       .then(done)
   });
 });

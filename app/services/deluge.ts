@@ -4,8 +4,8 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import {Torrent, marshall} from '../models/torrent.js';
-
+import {Torrent} from '../models/torrent';
+import {ValueMap} from '../models/map';
 
 @Injectable()
 export class DelugeService {
@@ -107,37 +107,38 @@ export class DelugeService {
     "label"
   ];
 
-  torrents: Map<string, Torrent> = new Map<string, Torrent>();
+  torrents: ValueMap<Torrent> = new ValueMap((v, i) => v.hash);
+
   // Brings the service's state in sync with the remote's state.
   // TODO: Immutable or Observer?
-  sync(): Promise<any> {
+  // TODO: Sync rest of state
+  sync(): Promise<void> {
     return this.rpc('web.update_ui', [this.information, {}])
       .then(d => {
-        if (d.error)
-          return Promise.reject(d.error);
-
         // Update Local State
-        var server_torrents = Object.keys(d['torrents']);
-        for (var i = 0; i < server_torrents.length; i++) {
-          var torrent = server_torrents[i];
-          if (this.torrents.has(torrent)) {
+        var nk = Object.keys(d['torrents']);
+        for (var i = 0; i < nk.length; i++) {
+          var torrentHash = nk[i];
+          if (this.torrents.has(torrentHash)) {
             // Interection of the Client Torrents and Server Torrents
             // Update Torrent
+            var t = this.torrents.get(torrentHash);
+            t.unmarshall(d['torrents'][torrentHash]);
+            this.torrents.set(torrentHash, t);
           } else {
             // Torrents only on the Server
             // Add Torrent
+            this.torrents.add(new Torrent(d['torrents'][torrentHash], torrentHash));
           }
-          this.torrents.set(torrent, marshall(torrent, d['torrents'][torrent]));
         }
 
-        this.torrents.forEach((v, k) => {
-          if (server_torrents.indexOf(k) == -1) {
-            // Torrents only on the Client
-            // Remove from Client
-            this.torrents.delete(k);
+        // Torrents only on the Client
+        // Remove from Client
+        this.torrents.each((k, v, i) => {
+          if (nk.indexOf(k) == -1) {
+            this.torrents.remove(k);
           }
         });
-        return Promise.resolve();
       });
   }
 }
