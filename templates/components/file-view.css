@@ -1,0 +1,14 @@
+input[type="checkbox"] {
+  margin: 0;
+}
+
+.fa {
+  width: 1em;
+  vertical-align: text-top;
+  color: #555;
+}
+
+span.text {
+  vertical-align: text-bottom;
+}
+

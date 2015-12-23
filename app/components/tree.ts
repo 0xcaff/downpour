@@ -1,14 +1,13 @@
 import {Component, ChangeDetectionStrategy, View, Input} from 'angular2/core';
 
 import {Directory, File} from '../models/tree';
-import {BytesPipe} from '../pipes/bytes';
+import {FileView} from './file';
 
 @Component({
   selector: 'tree-view',
   templateUrl:'templates/components/tree-view.html',
   styleUrls: ['templates/components/tree-view.css'],
-  directives: [TreeComponent],
-  pipes: [BytesPipe],
+  directives: [TreeComponent, FileView],
 })
 export class TreeComponent {
   @Input() tree: Directory;

@@ -3,13 +3,14 @@ import {Router} from 'angular2/router';
 
 import {DelugeService} from '../../services/deluge';
 import {TreeComponent} from '../../components/tree';
+import {FileView} from '../../components/file';
 import {Directory, File} from '../../models/tree';
 import {Configuration} from '../../models/configuration';
 
 @Component({
   templateUrl: 'templates/add/byurl.html',
   styleUrls: ['templates/add/byurl.css'],
-  directives: [TreeComponent],
+  directives: [TreeComponent, FileView],
 })
 export class ByURLComponent {
   // url: string = 'http://releases.ubuntu.com/15.10/ubuntu-15.10-desktop-amd64.iso.torrent';

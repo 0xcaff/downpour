@@ -1,0 +1,12 @@
+<span *ngIf='element.files' [ngSwitch]='element.open'>
+  <i *ngSwitchWhen='true' class="fa fa-folder"></i>
+  <i *ngSwitchDefault class="fa fa-folder-open"></i>
+</span>
+<i *ngIf='!element.files' class='fa fa-file'></i>
+
+<input type='checkbox' [(ngModel)]='element.download'/>
+<span class='text'>
+  {{ element.name }}
+  <span class='size text-muted pull-right'>({{ element.len | bytes:2 }})</span>
+</span>
+
