@@ -5,6 +5,8 @@ import {ConnectComponent} from './routes/connect';
 import {AddComponent} from './routes/add';
 import {TorrentDetailComponent} from './routes/detail';
 import {TorrentsComponent} from './routes/torrents';
+import {ConfigurationComponent} from './routes/configuration';
+
 import {DelugeService} from './services/deluge';
 
 @Component({
@@ -33,7 +35,12 @@ import {DelugeService} from './services/deluge';
     name: 'Torrents',
     component: TorrentsComponent,
     useAsDefault: true,
-  }
+  },
+  {
+    path: '/configuration',
+    name: 'Configuration',
+    component: ConfigurationComponent,
+  },
 ])
 export class AppComponent {
   constructor(public ds: DelugeService) { }
