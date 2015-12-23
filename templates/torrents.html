@@ -9,26 +9,18 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <!--
-      <th {{action 'sortBy' 'name'}} class="name">Name</th>
-      <th {{action 'sortBy' 'progress'}} class="prog">Progress</th>
-      <th {{action 'sortBy' 'ratio'}} class="ratio">Ratio</th>
-      -->
+      <th class="name">Name</th>
+      <th class="prog">Progress</th>
+      <th class="ratio">Ratio</th>
     </tr>
   </thead>
   <tbody>
-    <!--
-    {{#each-keys object=model.torrents sortby=sorter filter=filter as |torrent|}}
-    <tr>
-      <td>{{#link-to 'torrent' torrent.hash}}{{torrent.name}}{{/link-to}}</td>
-      <td>{{bootstrap-progress progress=torrent.progress }}</td>
-      <td>{{round-decimal torrent.ratio }}</td>
+    <tr *ngFor='#value of ds.torrents.values'>
+      <td><a [routerLink]='["TorrentDetail", {hash: value.hash}]'>{{ value.name }}</a></td>
+      <td>{{ value.progress | number }}%</td>
+      <td>{{ value.ratio | number }}</td>
     </tr>
-    {{/each-keys}}
-    -->
   </tbody>
-
 </table>
 </div>
-
 
