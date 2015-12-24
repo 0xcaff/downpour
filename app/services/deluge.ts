@@ -21,7 +21,6 @@ export class DelugeService {
 
   // Calls a method on the remote using the rpc protocol over json.
   // TODO: Support Sockets for Native App
-  // TODO: Use Fetch for CORS?
   rpc(method: string, payload: any, serverURL?: string): Promise<string|Object> {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -81,7 +80,7 @@ export class DelugeService {
 
   // The information requested about each torrent every time sync is called.
   // These are the values requested by default by the official deluge web client.
-  information: string[] = [
+  syncStateInformation: string[] = [
     "queue",
     "name",
     "total_wanted",
@@ -114,7 +113,7 @@ export class DelugeService {
   // TODO: Immutable or Observer?
   // TODO: Sync rest of state
   sync(): Promise<void> {
-    return this.rpc('web.update_ui', [this.information, {}])
+    return this.rpc('web.update_ui', [this.syncStateInformation, {}])
       .then(d => {
         // Update Local State
         var nk = Object.keys(d['torrents']);
@@ -180,6 +179,15 @@ export class DelugeService {
       ti.unmarshall(d)
       return ti;
     })
+  }
+
+  syncOnceInformation: string[];
+  currentTorrent: Torrent;
+
+  syncTorrent(hash: string): Promise<any> {
+    if (!this.currentTorrent) this.currentTorrent = new Torrent();
+    return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
+      .then(d => this.currentTorrent.unmarshall(d));
   }
 }
 

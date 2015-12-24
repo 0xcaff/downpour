@@ -1,10 +1,10 @@
-import {Pipe, PipeTransform, Injectable} from 'angular2/core';
+import {Pipe, PipeTransform} from 'angular2/core';
 
 @Pipe({
   name: 'bytes',
 })
 export class BytesPipe implements PipeTransform {
-  transform(value: number, args: string[] = [0]): any {
+  transform(value: number, args: number[] = [0]): any {
     if (value == 0) return '0 B';
     // Math.floor(Math.log(val, base = 1000))
     var pows = Math.floor(Math.log(value) / Math.log(1000));
