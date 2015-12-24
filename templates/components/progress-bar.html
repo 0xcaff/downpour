@@ -1,0 +1,17 @@
+<div class="progress">
+  <div 
+    [ngClass]="
+      {
+        'progress-bar-striped active': active,
+        'progress-bar-success': color == 'green',
+        'progress-bar-danger': color == 'red',
+        'progress-bar-info': color == 'light-blue',
+        'progress-bar-warning': color == 'orange',
+        'progress-bar-paused': color == 'gray',
+        'reverse': reverse
+      }
+    " class="progress-bar" style="width: {{percentage}}%;">
+  </div>
+  <div class='l'>{{ percentage | number:'1.0-2' }}%</div>
+</div>
+

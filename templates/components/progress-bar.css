@@ -1,0 +1,22 @@
+.progress {
+  position: relative;
+}
+
+.progress > .l {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.progress-bar.active.reverse {
+  -webkit-animation: progress-bar-stripes 2s linear reverse infinite;
+  animation: progress-bar-stripes 2s linear reverse infinite;
+}
+
+.progress-bar.progress-bar-paused {
+  background-color: #bbb;
+}
+
