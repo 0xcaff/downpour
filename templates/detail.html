@@ -1,2 +1,166 @@
-Detail
+<div *ngIf='ds.currentTorrent'>
 
+<div class="row">
+  <p class="col-md-11">
+    {{ ds.currentTorrent.name }}
+    <i *ngIf='ds.currentTorrent.priv' class="fa fa-lock text-muted"></i>
+  </p>
+  <div class="col-md-1 text-right">
+    <span class="label label-default">{{ ds.currentTorrent.label }}</span>
+  </div>
+</div>
+
+<progress-bar
+  [active]='
+  (
+    ds.currentTorrent.state == "Downloading" && ds.currentTorrent.downloadSpeed > 0
+  ) || (
+    ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
+  )'
+  [color]='ds.currentTorrent.color()'
+  [percentage]='ds.currentTorrent.progress'
+  [reverse]='
+    ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
+  '></progress-bar>
+
+<ul class="nav nav-tabs nav-justified">
+  <li class="active"><a href="#">General</a></li>
+  <li><a href="#">Connections</a></li>
+  <li><a href="#">Files</a></li>
+  <li><a href="#">Options</a></li>
+</ul>
+
+<div style='margin:1em 0'>
+  <div class="row">
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Time Elpased:</p>
+      <p class="pull-right">{{ ds.currentTorrent.active_time }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Remaining:</p>
+      <p class="pull-right">{{ ds.currentTorrent.eta }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix" *ngIf='ds.currentTorrent.timeAdded'>
+      <p class="pull-left text-muted">Added:</p>
+      <p class="pull-right">{{ ds.currentTorrent.timeAdded * 1000 | date:"EEEE, MMMM d, y hh" }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Downloaded:</p>
+      <p class="pull-right">{{ ds.currentTorrent.totalDownloaded | bytes:2 }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Uploaded:</p>
+      <p class="pull-right">{{ ds.currentTorrent.totalUploaded | bytes:2 }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Ratio:</p>
+      <p class="pull-right">{{ ds.currentTorrent.ratio | number:'1.0-2' }}</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Download Speed:</p>
+      <p class="pull-right">{{ ds.currentTorrent.downloadSpeed | bytes:2 }}/s</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Upload Speed:</p>
+      <p class="pull-right">{{ ds.currentTorrent.uploadSpeed | bytes:2 }}/s</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Seeds:</p>
+      <p class="pull-right">0 of 105 connected (105 in swarm)</p>
+    </div>
+  
+    <div class="col-md-4 clearfix">
+      <p class="pull-left text-muted">Size:</p>
+      <p class="pull-right">{{ ds.currentTorrent.size | bytes:2 }}</p>
+    </div>
+    <!-- TODO: Add:
+      Comment
+    -->
+  </div>
+</div>
+
+<!--
+<div>
+      TODO: Add:
+        File Count
+        Download Path
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Path</th>
+          <th>File Size</th>
+          <th>Progress</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each files as |file|}}
+        <tr>
+          <td>{{ file.path }}</td>
+          <td>{{ format-bytes file.size }}</td>
+          <td>{{ bootstrap-progress progress=file.progress info=true }}</td>
+          <td>{{ file.priority }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+</div>
+-->
+
+<!--
+<div id="connections">
+  <div class="flex">
+    {{#each tracker in ds.currentTorrent.trackers}}
+    <div class="clearfix" style="width: 100%">
+      <p class="pull-left text-muted">Trackers:</p>
+      <p class="pull-right">
+        {{ tracker.url }}
+        <i class="fa {{if tracker.verified 'fa-lock' 'fa-unlock' }}"></i>
+        {{#if tracker.updating }}
+          <i class="fa fa-refresh fa-spin"></i>
+        {{/if}}
+
+        {{#if tracker.send_stats }}
+          <i class="fa fa-task"></i>
+        {{/if}}
+      </p>
+    </div>
+    {{/each}}
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Client</th>
+        <th>IP</th>
+        <th>Progress</th>
+        <th>Download Speed</th>
+        <th>Upload Speed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each peers as |peer|}}
+      <tr>
+        <td>{{ format-country peer.country }}</td>
+        <td>{{ peer.client }}</td>
+        <td>{{ peer.ip }}</td>
+        <td>{{ bootstrap-progress progress=peer.progress info=true }}</td>
+        <td>{{ format-speed peer.up_speed }}</td>
+        <td>{{ format-speed peer.down_speed }}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+-->
+</div>
