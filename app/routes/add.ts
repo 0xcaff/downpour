@@ -27,8 +27,8 @@ export class AddTorrent extends AuthenticatedRoute {
 
   ngOnInit() {
     super.ngOnInit()
-      .then(ds => ds.rpc('core.get_config_values', [config_values]))
-      .then(d => this.config = new Configuration(d));
+      .then(ds => ds.getConfig(config_keys))
+      .then(d => this.config = d);
   }
 
   // TODO: Multiple Uploads at Once Support
@@ -74,7 +74,7 @@ export class AddTorrent extends AuthenticatedRoute {
   }
 }
 
-var config_values = [
+var config_keys = [
   "add_paused",
   "compact_allocation",
   "download_location",

@@ -7,6 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import {Torrent} from '../models/torrent';
 import {ValueMap} from '../models/map';
 import {TorrentRequest, TorrentType} from '../models/torrent_request';
+import {Configuration} from '../models/configuration';
 
 @Injectable()
 export class DelugeService {
@@ -179,6 +180,20 @@ export class DelugeService {
       ti.unmarshall(d)
       return ti;
     })
+  }
+
+  getConfig(params: string[] = []): Promise<Configuration> {
+    return this.rpc('core.get_config_values', [params])
+      .then(d => new Configuration(d));
+  }
+
+  getAllConfig(): Promise<Configuration> {
+    return this.rpc('core.get_config', [])
+      .then(d => new Configuration(d));
+  }
+
+  setConfig(c: Configuration): Promise<void> {
+    return this.rpc('core.set_config', [c.marshall()]);
   }
 
   syncOnceInformation: string[];
