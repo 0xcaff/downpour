@@ -5,12 +5,15 @@ import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
 import {Torrent} from '../model/torrent';
 import {BytesPipe} from '../pipes/bytes';
+import {DurationPipe} from '../pipes/duration';
 import {ProgressComponent} from '../components/progress';
+import {UiTabs, UiPane} from '../components/ui-tabs';
 
 @Component({
   templateUrl: 'templates/detail.html',
-  directives: [ProgressComponent],
-  pipes: [BytesPipe],
+  styleUrls: ['templates/detail.css'],
+  directives: [ProgressComponent, UiTabs, UiPane],
+  pipes: [BytesPipe, DurationPipe],
 })
 export class TorrentDetailComponent extends AuthenticatedRoute {
   constructor(ds: DelugeService, r: Router, public rp: RouteParams) {
@@ -32,13 +35,25 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 
   ngOnDestroy() {
     this.running = false;
-    this.ds.currentTorrent = null;
+  }
+
+  get color(): string {
+    var ct = this.ds.currentTorrent;
+    if (ct.state == 'Seeding')
+      return 'green';
+    else if (ct.state == 'Error')
+      return 'red';
+    else if (ct.state == 'Queued')
+      return 'orange';
+    else if (ct.state == 'Paused')
+      return 'gray';
   }
 }
 
 function sync(ctx) {
   if (ctx.running)
-    ctx.ds.syncTorrent(ctx.torrentId).then(() => sync(ctx));
+    ctx.ds.syncTorrent(ctx.torrentId)
+      .then(() => sync(ctx));
 }
 
 var information = [
@@ -60,5 +75,6 @@ var information = [
   'trackers',
   'peers',
   'state',
+  'comment',
 ];
 

@@ -76,17 +76,6 @@ export class Torrent extends Serializable {
   trackers: ValueMap<Tracker> = new ValueMap((d, i) => d.url);
 
   // The peers connected to.
-
-  color() {
-    if (this.state == 'Seeding')
-      return 'green';
-    else if (this.state == 'Error')
-      return 'red';
-    else if (this.state == 'Queued')
-      return 'orange';
-    else if (this.state == 'Paused')
-      return 'gray';
-  }
   peers: ValueMap<Peer> = new ValueMap((d, i) => d.ip);
 
   constructor(o: Object, public hash: string) {

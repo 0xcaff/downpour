@@ -1,13 +1,13 @@
-<div *ngIf='ds.currentTorrent'>
+<div *ngIf='ds.currentTorrent && ds.currentTorrent.name'>
 
-<div class="row">
+<div class="row" style='margin-bottom:1em'>
   <p class="col-md-11">
     {{ ds.currentTorrent.name }}
     <i *ngIf='ds.currentTorrent.priv' class="fa fa-lock text-muted"></i>
   </p>
-  <div class="col-md-1 text-right">
-    <span class="label label-default">{{ ds.currentTorrent.label }}</span>
-  </div>
+  <p class="col-md-1 text-right" *ngIf='ds.currentTorrent.label'>
+    <span class="label label-default" style='display:block'>{{ ds.currentTorrent.label }}</span>
+  </p>
 </div>
 
 <progress-bar
@@ -17,74 +17,128 @@
   ) || (
     ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
   )'
-  [color]='ds.currentTorrent.color()'
+  [color]='color'
   [percentage]='ds.currentTorrent.progress'
   [reverse]='
     ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
   '></progress-bar>
 
-<ul class="nav nav-tabs nav-justified">
-  <li class="active"><a href="#">General</a></li>
-  <li><a href="#">Connections</a></li>
-  <li><a href="#">Files</a></li>
-  <li><a href="#">Options</a></li>
-</ul>
+<ui-tabs>
+  <template ui-pane title='General' active='true'>
+    <div style='margin:1em 0'>
+      <div class="row">
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Time Active:</div>
+          <div class="pull-right">{{ ds.currentTorrent.timeActive | duration:'s' }}</div>
+        </div>
 
-<div style='margin:1em 0'>
-  <div class="row">
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Time Elpased:</p>
-      <p class="pull-right">{{ ds.currentTorrent.active_time }}</p>
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Remaining:</div>
+          <div class="pull-right">{{ ds.currentTorrent.eta | duration:'s' }}</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Added:</div>
+          <div class="pull-right">{{ ds.currentTorrent.timeAdded * 1000 | date:"EEEE, MMMM d, y hh" }}</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Downloaded:</div>
+          <div class="pull-right">{{ ds.currentTorrent.totalDownloaded | bytes:2 }}</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Uploaded:</div>
+          <div class="pull-right">{{ ds.currentTorrent.totalUploaded | bytes:2 }}</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Ratio:</div>
+          <div class="pull-right">{{ ds.currentTorrent.ratio | number:'1.0-2' }}</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Download Speed:</div>
+          <div class="pull-right">{{ ds.currentTorrent.downloadSpeed | bytes:2 }}/s</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Upload Speed:</div>
+          <div class="pull-right">{{ ds.currentTorrent.uploadSpeed | bytes:2 }}/s</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Seeds:</div>
+          <div class="pull-right">0 of 105 connected (105 in swarm)</div>
+        </div>
+
+        <div class="col-md-4 clearfix">
+          <div class="pull-left text-muted">Size:</div>
+          <div class="pull-right">{{ ds.currentTorrent.size | bytes:2 }}</div>
+        </div>
+      </div>
+
+      <div class='clearfix' *ngIf='ds.currentTorrent.comment'>
+        <hr />
+        <div class="pull-left text-muted">Comment:</div>
+        <div class='pull-right'>{{ ds.currentTorrent.comment }}</div>
+      </div>
     </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Remaining:</p>
-      <p class="pull-right">{{ ds.currentTorrent.eta }}</p>
+  </template>
+
+  <template ui-pane title='Connections'>
+    <div *ngIf='ds.currentTorrent.trackers.values.length > 0'>
+      <h3>Trackers</h3>
+      <table class='table table-striped'>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='#t of ds.currentTorrent.trackers.values'>
+            <td>{{ t.tier }}</td>
+            <td>{{ t.url }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  
-    <div class="col-md-4 clearfix" *ngIf='ds.currentTorrent.timeAdded'>
-      <p class="pull-left text-muted">Added:</p>
-      <p class="pull-right">{{ ds.currentTorrent.timeAdded * 1000 | date:"EEEE, MMMM d, y hh" }}</p>
+
+    <div *ngIf='ds.currentTorrent.peers.values.length > 0'>
+      <h3>Peers</h3>
+      <table class='table table-striped'>
+        <thead>
+          <tr>
+            <th>Country</th>
+            <th>IP</th>
+            <th>Download Speed</th>
+            <th>Upload Speed</th>
+            <th>Client</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='#p of ds.currentTorrent.peers.values'>
+            <td>{{ p.country }}</td>
+            <td>{{ p.ip }}</td>
+            <td>{{ p.downloadSpeed | bytes:2 }}/s</td>
+            <td>{{ p.uploadSpeed | bytes:2 }}/s</td>
+            <td>{{ p.client }}</td>
+            <td>{{ p.progress * 100 | number:'1.0-2' }}%</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Downloaded:</p>
-      <p class="pull-right">{{ ds.currentTorrent.totalDownloaded | bytes:2 }}</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Uploaded:</p>
-      <p class="pull-right">{{ ds.currentTorrent.totalUploaded | bytes:2 }}</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Ratio:</p>
-      <p class="pull-right">{{ ds.currentTorrent.ratio | number:'1.0-2' }}</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Download Speed:</p>
-      <p class="pull-right">{{ ds.currentTorrent.downloadSpeed | bytes:2 }}/s</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Upload Speed:</p>
-      <p class="pull-right">{{ ds.currentTorrent.uploadSpeed | bytes:2 }}/s</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Seeds:</p>
-      <p class="pull-right">0 of 105 connected (105 in swarm)</p>
-    </div>
-  
-    <div class="col-md-4 clearfix">
-      <p class="pull-left text-muted">Size:</p>
-      <p class="pull-right">{{ ds.currentTorrent.size | bytes:2 }}</p>
-    </div>
-    <!-- TODO: Add:
-      Comment
-    -->
-  </div>
+  </template>
+
+  <template ui-pane title='Files'>
+
+  </template>
+  <template ui-pane title='Options'>
+
+  </template>
+</ui-tabs>
 </div>
 
 <!--
@@ -163,4 +217,4 @@
 </div>
 
 -->
-</div>
+
