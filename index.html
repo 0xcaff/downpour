@@ -17,10 +17,18 @@
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"></script>
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.css"></script>
+    <style>
+      table.table {
+        font-size: 1em;
+      }
+    </style>
 
     <!-- 2. Configure SystemJS -->
     <script>
       System.config({
+        map: {
+          moment: 'node_modules/moment/moment.js',
+        },
         packages: {        
           app: {
             format: 'register',
