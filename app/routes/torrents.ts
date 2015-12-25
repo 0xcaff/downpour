@@ -17,7 +17,7 @@ export class TorrentsComponent extends AuthenticatedRoute {
 
   ngOnInit() {
     this.running = true;
-    super.ngOnInit().then((ds) => {
+    return super.ngOnInit().then((ds) => {
       sync(ds, this);
     });
   }

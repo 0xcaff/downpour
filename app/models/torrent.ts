@@ -73,13 +73,14 @@ export class Torrent extends Serializable {
   tree: Directory|File;
 
   // The trackers connected to.
-  trackers: ValueMap<Tracker> = new ValueMap((d, i) => d.url);
+  trackers: ValueMap<Tracker> = new ValueMap<Tracker>((d, i) => d.url);
 
   // The peers connected to.
-  peers: ValueMap<Peer> = new ValueMap((d, i) => d.ip);
+  peers: ValueMap<Peer> = new ValueMap<Peer>((d, i) => d.ip);
 
-  constructor(o: Object, public hash: string) {
+  constructor(o: Object, hash: string) {
     super(o);
+    this.hash = hash;
   }
 
   unmarshall(o: Object = {}) {

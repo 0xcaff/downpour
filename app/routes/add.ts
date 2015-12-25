@@ -4,7 +4,7 @@ import {Router} from 'angular2/router';
 import {DelugeService} from '../services/deluge';
 import {TreeComponent} from '../components/tree';
 import {FileView} from '../components/file';
-import {ConfigurationComponent} from '../components/config';
+import {ConfigurationView} from '../components/config';
 import {Configuration} from '../models/configuration';
 import {TorrentRequest, TorrentType} from '../models/torrent_request';
 import {AuthenticatedRoute} from './authenticated';
@@ -12,7 +12,7 @@ import {AuthenticatedRoute} from './authenticated';
 @Component({
   templateUrl: 'templates/add.html',
   styleUrls: ['templates/add.css'],
-  directives: [TreeComponent, FileView, ConfigurationComponent],
+  directives: [TreeComponent, FileView, ConfigurationView],
 })
 export class AddTorrent extends AuthenticatedRoute {
   url: string;
@@ -26,7 +26,7 @@ export class AddTorrent extends AuthenticatedRoute {
   }
 
   ngOnInit() {
-    super.ngOnInit()
+    return super.ngOnInit()
       .then(ds => ds.getConfig(config_keys))
       .then(d => this.config = d);
   }

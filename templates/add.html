@@ -29,7 +29,7 @@
           white-space:nowrap;'>
           <li class='list-group-item'>{{ torrentRequest.name }}</li>
         </ul>
-        <div class="panel-body">
+        <div class="panel-body" *ngIf='torrentRequest.tree'>
           <tree-view *ngIf='torrentRequest.tree.directories' [tree]='torrentRequest.tree'></tree-view>
           <file-view *ngIf='!torrentRequest.tree.directories' [element]='torrentRequest.tree'></file-view>
         </div>

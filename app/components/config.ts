@@ -5,7 +5,7 @@ import {Configuration} from '../models/configuration';
   selector: 'config-view',
   templateUrl:'templates/components/config-view.html',
 })
-export class ConfigurationComponent {
+export class ConfigurationView {
   @Input() config: Configuration;
 }
 

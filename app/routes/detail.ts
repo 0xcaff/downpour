@@ -3,7 +3,7 @@ import {Router, RouteParams} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
-import {Torrent} from '../model/torrent';
+import {Torrent} from '../models/torrent';
 import {BytesPipe} from '../pipes/bytes';
 import {DurationPipe} from '../pipes/duration';
 import {ProgressComponent} from '../components/progress';
@@ -26,7 +26,7 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 
   ngOnInit() {
     this.running = true;
-    super.ngOnInit()
+    return super.ngOnInit()
       .then(ds => {
         ds.syncOnceInformation = information;
         sync(this);

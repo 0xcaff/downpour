@@ -1,8 +1,10 @@
 export class ValueMap<T> {
   values: T[] = [];
-  accessor: (o: T, index: number) => string;
+  accessor: accessorFunction;
 
-  constructor(public accessor) { }
+  constructor(accessor: accessorFunction) {
+    this.accessor = accessor;
+  }
 
   has(key: string): boolean {
     return this.values.some((v, i, a) => key == this.accessor.apply(a, [v, i]));
@@ -10,11 +12,11 @@ export class ValueMap<T> {
 
   remove(key: string|number): void {
     if (typeof key == 'string') {
-      this.runKey(key, function(v, i) {
+      this.runKey(<string>key, function(v, i) {
         this.splice(i, 1);
       });
     } else if (typeof key == 'number') {
-      this.values.splice(key, 1);
+      this.values.splice(<number>key, 1);
     }
   }
 
@@ -82,3 +84,6 @@ export class ValueMap<T> {
   }
 }
 
+interface accessorFunction {
+  (o: T, index: number): string;
+}

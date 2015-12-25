@@ -3,14 +3,14 @@ export function prop(target: Object, propertykey: string): void;
 
 export function prop(one: string|Object, two: string|void): PropertyDecorator|void {
   if (typeof one == 'string') {
-    var serializedkey: string = one;
+    var serializedkey: string = <string>one;
 
     return (target: Object, propertykey: string) => {
       serialize(target, serializedkey, propertykey);
     }
   } else if (typeof one == 'object') {
-    var target: Object = one;
-    var propertykey: string = two;
+    var target: Object = <Object>one;
+    var propertykey: string = <string>two;
 
     serialize(target, propertykey, propertykey);
   }
