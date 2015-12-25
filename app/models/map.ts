@@ -8,10 +8,14 @@ export class ValueMap<T> {
     return this.values.some((v, i, a) => key == this.accessor.apply(a, [v, i]));
   }
 
-  remove(key: string): void {
-    this.runKey(key, function(v, i) {
-      this.splice(i, 1);
-    });
+  remove(key: string|number): void {
+    if (typeof key == 'string') {
+      this.runKey(key, function(v, i) {
+        this.splice(i, 1);
+      });
+    } else if (typeof key == 'number') {
+      this.values.splice(key, 1);
+    }
   }
 
   set(key: string, value: T) {
@@ -44,6 +48,28 @@ export class ValueMap<T> {
       if (r)
         return true;
     }
+  }
+
+  // Loops over array a, using objectAccesor to get each element's key using the
+  // information to bring this into the state of a. To use this function, T must
+  // be serializable.
+  updateFromArray(a: Object[], objectAccessor: Function, createObject: Function) {
+    for (var i = 0; i < a.length; i++) {
+      var v = a[i];
+      var k = objectAccessor.apply(a, [v, i]);
+
+      if (this.has(k)) {
+        var c = this.get(k);
+        c.unmarshall(v);
+      } else {
+        this.add(createObject(v));
+      }
+    }
+
+    this.each((k, v, i) => {
+      if (!a.some((iv, ii, ia) => objectAccessor.apply(ia, [iv, ii]) == k))
+        this.remove(i);
+    });
   }
 
   private runKey(key: string, doSomething: Function): boolean {

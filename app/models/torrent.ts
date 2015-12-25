@@ -1,5 +1,8 @@
 import {Serializable, prop} from './serializable';
 import {Directory, File} from './tree';
+import {ValueMap} from './map';
+import {Tracker} from './tracker';
+import {Peer} from './peer';
 
 export class Torrent extends Serializable {
   // The SHA-1 has of the torrent's bencoded information section. Commonly used
@@ -63,14 +66,16 @@ export class Torrent extends Serializable {
   // The total number of bytes that the torrent has information about.
   @prop('total_size') size: number;
 
+  // The optional comment added to the torrent at the time of creation.
+  @prop comment: string;
+
   // The files or directories available for download in the torrent.
   tree: Directory|File;
 
   // The trackers connected to.
-  trackers: Tracker[];
+  trackers: ValueMap<Tracker> = new ValueMap((d, i) => d.url);
 
   // The peers connected to.
-  peers: Peer[];
 
   color() {
     if (this.state == 'Seeding')
@@ -82,9 +87,26 @@ export class Torrent extends Serializable {
     else if (this.state == 'Paused')
       return 'gray';
   }
+  peers: ValueMap<Peer> = new ValueMap((d, i) => d.ip);
 
   constructor(o: Object, public hash: string) {
     super(o);
+  }
+
+  unmarshall(o: Object = {}) {
+    super.unmarshall(o);
+
+    if (o['peers']) {
+      this.peers.updateFromArray(o['peers'], v => v.ip, v => new Peer(v));
+    }
+
+    if (o['trackers']) {
+      this.trackers.updateFromArray(o['trackers'], v => v.url, v => new Tracker(v));
+    }
+
+    if (o['files']) {
+      // console.log(o['files']);
+    }
   }
 };
 
