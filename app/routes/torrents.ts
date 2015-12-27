@@ -7,6 +7,7 @@ import {ObjectFilterPipe} from '../pipes/object';
 
 @Component({
   templateUrl: 'templates/torrents.html',
+  styleUrls: ['templates/torrents.css'],
   directives: [ROUTER_DIRECTIVES],
   pipes: [ObjectFilterPipe],
 })
@@ -27,6 +28,14 @@ export class TorrentsComponent extends AuthenticatedRoute {
 
   ngOnDestroy() {
     this.running = false;
+  }
+
+  getSelected() {
+    return this.ds.torrents.values.filter((v, i) => v.checked).map(v => v.hash);
+  }
+
+  unselect() {
+    this.ds.torrents.values.forEach(v => v.checked = false);
   }
 }
 

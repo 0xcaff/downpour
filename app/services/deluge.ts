@@ -151,6 +151,12 @@ export class DelugeService {
     return this.rpc('core.resume_torrent', [hashes]);
   }
 
+  remove(hashes: string[], removeData: boolean): Promise<any> {
+    return Promise.all(hashes.map((v, i) => {
+      return this.rpc('core.remove_torrent', [v, removeData]);
+    }));
+  }
+
   // Takes a URL, Magnet Link, or location on the remote server and returns a
   // TorrentRequest.
   getInfo(url: string, serverFile: boolean = false): Promise<TorrentRequest> {
