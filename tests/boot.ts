@@ -5,4 +5,5 @@ import './models/serializable';
 import './models/map';
 
 import './pipes/bytes';
+import './pipes/object';
 

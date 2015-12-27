@@ -1,7 +1,7 @@
 <h4>Torrents</h4>
 
 <div class="search-bar form-group has-feedback">
-  <input placeholder="Search..." type="text" class="form-control" />
+  <input [(ngModel)]='filter' placeholder="Search..." type="text" class="form-control" />
   <!--<span class="form-control-feedback "><i class="fa fa-refresh fa-spin"></i></span>-->
 </div>
 
@@ -15,7 +15,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='#value of ds.torrents.values'>
+    <tr *ngFor='#value of ds.torrents.values | object:filter'>
       <td><a [routerLink]='["TorrentDetail", {hash: value.hash}]'>{{ value.name }}</a></td>
       <td>{{ value.progress | number }}%</td>
       <td>{{ value.ratio | number }}</td>

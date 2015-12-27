@@ -3,13 +3,16 @@ import {Router, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
+import {ObjectFilterPipe} from '../pipes/object';
 
 @Component({
   templateUrl: 'templates/torrents.html',
   directives: [ROUTER_DIRECTIVES],
+  pipes: [ObjectFilterPipe],
 })
 export class TorrentsComponent extends AuthenticatedRoute {
   running: boolean;
+  filter: string;
 
   constructor(ds: DelugeService, r: Router) {
     super(ds, r)
