@@ -1,5 +1,5 @@
 import {Serializable, prop} from './serializable';
-import {Directory, File} from './tree';
+import {Directory, File, fromFilesTree} from './tree';
 import {Configuration} from './configuration';
 
 export class TorrentRequest extends Serializable {
@@ -20,18 +20,12 @@ export class TorrentRequest extends Serializable {
 
   format: TorrentType;
 
+  // TODO: move file type discovery into here
   unmarshall(d: Object) {
     super.unmarshall(d);
 
     if (this.format == TorrentType.File) {
-      var keys = Object.keys(d['files_tree']['contents']);
-      var o = d['files_tree']['contents'][keys[0]];
-
-      if (o['type'] == 'file') {
-        this.tree = new File(o, keys[0]);
-      } else if (o['type'] == 'dir') {
-        this.tree = new Directory(d['files_tree']['contents']);
-      }
+      this.tree = fromFilesTree(d['files_tree']);
     }
   }
 

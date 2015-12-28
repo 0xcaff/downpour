@@ -8,6 +8,7 @@ import {Torrent} from '../models/torrent';
 import {ValueMap} from '../models/map';
 import {TorrentRequest, TorrentType} from '../models/torrent_request';
 import {Configuration} from '../models/configuration';
+import {File, Directory, fromFilesTree} from '../models/tree';
 
 @Injectable()
 export class DelugeService {
@@ -209,6 +210,11 @@ export class DelugeService {
     if (!this.currentTorrent) this.currentTorrent = new Torrent();
     return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
       .then(d => this.currentTorrent.unmarshall(d));
+  }
+
+  getTree(hash: string): Promise<Directory|File> {
+    return this.rpc('web.get_torrent_files', [hash])
+      .then(d => fromFilesTree(d));
   }
 }
 

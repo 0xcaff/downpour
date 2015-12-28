@@ -20,7 +20,6 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
     super(ds, r);
     this.torrentId = rp.get('hash');
   }
-
   torrentId: string;
   running: boolean;
 
@@ -35,6 +34,7 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 
   ngOnDestroy() {
     this.running = false;
+    // this.ds.currentTorrent = null;
   }
 
   get color(): string {
@@ -53,7 +53,7 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 function sync(ctx) {
   if (ctx.running)
     ctx.ds.syncTorrent(ctx.torrentId)
-      .then(() => sync(ctx));
+      .then(_ => sync(ctx));
 }
 
 var information = [
@@ -72,6 +72,8 @@ var information = [
   'upload_payload_rate',
   'total_size',
   'files',
+  'file_priorities',
+  'file_progress',
   'trackers',
   'peers',
   'state',

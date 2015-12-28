@@ -15,12 +15,12 @@
   (
     ds.currentTorrent.state == "Downloading" && ds.currentTorrent.downloadSpeed > 0
   ) || (
-    ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
+    ds.currentTorrent.state == "Seeding" && ds.currentTorrent.uploadSpeed > 0
   )'
   [color]='color'
   [percentage]='ds.currentTorrent.progress'
   [reverse]='
-    ds.currentTorrent.state == "Upload" && ds.currentTorrent.uploadSpeed > 0
+    ds.currentTorrent.state == "Seeding" && ds.currentTorrent.uploadSpeed > 0
   '></progress-bar>
 
 <ui-tabs>
@@ -87,12 +87,16 @@
   </template>
 
   <template ui-pane title='Connections'>
+    <!-- TODO: Tracker Status -->
+    <!-- TODO: Verified -->
+    <!-- TODO: Updating -->
+    <!-- TODO: Send Stats -->
     <div *ngIf='ds.currentTorrent.trackers.values.length > 0'>
-      <h3>Trackers</h3>
+      <h3>Trackers <small>({{ ds.currentTorrent.trackers.values.length }})</small></h3>
       <table class='table table-striped'>
         <thead>
           <tr>
-            <th>Tier</th>
+            <th class='fit-content'>Tier</th>
             <th>Location</th>
           </tr>
         </thead>
@@ -106,7 +110,7 @@
     </div>
 
     <div *ngIf='ds.currentTorrent.peers.values.length > 0'>
-      <h3>Peers</h3>
+      <h3>Peers <small>({{ ds.currentTorrent.peers.values.length }})</small></h3>
       <table class='table table-striped'>
         <thead>
           <tr>
@@ -133,41 +137,34 @@
   </template>
 
   <template ui-pane title='Files'>
-
-  </template>
-  <template ui-pane title='Options'>
-
-  </template>
-</ui-tabs>
-</div>
-
-<!--
-<div>
-      TODO: Add:
-        File Count
-        Download Path
-    <table class="table table-striped">
+    <!-- TODO: Collapse -->
+    <!-- TODO: Download Path -->
+    <!-- TODO: Adjustable Priority -->
+    <h3>Files <small>({{ ds.currentTorrent.files.length }})</small></h3>
+    <table class='table table-striped'>
       <thead>
         <tr>
           <th>Path</th>
-          <th>File Size</th>
+          <th>Size</th>
           <th>Progress</th>
           <th>Priority</th>
         </tr>
       </thead>
       <tbody>
-        {{#each files as |file|}}
-        <tr>
-          <td>{{ file.path }}</td>
-          <td>{{ format-bytes file.size }}</td>
-          <td>{{ bootstrap-progress progress=file.progress info=true }}</td>
-          <td>{{ file.priority }}</td>
+        <tr *ngFor='#f of ds.currentTorrent.files'>
+          <td>{{ f.path }}</td>
+          <td>{{ f.len | bytes:2 }}</td>
+          <td>{{ f.progress * 100 | number:'1.0-2' }}%</td>
+          <td>{{ f.priority }}</td>
         </tr>
-        {{/each}}
       </tbody>
     </table>
+  </template>
+
+  <template ui-pane title='Options'>
+  </template>
+</ui-tabs>
 </div>
--->
 
 <!--
 <div id="connections">
@@ -189,32 +186,6 @@
     </div>
     {{/each}}
   </div>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Country</th>
-        <th>Client</th>
-        <th>IP</th>
-        <th>Progress</th>
-        <th>Download Speed</th>
-        <th>Upload Speed</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each peers as |peer|}}
-      <tr>
-        <td>{{ format-country peer.country }}</td>
-        <td>{{ peer.client }}</td>
-        <td>{{ peer.ip }}</td>
-        <td>{{ bootstrap-progress progress=peer.progress info=true }}</td>
-        <td>{{ format-speed peer.up_speed }}</td>
-        <td>{{ format-speed peer.down_speed }}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
 </div>
-
 -->
 

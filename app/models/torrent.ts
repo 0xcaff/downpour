@@ -1,5 +1,5 @@
 import {Serializable, prop} from './serializable';
-import {Directory, File} from './tree';
+import {Directory, File, fromFlatTree, getAllFiles} from './tree';
 import {ValueMap} from './map';
 import {Tracker} from './tracker';
 import {Peer} from './peer';
@@ -94,8 +94,21 @@ export class Torrent extends Serializable {
       this.trackers.updateFromArray(o['trackers'], v => v.url, v => new Tracker(v));
     }
 
-    if (o['files']) {
-      // console.log(o['files']);
+    if (o['files'] && !this.tree) {
+      var t = fromFlatTree(o['files']);
+      apply(t);
+      this.files = getAllFiles(t);
+      this.tree = t;
+
+      function apply(t: Directory|File) {
+        if (t instanceof File) {
+          var i = t.index;
+          t.priority = o['file_priorities'][i];
+          t.progress = o['file_progress'][i];
+        } else if (t instanceof Directory) {
+          t.getAllFiles().forEach(apply);
+        }
+      }
     }
   }
 };
