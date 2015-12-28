@@ -1,4 +1,4 @@
-export var MockTorrent = {
+export var SingleFileTorrent = {
   "comment": "Ubuntu CD releases.ubuntu.com",
   "active_time": 393,
   "is_seed": false,
@@ -1714,6 +1714,153 @@ export var MockTorrent = {
   "queue": 5,
   "num_files": 1,
   "all_time_download": 665293365,
+  "stop_ratio": 2,
+  "is_finished": false
+}
+
+export var MultiFileTorrent = {
+  "comment": "KNOPPIX_V7.6.0DVD-2015-11-21-EN",
+  "active_time": 44,
+  "is_seed": false,
+  "hash": "7b05ab9de5dba8ce3472ce776617dc741788b6d9",
+  "upload_payload_rate": 0,
+  "remove_at_ratio": false,
+  "move_completed_path": "/var/lib/deluge/Downloads",
+  "private": false,
+  "total_payload_upload": 420092,
+  "paused": true,
+  "seed_rank": 0,
+  "seeding_time": 0,
+  "max_upload_slots": -1,
+  "prioritize_first_last": false,
+  "distributed_copies": 0.01899999938905239,
+  "download_payload_rate": 0,
+  "message": "OK",
+  "num_peers": 0,
+  "max_download_speed": -1,
+  "max_connections": -1,
+  "compact": false,
+  "eta": 0,
+  "ratio": 0.0034794926177710295,
+  "total_peers": 20,
+  "total_size": 4372948775,
+  "total_wanted": 4372948775,
+  "state": "Paused",
+  "file_priorities": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "label": "",
+  "max_upload_speed": -1,
+  "tracker": "http://torrent.unix-ag.uni-kl.de/announce",
+  "save_path": "/var/lib/deluge/Downloads",
+  "progress": 2.7609000205993652,
+  "time_added": 1451251840,
+  "tracker_host": "uni-kl.de",
+  "total_uploaded": 420092,
+  "files": [
+    {
+      "index": 0,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso",
+      "offset": 0,
+      "size": 4372375552
+    },
+    {
+      "index": 1,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.md5",
+      "offset": 4372375552,
+      "size": 70
+    },
+    {
+      "index": 2,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.md5.asc",
+      "offset": 4372375622,
+      "size": 298
+    },
+    {
+      "index": 3,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.sha1",
+      "offset": 4372375920,
+      "size": 78
+    },
+    {
+      "index": 4,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.sha1.asc",
+      "offset": 4372375998,
+      "size": 306
+    },
+    {
+      "index": 5,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/dpkg-l-dvd-760.txt",
+      "offset": 4372376304,
+      "size": 562399
+    },
+    {
+      "index": 6,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/knoppix-cheatcodes.txt",
+      "offset": 4372938703,
+      "size": 10072
+    }
+  ],
+  "total_done": 120733696,
+  "num_pieces": 4171,
+  "tracker_status": "uni-kl.de: Announce OK",
+  "total_seeds": 241,
+  "peers": [],
+  "next_announce": 0,
+  "stop_at_ratio": true,
+  "file_progress": [
+    0.02761283703148365,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "move_completed": false,
+  "piece_length": 1048576,
+  "move_on_completed_path": "/var/lib/deluge/Downloads",
+  "num_seeds": 0,
+  "move_on_completed": false,
+  "name": "KNOPPIX_V7.6.0DVD-2015-11-21-EN",
+  "trackers": [
+    {
+      "send_stats": true,
+      "fails": 0,
+      "verified": false,
+      "url": "http://torrent.unix-ag.uni-kl.de/announce",
+      "fail_limit": 0,
+      "complete_sent": false,
+      "source": 1,
+      "start_sent": false,
+      "tier": 0,
+      "updating": false
+    },
+    {
+      "send_stats": true,
+      "fails": 0,
+      "verified": false,
+      "url": "http://tracker.birkenwald.de:6969/announce",
+      "fail_limit": 0,
+      "complete_sent": false,
+      "source": 1,
+      "start_sent": false,
+      "tier": 1,
+      "updating": false
+    }
+  ],
+  "total_payload_download": 121559263,
+  "is_auto_managed": true,
+  "seeds_peers_ratio": 12.050000190734863,
+  "queue": 0,
+  "num_files": 7,
+  "all_time_download": 119158663,
   "stop_ratio": 2,
   "is_finished": false
 }

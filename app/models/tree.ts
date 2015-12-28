@@ -17,13 +17,25 @@ export class File extends Serializable {
   // The name of the file with extension.
   name: string;
 
-  constructor(o: any, name: string) {
+  // A number between zero and ten describing the priority of the file in the
+  // torrent. If the priority is zero, there file will not be downloaded.
+  @prop priority: number;
+
+  // The progress of the file which has been downloaded as a number between 0-1.
+  @prop progress: number;
+
+  constructor(o: any, name?: string) {
     super(o);
-    this.name = name;
+    if (o['size'] && !this.len) this.len = o['size'];
+    if (name) {
+      this.name = name;
+    } else {
+      var p = this.path.split('/');
+      this.name = p[p.length - 1];
+    }
   }
 }
 
-// TODO: Use serializable
 export class Directory {
   files: File[] = new Array();
   directories: Directory[] = new Array();
@@ -47,10 +59,21 @@ export class Directory {
     this._download = d;
   }
 
-  constructor(name: string);
+  private _len: number;
+  get len(): number {
+    if (this._len) return this._len;
+    this._len = this.getAllFiles().reduce((pv, cv) => pv + cv.len, 0);
+    return this._len;
+  }
+
+  set len(l: number) {
+    this._len = l;
+  }
+
+  constructor(name: string, len?: number);
   constructor(o: Object);
 
-  constructor(stringOrObject: any, len: any) {
+  constructor(stringOrObject: any, len?: number) {
     if (typeof stringOrObject == 'string') {
       this.name = stringOrObject;
       this.len = len;
@@ -62,28 +85,25 @@ export class Directory {
       this.len = o[rootDir]['length'];
 
       this.download = o[rootDir]['download'];
-      this.recurse(o[rootDir]['contents']);
+      this.unmarshall(o[rootDir]['contents']);
     }
   }
 
-  // Could be more efficient
-  flatten(): File[] {
+  // Returns all files contained by this directory and its siblings.
+  getAllFiles(): File[] {
     var r = [];
     r.push(...this.files);
-    for (var i = 0; i < this.directories.length; i++) {
-      r.push(...this.directories[i].flatten());
-    }
-    return r.sort(function(a: File, b: File): number {
-      if (a.index > b.index)
-        return 1;
-      else if (a.index < b.index)
-        return -1;
-      else
-        return 0;
-    });
+    for (var i = 0; i < this.directories.length; i++)
+      r.push(...this.directories[i].getAllFiles());
+    return r;
   }
 
-  private recurse(obj: any) {
+  // A convienience method to get an array of all files sorted by their index property.
+  flatten(): File[] {
+    return this.getAllFiles().sort((a: File, b: File) => a.index - b.index);
+  }
+
+  private unmarshall(obj: any) {
     var keys = Object.keys(obj);
     for (var i = 0; i < keys.length; i++) {
       var key: string = keys[i];
@@ -93,7 +113,7 @@ export class Directory {
         this.files.push(f);
       } else if (obj[key]['type'] == 'dir') {
         var d: Directory = new Directory(key, obj[key]['length']);
-        d.recurse(obj[key]['contents']);
+        d.unmarshall(obj[key]['contents']);
         d.download = obj[key]['download'];
         this.directories.push(d);
       }
@@ -101,3 +121,51 @@ export class Directory {
   }
 }
 
+export function fromFilesTree(ft: Object): File|Directory {
+  if (ft['type'] == 'dir') {
+    return new Directory(ft['contents']);
+  } else {
+    var k = Object.keys(ft['contents'])[0];
+    var o = ft['contents'][k];
+
+    return new File(o, k);
+  }
+};
+
+export function fromFlatTree(flat: Object[]): File|Directory {
+  var t = new Directory('');
+  for (var i = 0; i < flat.length; i++) {
+    var f = flat[i];
+
+    var p = f['path'].split('/');
+    recurse(t, p, 0, f);
+  }
+
+  if (t.files.length == 1) {
+    return t.files[0];
+  } else if (t.directories.length == 1) {
+    return t.directories[0];
+  }
+
+  function recurse(tree: Directory, pathArray: string[], index: number, fo: Object) {
+    if (index == pathArray.length - 1)
+      tree.files.push(new File(fo));
+    else {
+      var n = pathArray[index];
+      var t = tree.directories.filter((v, i, a) => v.name == n)[0];
+      if (!t) {
+        t = new Directory(n);
+        tree.directories.push(t);
+      }
+
+      recurse(t, pathArray, index+1, fo);
+    }
+  }
+}
+
+export function getAllFiles(tree: File|Directory): File[] {
+  if (tree instanceof File)
+    return [tree];
+  else if (tree instanceof Directory)
+    return tree.getAllFiles();
+}

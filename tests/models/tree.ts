@@ -1,5 +1,7 @@
 import {MockTree} from 'app/mock/tree';
-import {Directory} from 'app/models/tree';
+import {SingleFileTorrentRequest, MultiFileTorrentRequest} from 'app/mock/torrent_request';
+import {SingleFileTorrent, MultiFileTorrent} from 'app/mock/torrent';
+import {Directory, File, fromFilesTree, fromFlatTree, getAllFiles} from 'app/models/tree';
 
 describe('tree model', () => {
   var tree: Directory;
@@ -64,5 +66,62 @@ describe('tree model', () => {
     expect(tree.directories[0].len).toEqual(49940930);
   });
 
+  it('should be able to calculate the length of its children', () => {
+    tree.len = undefined;
+    expect(tree.len).toEqual(230566199);
+    expect(tree.directories[0].len).toEqual(49940930);
+  });
 });
 
+describe('fileTree handling', () => {
+  it('should be able to unmarshall fileTrees with multiple files', () => {
+    var mftr = MultiFileTorrentRequest;
+    var r = fromFilesTree(mftr['files_tree']);
+
+    expect(r instanceof Directory).toEqual(true);
+    expect(r.directories.length).toEqual(0);
+    expect(r.files.length).toEqual(7);
+  });
+
+  it('should be able to unmarshall fileTrees with single files', () => {
+    var sft = SingleFileTorrentRequest;
+    var r = fromFilesTree(sft['files_tree']);
+
+    expect(r instanceof File).toEqual(true);
+    expect(r.name).toEqual('ubuntu-15.10-desktop-amd64.iso');
+  });
+});
+
+describe('flatTree handling', () => {
+  it('should be able to unmarshall single file flatTrees', () => {
+    var fs = SingleFileTorrent['files'];
+    var r = fromFlatTree(fs);
+
+    expect(r instanceof File).toEqual(true);
+    expect(r.name).toEqual(fs[0]['path']);
+  });
+
+  it('should be able to unmarshall multi file flatTrees', () => {
+    var fs = MultiFileTorrent['files'];
+    var r = fromFlatTree(fs);
+
+    expect(r instanceof Directory).toEqual(true);
+    expect(r.name).toEqual(fs[0]['path'].split('/')[0]);
+  });
+});
+
+describe('getAllFiles', () => {
+  it('should be able to get all files from a single file torrent', () => {
+    var r = fromFlatTree(SingleFileTorrent['files']);
+    var af = getAllFiles(r)
+
+    expect(af.length).toEqual(1);
+  });
+
+  it('should be able to get all files from a multi file torrent', () => {
+    var fs = MultiFileTorrent['files'];
+    var r = getAllFiles(fromFlatTree(fs));
+
+    expect(r.length).toEqual(fs.length);
+  });
+});
