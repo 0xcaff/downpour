@@ -32,28 +32,38 @@ export class Serializable {
   }
 
   unmarshall(o: Object = {}) {
-    var ks = Object.keys(o);
-    for (var i = 0; i < ks.length; i++) {
-      var k = ks[i];
-      if (this['__serialization__'].hasOwnProperty(k)) {
-        var v = o[k];
-        this[this['__serialization__'][k]] = v;
+    var serial = this['__serialization__'];
+    var keys = Object.keys(serial);
+
+    for (var i = 0; i < keys.length; i++) {
+      var serializedKey = keys[i];
+      var prettyKey = serial[serializedKey];
+
+      var lo = o;
+      var keySegments = serializedKey.split('.');
+      for (var j = 0; j < keySegments.length && lo !== undefined; j++) {
+        var lo = lo[keySegments[j]];
       }
+
+      if (lo !== undefined)
+        this[prettyKey] = lo;
     }
   }
 
   marshall(): Object {
-    var r = {};
-    var s = this.__serialization__;
-    var ks = Object.keys(s);
+    var result = {};
+    var serial = this['__serialization__'];
+    var keys = Object.keys(serial);
 
-    for (var i = 0; i < ks.length; i++) {
-      var k = ks[i];
-      var v = s[k];
+    for (var i = 0; i < keys.length; i++) {
+      var serializedKey = keys[i];
+      var prettyKey = serial[serializedKey];
+      var value = this[prettyKey];
 
-      r[k] = this[v];
+      if (value !== undefined)
+        result[serializedKey] = this[prettyKey];
     }
-    return r;
+    return result;
   }
 }
 

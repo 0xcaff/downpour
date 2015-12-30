@@ -3,6 +3,7 @@ import {prop, Serializable} from 'app/models/serializable';
 class Test extends Serializable {
   @prop('special') t: number;
   @prop a: string;
+  @prop('nested.data') data: string;
 
   constructor(o: Object);
   constructor(o: string);
@@ -50,6 +51,17 @@ describe('serializable model', () => {
   it("shoudn't apply extra properties as undefined", () => {
     var t: Test = new Test({special: 1, extra: 'random'});
     expect(t.extra).not.toBeDefined();
+  });
+
+  it('should deserialize with dot properties', () => {
+    var t: Test = new Test({special: 1, nested: {data: 'tesT'}});
+    expect(t.data).toEqual('tesT');
+  });
+
+  xit('should serialize with dot properities', () => {
+    test.data = 'testdata';
+    var r = test.marshall();
+    expect(r.nested.data).toEqual('testdata');
   });
 });
 

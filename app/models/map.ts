@@ -55,6 +55,7 @@ export class ValueMap<T> {
   // Loops over array a, using objectAccesor to get each element's key using the
   // information to bring this into the state of a. To use this function, T must
   // be serializable.
+  // TODO: Tests
   updateFromArray(a: Object[], objectAccessor: Function, createObject: Function) {
     for (var i = 0; i < a.length; i++) {
       var v = a[i];
