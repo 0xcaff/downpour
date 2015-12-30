@@ -1,5 +1,5 @@
 <div style='margin-bottom:1em'>
-  <h4>Torrents <small>({{ ds.torrents.values.length }})</small></h4>
+  <h3>Torrents <small>({{ ds.state.torrents.values.length }})</small></h3>
 </div>
 
 <div class="form-group">
@@ -18,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='#value of ds.torrents.values | object:filter'>
+    <tr *ngFor='#value of ds.state.torrents.values | object:filter'>
       <td><input type='checkbox' [(ngModel)]='value.checked' /></td>
       <td class='state' [ngSwitch]='value.state'>
         <i *ngSwitchWhen='"Seeding"' class='fa fa-arrow-up'></i>

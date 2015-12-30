@@ -31,11 +31,11 @@ export class TorrentsComponent extends AuthenticatedRoute {
   }
 
   getSelected() {
-    return this.ds.torrents.values.filter((v, i) => v.checked).map(v => v.hash);
+    return this.ds.state.torrents.values.filter((v, i) => v.checked).map(v => v.hash);
   }
 
   unselect() {
-    this.ds.torrents.values.forEach(v => v.checked = false);
+    this.ds.state.torrents.values.forEach(v => v.checked = false);
   }
 }
 

@@ -1,14 +1,11 @@
 import {Injectable} from 'angular2/core';
 
-import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-
 import {Torrent} from '../models/torrent';
 import {ValueMap} from '../models/map';
 import {TorrentRequest, TorrentType} from '../models/torrent_request';
 import {Configuration} from '../models/configuration';
 import {File, Directory, fromFilesTree} from '../models/tree';
+import {State} from '../models/state';
 
 @Injectable()
 export class DelugeService {
@@ -106,41 +103,19 @@ export class DelugeService {
     "max_download_speed",
     "max_upload_speed",
     "seeds_peers_ratio",
-    "label"
+    "label",
   ];
 
-  torrents: ValueMap<Torrent> = new ValueMap((v, i) => v.hash);
+  state: State = new State();
+  stateChanged: Observable = new Observable();
 
   // Brings the service's state in sync with the remote's state.
   // TODO: Immutable or Observer?
-  // TODO: Sync rest of state
-  sync(): Promise<void> {
+  sync(): Promise<State> {
     return this.rpc('web.update_ui', [this.syncStateInformation, {}])
       .then(d => {
-        // Update Local State
-        var nk = Object.keys(d['torrents']);
-        for (var i = 0; i < nk.length; i++) {
-          var torrentHash = nk[i];
-          if (this.torrents.has(torrentHash)) {
-            // Interection of the Client Torrents and Server Torrents
-            // Update Torrent
-            var t = this.torrents.get(torrentHash);
-            t.unmarshall(d['torrents'][torrentHash]);
-            this.torrents.set(torrentHash, t);
-          } else {
-            // Torrents only on the Server
-            // Add Torrent
-            this.torrents.add(new Torrent(d['torrents'][torrentHash], torrentHash));
-          }
-        }
-
-        // Torrents only on the Client
-        // Remove from Client
-        this.torrents.each((k, v, i) => {
-          if (nk.indexOf(k) == -1) {
-            this.torrents.remove(k);
-          }
-        });
+        this.state.unmarshall(d);
+        return this.state;
       });
   }
 
