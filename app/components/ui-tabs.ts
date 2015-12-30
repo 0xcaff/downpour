@@ -33,14 +33,18 @@ export class UiPane {
 @Component({
   selector: 'ui-tabs',
   template: `
-    <ul class="nav nav-tabs nav-justified">
-      <li *ngFor="var pane of panes"
-          (click)="select(pane)"
-          [class.active]="pane.active">
-        <a href="javascript: false">{{pane.title}}</a>
-      </li>
-    </ul>
-    <ng-content></ng-content>
+    <div [class]='firstDivClasses'>
+      <ul [class]='listClasses'>
+        <li *ngFor="var pane of panes"
+            (click)="select(pane)"
+            [class.active]="pane.active">
+          <a href="javascript: false">{{pane.title}}</a>
+        </li>
+      </ul>
+    </div>
+    <div [class]='secondDivClasses'>
+      <ng-content></ng-content>
+    </div>
     `
 })
 export class UiTabs {
@@ -48,5 +52,9 @@ export class UiTabs {
   select(pane: UiPane) {
     this.panes.toArray().forEach((p: UiPane) => p.active = p == pane);
   }
+
+  @Input() listClasses: string;
+  @Input() firstDivClasses: string;
+  @Input() secondDivClasses: string;
 }
 
