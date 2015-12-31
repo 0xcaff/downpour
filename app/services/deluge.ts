@@ -1,4 +1,4 @@
-import {Injectable} from 'angular2/core';
+import {Injectable, EventEmitter} from 'angular2/core';
 
 import {Torrent} from '../models/torrent';
 import {ValueMap} from '../models/map';
@@ -79,35 +79,10 @@ export class DelugeService {
 
   // The information requested about each torrent every time sync is called.
   // These are the values requested by default by the official deluge web client.
-  syncStateInformation: string[] = [
-    "queue",
-    "name",
-    "total_wanted",
-    "state",
-    "progress",
-    "num_seeds",
-    "total_seeds",
-    "num_peers",
-    "total_peers",
-    "download_payload_rate",
-    "upload_payload_rate",
-    "eta",
-    "ratio",
-    "distributed_copies",
-    "is_auto_managed",
-    "time_added",
-    "tracker_host",
-    "save_path",
-    "total_done",
-    "total_uploaded",
-    "max_download_speed",
-    "max_upload_speed",
-    "seeds_peers_ratio",
-    "label",
-  ];
+  syncStateInformation: string[] = [''];
 
   state: State = new State();
-  stateChanged: Observable = new Observable();
+  stateChanged: EventEmitter<State> = new EventEmitter();
 
   // Brings the service's state in sync with the remote's state.
   // TODO: Immutable or Observer?
@@ -115,6 +90,7 @@ export class DelugeService {
     return this.rpc('web.update_ui', [this.syncStateInformation, {}])
       .then(d => {
         this.state.unmarshall(d);
+        this.stateChanged.emit(this.state);
         return this.state;
       });
   }

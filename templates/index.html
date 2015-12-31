@@ -24,6 +24,20 @@
           <a [routerLink]="['Configuration']">Configuration</a>
         </li>
       </ul>
+
+      <div *ngIf='ds.state.connected'>
+        <div class='navbar-text navbar-right'>
+          <i class='fa fa-arrow-up'></i> {{ ds.state.uploadSpeed | bytes }}/s
+        </div>
+
+        <div class='navbar-text navbar-right'>
+          <i class='fa fa-arrow-down'></i> {{ ds.state.downloadSpeed | bytes }}/s
+        </div>
+
+        <div class='navbar-text navbar-right'>
+          <i class='fa fa-arrows-h'></i> {{ ds.state.connectionsCount }}
+        </div>
+      </div>
     </div>
   </div>
 </nav>

@@ -6,13 +6,14 @@ import {AddTorrent} from './routes/add';
 import {TorrentDetailComponent} from './routes/detail';
 import {TorrentsComponent} from './routes/torrents';
 import {ConfigurationComponent} from './routes/configuration';
-
+import {BytesPipe} from './pipes/bytes';
 import {DelugeService} from './services/deluge';
 
 @Component({
   selector: 'deluge-app',
   templateUrl: 'templates/index.html',
   directives: [ROUTER_DIRECTIVES],
+  pipes: [BytesPipe],
 })
 @RouteConfig([
   {

@@ -20,14 +20,12 @@ export class TorrentsComponent extends AuthenticatedRoute {
   }
 
   ngOnInit() {
-    this.running = true;
-    return super.ngOnInit().then((ds) => {
-      sync(ds, this);
-    });
+    super.ngOnInit();
+    this.ds.syncStateInformation = torrentProperties;
   }
 
   ngOnDestroy() {
-    this.running = false;
+    this.ds.syncStateInformation = [''];
   }
 
   getSelected() {
@@ -39,9 +37,30 @@ export class TorrentsComponent extends AuthenticatedRoute {
   }
 }
 
-function sync(ds, ctx) {
-  if (ctx.running) {
-    ds.sync().then(() => sync(ds, ctx));
-  }
-}
+var torrentProperties = [
+    // "queue",
+    "name",
+    // "total_wanted",
+    "state",
+    "progress",
+    // "num_seeds",
+    // "total_seeds",
+    // "num_peers",
+    // "total_peers",
+    // "download_payload_rate",
+    // "upload_payload_rate",
+    // "eta",
+    "ratio",
+    // "distributed_copies",
+    // "is_auto_managed",
+    // "time_added",
+    "tracker_host",
+    // "save_path",
+    // "total_done",
+    // "total_uploaded",
+    // "max_download_speed",
+    // "max_upload_speed",
+    // "seeds_peers_ratio",
+    "label",
+];
 
