@@ -1,0 +1,19 @@
+<label>{{ title }}</label>
+<div class='input-group'>
+  <input
+    [ngModel]='model[0]'
+    (ngModelChange)='modelChange.next([$event, model[1]])'
+    [disabled]='disabled'
+    type='number'
+    class='form-control'
+    min='1' />
+  <span class='input-group-addon'>to</span>
+  <input
+    [ngModel]='model[1]'
+    (ngModelChange)='modelChange.next([model[0], $event])'
+    [disabled]='disabled'
+    type='number'
+    class='form-control'
+    min='1' />
+</div>
+

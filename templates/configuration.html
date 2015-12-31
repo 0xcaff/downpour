@@ -1,2 +1,254 @@
-This is the configuration page.
+<div class='clearfix' style='margin-bottom:1em' *ngIf='config'>
+  <div class='row'>
+    <ui-tabs
+      listClasses='nav nav-pills nav-stacked'
+      firstDivClasses='col-md-3'
+      secondDivClasses='col-md-9'>
+      <template ui-pane title='Connection Limits' active='true'>
+        <h2>Connection Limits</h2>
+        <speedinput-view
+          [(model)]='config.maximumDownloadSpeed'
+          title='Maximum Download Speed'></speedinput-view>
+
+        <speedinput-view
+          [(model)]='config.maximumUploadSpeed'
+          title='Maximum Download Speed'></speedinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumConnections'
+          title='Maximum Connections'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumConnectionsPerSecond'
+          title='Maximum Connections Per Second'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumHalfConnections'
+          title='Maximum Half-Open Connections'></numberinput-view>
+
+        <checkbox-view
+          [(model)]='config.ignoreLocalNetworkLimits'
+          title='Ignore Limits on Local Network'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.ratelimitIPOverhead'
+          title='Ratelimit IP Overhead'></checkbox-view>
+
+        <h3>Per-Torrent</h3>
+        <speedinput-view
+          [(model)]='config.maximumDownloadSpeedPerTorrent'
+          title='Maximum Download Speed Per Torrent'></speedinput-view>
+        
+        <speedinput-view
+          [(model)]='config.maximumUploadSpeedPerTorrent'
+          title='Maximum Upload Speed Per Torrent'></speedinput-view>
+        
+        <numberinput-view
+          [(model)]='config.maximumConnectionsPerTorrent'
+          title='Maximum Connections Per Torrent'></numberinput-view>
+      </template>
+
+      <template ui-pane title='Protocols'>
+        <h2>Protocols</h2>
+        <textinput-view
+          [(model)]='config.listenInterfaces'
+          title='Bind to IPs'></textinput-view>
+
+        <port-view
+          [(model)]='config.incomingPorts'
+          [disabled]='config.randomizeIncomingPorts'
+          title='Ports for Incoming Traffic to Connect to'></port-view>
+
+        <checkbox-view
+          [(model)]='config.randomizeIncomingPorts'
+          title='Randomize Incoming Ports'></checkbox-view>
+
+        <port-view
+          [(model)]='config.outgoingPorts'
+          [disabled]='config.randomizeOutgoingPorts'
+          title='Ports for Outgoing Traffic to Come From'></port-view>
+
+        <checkbox-view
+          [(model)]='config.randomizeOutgoingPorts'
+          title='Randomize Outgoing Ports'></checkbox-view>
+
+        <textinput-view
+          [(model)]='config.tosByte'
+          title='TOS Byte'></textinput-view>
+
+        <checkbox-view
+          [(model)]='config.upnp'
+          title='UPnP'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.natpmp'
+          title='NAT-PMP'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.pex'
+          title='PeX'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.dht'
+          title='DHT'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.lsd'
+          title='LSD'></checkbox-view>
+
+        <!--
+          <h3>Encryption</h3>
+          TODO: Implement
+        -->
+      </template>
+
+      <template ui-pane title='AutoManager'>
+        <h2>AutoManager <sup><small>TM</small></sup></h2>
+        <checkbox-view
+          [(model)]='config.autoManaged'
+          title='Manage New Torrents'></checkbox-view>
+
+        <numberinput-view
+          [(model)]='config.maximumActiveTorrents'
+          title='Maximum Active Torrents'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumDownloadingTorrents'
+          title='Maximum Downloading Torrents'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumSeedingTorrents'
+          title='Maximum Seeding Torrents'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumUploadSlots'
+          title='Maximum Upload Slots'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumUploadSlotsPerTorrent'
+          title='Maximum Upload Slots Per Torrent'></numberinput-view>
+
+        <checkbox-view
+          [(model)]='config.ignoreSlowTorrents'
+          title='Ignore Slow Torrents'></checkbox-view>
+
+        <numberinput-view
+          [(model)]='config.shareRatioLimit'
+          title='Share Ratio Limit'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.seedRatio'
+          [(checkbox)]='config.stopSeedAtRatio'
+          addon='true'
+          title='Stop At Seed Ratio'></numberinput-view>
+
+        <checkbox-view
+          [(model)]='config.removeSeedAtRatio'
+          title='Remove Torrent at Seed Ratio'></checkbox-view>
+
+        <numberinput-view
+          [(model)]='config.seedTimeLimits'
+          title='Seeding Time Limits (m)'></numberinput-view>
+
+        <checkbox-view
+          [(model)]='config.queueNewToTop'
+          title='Queue new Torrents to Top'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.addPaused'
+          title='Add Paused'></checkbox-view>
+      </template>
+
+      <template ui-pane title='Storage'>
+        <h2>Storage</h2>
+        <textinput-view
+          [(model)]='config.downloadLocation'
+          title='Download Location'></textinput-view>
+
+        <textinput-view
+          [(model)]='config.torrentFilesLocation'
+          [(checkbox)]='config.copyTorrentFiles'
+          addon='true'
+          title='Copy Torrents to Directory'></textinput-view>
+
+        <checkbox-view
+          [(model)]='config.deleteCopyTorrentFile'
+          [disabled]='!config.copyTorrentFiles'
+          title='Delete Completed Torrent Files'></checkbox-view>
+
+        <textinput-view
+          [(model)]='config.autoaddPath'
+          [(checkbox)]='config.autoadd'
+          addon='true'
+          title='AutoAdd Torrents from Directory'></textinput-view>
+
+        <textinput-view
+          [(model)]='config.moveCompletedPath'
+          [(checkbox)]='config.moveCompleted'
+          addon='true'
+          title='Move Downloaded Files here When Complete'></textinput-view>
+
+        <checkbox-view
+          [(model)]='config.compactAllocation'
+          title='Compact Allocation'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.sequentialDownload'
+          title='Download Sequentially'></checkbox-view>
+
+        <h3>Cache</h3>
+        <numberinput-view
+          [(model)]='config.cacheExpiry'
+          title='Cache Expiry Interval'></numberinput-view>
+
+        <numberinput-view
+          [(model)]='config.cacheSize'
+          title='Cache Size in 16KB Blocks'></numberinput-view>
+      </template>
+
+      <template ui-pane title='Deluge Daemon'>
+        <h2>Deluge Daemon</h2>
+        <checkbox-view
+          [(model)]='config.analyticsEnabled'
+          title='Send System Information'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.checkRelease'
+          title='Automatically Check for New Releases'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.daemonRemoteConnections'
+          title='Allow Remote Connections to the Daemon'></checkbox-view>
+
+        <numberinput-view
+          [(model)]='config.daemonPort'
+          title='Connection Port'></numberinput-view>
+
+        <textinput-view
+          [(model)]='config.geoIPDatabsePath'
+          title='GeoIP Database Location'></textinput-view>
+
+        <textinput-view
+          [(model)]='config.pluginsDirectory'
+          title='Plugins Directory'></textinput-view>
+
+        <div class='form-group'>
+          <label>Enabled Plugins</label>
+          <ul>
+            <li *ngFor='#p of config.plugins'>{{ p }}</li>
+          </ul>
+        </div>
+
+        <div class='form-group' *ngIf='config.lastAnalyticsUpdate > 0'>
+          <label>Last Updated</label>
+          <div>{{ config.lastAnalyticsUpdate | date }}</div>
+        </div>
+
+        <!-- TODO: Helptext -->
+        <!-- TODO: Free Diskspace -->
+      </template>
+    </ui-tabs>
+  </div>
+  <button class='btn btn-default pull-right' (click)='submit()'>Submit</button>
+</div>
 

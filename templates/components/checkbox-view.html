@@ -1,0 +1,8 @@
+<label>
+  <input type="checkbox"
+    [disabled]='disabled'
+    [ngModel]='model'
+    (ngModelChange)='modelChange.next($event)' />
+  {{ title }}
+</label>
+

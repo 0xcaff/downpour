@@ -43,7 +43,39 @@
       </div>
 
       <div class="panel-body">
-        <config-view [config]='config'></config-view>
+        <speedinput-view
+          [(model)]='config.maximumDownloadSpeedPerTorrent'
+          title='Maximum Download Speed Per Torrent'></speedinput-view>
+
+        <speedinput-view
+          [(model)]='config.maximumUploadSpeedPerTorrent'
+          title='Maximum Upload Speed Per Torrent'></speedinput-view>
+
+        <numberinput-view
+          [(model)]='config.maximumUploadSlotsPerTorrent'
+          title='Maximum Upload Slots'></numberinput-view>
+
+        <textinput-view
+          [(model)]='config.downloadLocation'
+          title='Download Location'></textinput-view>
+
+        <textinput-view
+          [(model)]='config.moveCompletedPath'
+          [(checkbox)]='config.moveCompleted'
+          title='Move Completed Location'
+          addon='true'></textinput-view>
+
+        <checkbox-view
+          [(model)]='config.addPaused'
+          title='Add Paused'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.sequentialDownload'
+          title='Download Sequentially'></checkbox-view>
+
+        <checkbox-view
+          [(model)]='config.compactAllocation'
+          title='Use Compact Allocation'></checkbox-view>
       </div>
     </div>
     </div>

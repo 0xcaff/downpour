@@ -2,17 +2,22 @@ import {Component} from 'angular2/core';
 import {Router} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
-import {TreeComponent} from '../components/tree';
-import {FileView} from '../components/file';
-import {ConfigurationView} from '../components/config';
+import {AuthenticatedRoute} from './authenticated';
 import {Configuration} from '../models/configuration';
 import {TorrentRequest, TorrentType} from '../models/torrent_request';
-import {AuthenticatedRoute} from './authenticated';
+
+import {TreeComponent} from '../components/tree';
+import {FileView} from '../components/file';
+import {CheckboxView} from '../components/checkbox';
+import {TextInputView} from '../components/text';
+import {SpeedInputView} from '../components/speed';
+import {NumberInputView} from '../components/number';
 
 @Component({
   templateUrl: 'templates/add.html',
   styleUrls: ['templates/add.css'],
-  directives: [TreeComponent, FileView, ConfigurationView],
+  directives: [TreeComponent, FileView, CheckboxView, TextInputView,
+    SpeedInputView, NumberInputView],
 })
 export class AddTorrent extends AuthenticatedRoute {
   url: string;

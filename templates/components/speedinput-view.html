@@ -1,0 +1,10 @@
+<label>{{ title }}</label>
+<div class='input-group'>
+  <input type="number"
+         min='-1'
+         class="form-control"
+         [ngModel]='model'
+         (ngModelChange)='modelChange.next($event)' />
+  <span class="input-group-addon">KB/s</span>
+</div>
+

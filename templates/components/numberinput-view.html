@@ -1,0 +1,17 @@
+<label>{{ title }}</label>
+<div [class.input-group]='addon'>
+  <input type="number"
+         min='-1'
+         class="form-control"
+         [ngModel]='model'
+         (ngModelChange)='modelChange.next($event)'
+         [disabled]='addon && !checkbox' />
+  <span class='input-group-addon' *ngIf='addon'>
+    <input
+      type='checkbox'
+      [ngModel]='checkbox'
+      (ngModelChange)='checkboxChange.next($event)' />
+  </span>
+</div>
+
+

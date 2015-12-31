@@ -1,0 +1,16 @@
+<label [attr.for]='slug'>{{ title }}</label>
+<div [class.input-group]='addon'>
+  <input type="text"
+         class="form-control"
+         [ngModel]='model'
+         (ngModelChange)='modelChange.next($event)'
+         [disabled]='addon && !checkbox'
+         [id]='slug' />
+  <span class='input-group-addon' *ngIf='addon'>
+    <input
+      type='checkbox'
+      [ngModel]='checkbox'
+      (ngModelChange)='checkboxChange.next($event)' />
+  </span>
+</div>
+
