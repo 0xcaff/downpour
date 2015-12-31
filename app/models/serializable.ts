@@ -61,9 +61,23 @@ export class Serializable {
       var value = this[prettyKey];
 
       if (value !== undefined)
-        result[serializedKey] = this[prettyKey];
+        recurse(serializedKey.split('.'), 0, result, value);
     }
     return result;
+
+    function recurse(keyPath: string[], index: number, result: Object, value: any) {
+      var path = keyPath[index];
+      if (index == keyPath.length - 1) {
+        result[path] = value;
+      } else {
+        var rp = result[path];
+        if (!rp) {
+          rp = {};
+          result[path] = rp;
+        }
+        recurse(keyPath, index + 1, rp, value);
+      }
+    }
   }
 }
 

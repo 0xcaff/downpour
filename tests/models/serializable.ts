@@ -58,7 +58,7 @@ describe('serializable model', () => {
     expect(t.data).toEqual('tesT');
   });
 
-  xit('should serialize with dot properities', () => {
+  it('should serialize with dot properities', () => {
     test.data = 'testdata';
     var r = test.marshall();
     expect(r.nested.data).toEqual('testdata');
