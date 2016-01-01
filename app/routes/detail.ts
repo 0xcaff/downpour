@@ -9,6 +9,7 @@ import {DurationPipe} from '../pipes/duration';
 import {ProgressComponent} from '../components/progress';
 import {UiTabs, UiPane} from '../components/ui-tabs';
 
+// TOOO: Add Capability to Change a Torrents Label
 @Component({
   templateUrl: 'templates/detail.html',
   styleUrls: ['templates/detail.css'],
@@ -25,6 +26,8 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 
   ngOnInit() {
     this.running = true;
+    this.ds.currentTorrent = null;
+
     return super.ngOnInit()
       .then(ds => {
         ds.syncOnceInformation = information;
@@ -34,7 +37,6 @@ export class TorrentDetailComponent extends AuthenticatedRoute {
 
   ngOnDestroy() {
     this.running = false;
-    // this.ds.currentTorrent = null;
   }
 
   get color(): string {
@@ -78,5 +80,6 @@ var information = [
   'peers',
   'state',
   'comment',
+  'total_peers',
 ];
 

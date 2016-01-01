@@ -28,8 +28,10 @@ export class AuthenticatedRoute {
 }
 
 function sync(ds: DelugeService) {
-  ds.sync()
-    .then(_ => sync(ds));
-  return ds;
+  if (ds) {
+    ds.sync()
+      .then(_ => sync(ds));
+    return ds;
+  }
 }
 

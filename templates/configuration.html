@@ -232,7 +232,7 @@
           [(model)]='config.pluginsDirectory'
           title='Plugins Directory'></textinput-view>
 
-        <div class='form-group'>
+        <div class='form-group' *ngIf='config.plugins.length > 0'>
           <label>Enabled Plugins</label>
           <ul>
             <li *ngFor='#p of config.plugins'>{{ p }}</li>

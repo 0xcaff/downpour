@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, View, Input} from 'angular2/core';
+import {Component, Input} from 'angular2/core';
 
 import {Directory, File} from '../models/tree';
 import {FileView} from './file';
@@ -8,6 +8,9 @@ import {FileView} from './file';
   templateUrl:'templates/components/tree-view.html',
   styleUrls: ['templates/components/tree-view.css'],
   directives: [TreeComponent, FileView],
+  host: {
+    'style': 'display:block',
+  },
 })
 export class TreeComponent {
   @Input() tree: Directory;

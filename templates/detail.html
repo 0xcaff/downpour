@@ -34,7 +34,7 @@
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Remaining:</div>
-          <div class="pull-right">{{ ds.currentTorrent.eta | duration:'s' }}</div>
+          <div class="pull-right">{{ ds.currentTorrent.timeRemaining | duration:'s' }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
@@ -67,9 +67,10 @@
           <div class="pull-right">{{ ds.currentTorrent.uploadSpeed | bytes:2 }}/s</div>
         </div>
 
+        <!-- TODO: Real Data -->
         <div class="col-md-4 clearfix">
-          <div class="pull-left text-muted">Seeds:</div>
-          <div class="pull-right">0 of 105 connected (105 in swarm)</div>
+          <div class="pull-left text-muted">Peers:</div>
+          <div class="pull-right">{{ ds.currentTorrent.peersCount }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
@@ -160,32 +161,6 @@
       </tbody>
     </table>
   </template>
-
-  <template ui-pane title='Options'>
-  </template>
 </ui-tabs>
 </div>
-
-<!--
-<div id="connections">
-  <div class="flex">
-    {{#each tracker in ds.currentTorrent.trackers}}
-    <div class="clearfix" style="width: 100%">
-      <p class="pull-left text-muted">Trackers:</p>
-      <p class="pull-right">
-        {{ tracker.url }}
-        <i class="fa {{if tracker.verified 'fa-lock' 'fa-unlock' }}"></i>
-        {{#if tracker.updating }}
-          <i class="fa fa-refresh fa-spin"></i>
-        {{/if}}
-
-        {{#if tracker.send_stats }}
-          <i class="fa fa-task"></i>
-        {{/if}}
-      </p>
-    </div>
-    {{/each}}
-  </div>
-</div>
--->
 

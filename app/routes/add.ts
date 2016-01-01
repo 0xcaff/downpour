@@ -15,7 +15,6 @@ import {NumberInputView} from '../components/number';
 
 @Component({
   templateUrl: 'templates/add.html',
-  styleUrls: ['templates/add.css'],
   directives: [TreeComponent, FileView, CheckboxView, TextInputView,
     SpeedInputView, NumberInputView],
 })

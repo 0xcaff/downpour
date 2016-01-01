@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {ConnectComponent} from './routes/connect';
 import {AddTorrent} from './routes/add';
@@ -44,6 +44,11 @@ import {DelugeService} from './services/deluge';
   },
 ])
 export class AppComponent {
-  constructor(public ds: DelugeService) { }
+  constructor(public ds: DelugeService, public r: Router) { }
+
+  isCurrentRoute(route: string[]): boolean {
+    var instruction = this.r.generate(route);
+    return this.r.isRouteActive(instruction);
+  }
 }
 

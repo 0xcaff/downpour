@@ -17,21 +17,24 @@
     </div>
     <div class='collapse navbar-collapse' id='navigation' *ngIf='ds.authenticated'>
       <ul class='navbar-nav nav'>
-        <li>
+        <li [class.active]='isCurrentRoute(["Torrents"])'>
+          <a [routerLink]="['Torrents']">Torrents</a>
+        </li>
+        <li [class.active]='isCurrentRoute(["AddTorrent"])'>
           <a [routerLink]="['AddTorrent']">Add Torrent</a>
         </li>
-        <li>
+        <li [class.active]='isCurrentRoute(["Configuration"])'>
           <a [routerLink]="['Configuration']">Configuration</a>
         </li>
       </ul>
 
       <div *ngIf='ds.state.connected'>
         <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrow-up'></i> {{ ds.state.uploadSpeed | bytes }}/s
+          <i class='fa fa-arrow-up'></i> {{ ds.state.uploadSpeed | bytes:2 }}/s
         </div>
 
         <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrow-down'></i> {{ ds.state.downloadSpeed | bytes }}/s
+          <i class='fa fa-arrow-down'></i> {{ ds.state.downloadSpeed | bytes:2 }}/s
         </div>
 
         <div class='navbar-text navbar-right'>

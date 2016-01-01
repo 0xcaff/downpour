@@ -3,18 +3,21 @@
 </div>
 
 <div class="form-group">
-  <input [(ngModel)]='filter' placeholder="Search..." type="text" class="form-control" />
+  <input [(ngModel)]='filter'
+         placeholder="Search... (try filtering with label: music syntax, tracker and state also supported)"
+         type="text"
+         class="form-control" />
 </div>
 
 <div class="table-responsive" style='margin-bottom:2em'>
 <table class="table table-hover">
   <thead>
     <tr>
-      <th><i class='fa fa-check'></i></th>
-      <th></th>
+      <th class='fit-content'><i class='fa fa-check'></i></th>
+      <th class='fit-content'></th>
       <th>Name</th>
-      <th>Progress</th>
-      <th>Ratio</th>
+      <th class='fit-content'>Progress</th>
+      <th class='fit-content'>Ratio</th>
     </tr>
   </thead>
   <tbody>
@@ -28,13 +31,14 @@
         <i *ngSwitchWhen='"Queued"' class='fa fa-circle-o'></i>
       </td>
       <td><a [routerLink]='["TorrentDetail", {hash: value.hash}]'>{{ value.name }}</a></td>
-      <td>{{ value.progress | number }}%</td>
-      <td>{{ value.ratio | number }}</td>
+      <td>{{ value.progress | number:'1.0-2' }}%</td>
+      <td>{{ value.ratio | number:'1.0-2' }}</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+<!-- TODO: Add Label -->
 <nav *ngIf='getSelected().length > 0' class='navbar navbar-default navbar-fixed-bottom'>
   <div class='container'>
     <div class="navbar-text">
@@ -59,7 +63,7 @@
         <span class='caret'></span>
       </button>
       <ul class='dropdown-menu'>
-        <li><a herf='javascript:false' (click)='ds.remove(getSelected(), false)'>torrent only</a></li>
+        <li><a (click)='ds.remove(getSelected(), false)' style='cursor:pointer'>torrent only</a></li>
       </ul>
     </div>
   </div>

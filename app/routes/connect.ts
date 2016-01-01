@@ -19,8 +19,6 @@ export class ConnectComponent {
 
   connect() {
     this.pending = true;
-    console.log(`URL: ${this.serverURL}, Password: ${this.password}`);
-
     this.ds.auth(this.serverURL, this.password)
       .then(() => {
         this.pending = false;

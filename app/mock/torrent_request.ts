@@ -81,7 +81,7 @@ export var MultiFileTorrentRequest = {
 
 export var MagnetTorrentRequest = {
   "files_tree": "",
-  "name": "star wars the force awakens 2015 hd cam xvid hqmic ac3 cpg avi",
-  "info_hash": "C28B3973F693BAE99C1B0C13A137A051EEF8D9D5"
+  "name": "ubuntu-15.10-desktop-amd64.iso",
+  "info_hash": "3f19b149f53a50e14fc0b79926a391896eabab6f",
 }
 
