@@ -4,15 +4,15 @@ import {Router, ROUTER_DIRECTIVES} from 'angular2/router';
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
 import {ObjectFilterPipe} from '../pipes/object';
+import {BytesPipe} from '../pipes/bytes';
 
 @Component({
   templateUrl: 'templates/torrents.html',
   styleUrls: ['templates/torrents.css'],
   directives: [ROUTER_DIRECTIVES],
-  pipes: [ObjectFilterPipe],
+  pipes: [ObjectFilterPipe, BytesPipe],
 })
 export class TorrentsComponent extends AuthenticatedRoute {
-  running: boolean;
   filter: string;
 
   constructor(ds: DelugeService, r: Router) {
@@ -21,10 +21,12 @@ export class TorrentsComponent extends AuthenticatedRoute {
 
   ngOnInit() {
     super.ngOnInit();
+    this.filter = this.ds.filter;
     this.ds.syncStateInformation = torrentProperties;
   }
 
   ngOnDestroy() {
+    this.ds.filter = this.filter;
     this.ds.syncStateInformation = [''];
   }
 
@@ -47,8 +49,8 @@ var torrentProperties = [
     // "total_seeds",
     // "num_peers",
     // "total_peers",
-    // "download_payload_rate",
-    // "upload_payload_rate",
+    "download_payload_rate",
+    "upload_payload_rate",
     // "eta",
     "ratio",
     // "distributed_copies",
@@ -62,5 +64,6 @@ var torrentProperties = [
     // "max_upload_speed",
     // "seeds_peers_ratio",
     "label",
+    "total_size",
 ];
 

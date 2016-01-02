@@ -12,7 +12,7 @@ export class BytesPipe implements PipeTransform {
   }
 }
 
-var suffix: string[] = [
+export var suffix: string[] = [
   'B',
   'KB',
   'MB',

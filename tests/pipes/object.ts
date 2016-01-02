@@ -19,10 +19,38 @@ describe('string matcher function', () => {
 describe('object filter pipe', () => {
   var op = new ObjectFilterPipe();
   var ta = [
-    {hash: 'abc', label: 'debian', name: 'kali linux', state: 'paused', active: false},
-    {hash: 'dec', label: 'debian', name: 'debian vanilla linux', state: 'seeding', active: true},
-    {hash: 'uniq', label: 'arch', name: 'arch linux', state: 'seeding', active: false},
-    {hash: 'sda', label: 'arch', name: 'my custom linux', state: 'downloading', active: true},
+    {
+      hash: 'abc',
+      label: 'debian',
+      name: 'kali linux',
+      state: 'paused',
+      active: false,
+      size: 1000 * 10
+    },
+    {
+      hash: 'dec',
+      label: 'debian',
+      name: 'debian vanilla linux',
+      state: 'seeding',
+      active: true,
+      size: 1000 * 100
+    },
+    {
+      hash: 'uniq',
+      label: 'arch',
+      name: 'arch linux',
+      state: 'seeding',
+      active: false,
+      size: 1000 * 15
+    },
+    {
+      hash: 'sda',
+      label: 'arch',
+      name: 'my custom linux',
+      state: 'downloading',
+      active: true,
+      size: 1000 * 5
+    },
   ];
 
   it('should match with tags', () => {
@@ -41,6 +69,26 @@ describe('object filter pipe', () => {
   it('should match with tags and fuzzy searching', () => {
     var r = op.transform(ta, ['k lnx label: debian']);
     expect(r[0]).toBe(ta[0]);
+  });
+
+  it('should filter with size', () => {
+    var r = op.transform(ta, ['size > 5kb']);
+    expect(r.length).toEqual(3);
+  });
+
+  it('should filter with multiple sizes', () => {
+    var r = op.transform(ta, ['size > 10kb size < 20kb']);
+    expect(r.length).toEqual(1);
+  });
+
+  it('should filter by size and label', () => {
+    var r = op.transform(ta, ['label:debian size > 10kb']);
+    expect(r.length).toEqual(1);
+  });
+
+  it('should filter by label caseless', () => {
+    var r = op.transform(ta, ['label:DebIAN']);
+    expect(r.length).toEqual(2);
   });
 });
 

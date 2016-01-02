@@ -1,29 +1,54 @@
 import {Pipe, PipeTransform} from 'angular2/core';
-import fuzzy from 'fuzzy';
+import {suffix} from './bytes';
 
 @Pipe({
   name: 'object',
 })
 export class ObjectFilterPipe implements PipeTransform {
   transform(value: any[], args: any[]): any {
-    if (!args[0]) return value;
+    var queryString = args[0];
+    if (!queryString)
+      return value;
 
-    var s = args[0];
-    var r = [];
+    var ast = [];
     for (var i = 0; i < toFilterBy.length; i++) {
-      var re = new RegExp(`${toFilterBy[i]}: (\\S+)`);
+      var re = new RegExp(`${toFilterBy[i]}: ?(\\S+)`);
 
-      s = s.replace(re, (match, p1) => {
-        if (p1) r[i] = p1;
+      queryString = queryString.replace(re, (match, p1) => {
+        if (p1) ast.push([p1, toFilterBy[i]]);
         return '';
       });
     }
 
+    for (var i = 0; i < toCompareBy.length; i++) {
+      var re = new RegExp(`${toCompareBy[i][0]} ?([><]) ?([\\d.]+)(\\w?b)?`, 'gi');
+
+      queryString = queryString.replace(re, (match, p1, p2, p3) => {
+        if (match) {
+          var normFunc = toCompareBy[i][2];
+          var normalized;
+          if (normFunc) {
+            normalized = normFunc(Number(p2), p3);
+          } else {
+            normalized = Number(p2);
+          }
+          if (normalized !== undefined)
+            ast.push([p1, normalized, toCompareBy[i][1]]);
+        }
+        return '';
+      });
+    }
     return value.filter((v, i) => {
-      for (var j = 0; j < r.length; j++) {
-        if (r[j] && r[j] != v[toFilterBy[j]]) return false;
+      for (var j = 0; j < ast.length; j++) {
+        var st = ast[j];
+        if (st.length == 2) {
+          if (st[0].toLowerCase() != v[st[1]].toLowerCase()) return false;
+        } else if (st.length == 3) {
+          if (st[0] == '>' && st[1] >= v[st[2]]) return false;
+          if (st[0] == '<' && st[1] <= v[st[2]]) return false;
+        }
       }
-      v.sortIndex = match(s, v.name);
+      v.sortIndex = match(queryString, v.name);
       return v.sortIndex != -1;
     }).sort((a, b) => b.sortIndex - a.sortIndex);
   }
@@ -35,7 +60,21 @@ var toFilterBy = [
   'tracker',
 ];
 
-// TODO: Prefix weight and comparion operators
+// Support Duration
+var toCompareBy = [
+  ['download', 'downloadSpeed', toBytes],
+  ['upload', 'uploadSpeed', toBytes],
+  ['size', 'size', toBytes],
+  ['ratio', 'ratio'],
+  ['progress', 'progress'],
+];
+
+function toBytes(count: number, unit: string) {
+  if (unit)
+    return count * Math.pow(1000, suffix.indexOf(unit.toUpperCase()));
+}
+
+// TODO: Prefix Weight
 export function match(query: string, record: string): number {
   var q = query.toLowerCase().replace(/ /g, '');
   var r = record.toLowerCase();
