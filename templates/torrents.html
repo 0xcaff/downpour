@@ -9,33 +9,37 @@
          class="form-control" />
 </div>
 
-<div class="table-responsive" style='margin-bottom:2em'>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th class='fit-content'><i class='fa fa-check'></i></th>
-      <th class='fit-content'></th>
-      <th>Name</th>
-      <th class='fit-content'>Progress</th>
-      <th class='fit-content'>Ratio</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor='#value of ds.state.torrents.values | object:filter'>
-      <td><input type='checkbox' [(ngModel)]='value.checked' /></td>
-      <td class='state' [ngSwitch]='value.state'>
-        <i *ngSwitchWhen='"Seeding"' class='fa fa-arrow-up'></i>
-        <i *ngSwitchWhen='"Downloading"' class='fa fa-arrow-down'></i>
-        <i *ngSwitchWhen='"Paused"' class='fa fa-pause'></i>
-        <i *ngSwitchWhen='"Error"' class='fa fa-exclamation'></i>
-        <i *ngSwitchWhen='"Queued"' class='fa fa-circle-o'></i>
-      </td>
-      <td><a [routerLink]='["TorrentDetail", {hash: value.hash}]'>{{ value.name }}</a></td>
-      <td>{{ value.progress | number:'1.0-2' }}%</td>
-      <td>{{ value.ratio | number:'1.0-2' }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class='flex-table' style='margin-bottom:5em'>
+  <div class='flex-table-row'>
+    <div class='flex-table-item flex-table-fit'><i class='fa fa-fw'></i></div>
+    <div class='flex-table-item'>Name</div>
+    <!--
+    <div class='flex-table-item flex-table-looser'>Download Speed</div>
+    <div class='flex-table-item flex-table-looser'>Upload Speed</div>
+    -->
+    <div class='flex-table-item flex-table-tight'>Progress</div>
+    <div class='flex-table-item flex-table-tight'>Ratio</div>
+  </div>
+
+  <label style='font-weight:normal;margin:0' *ngFor='#torrent of ds.state.torrents.values | object:filter'>
+    <input type='checkbox' style='display: none' [(ngModel)]='torrent.checked' />
+    <div class='flex-table-row'>
+      <div class='flex-table-item state flex-table-fit center' [ngSwitch]='torrent.state'>
+        <i *ngSwitchWhen='"Seeding"' class='fa fa-arrow-up fa-fw'></i>
+        <i *ngSwitchWhen='"Downloading"' class='fa fa-arrow-down fa-fw'></i>
+        <i *ngSwitchWhen='"Paused"' class='fa fa-pause fa-fw'></i>
+        <i *ngSwitchWhen='"Error"' class='fa fa-exclamation fa-fw'></i>
+        <i *ngSwitchWhen='"Queued"' class='fa fa-circle-o fa-fw'></i>
+      </div>
+      <div class='flex-table-item flex-table-free'><a [routerLink]='["TorrentDetail", {hash: torrent.hash}]'>{{ torrent.name }}</a></div>
+      <!--
+      <div class='flex-table-item flex-table-looser'>{{ torrent.downloadSpeed | bytes:2 }}/s</div>
+      <div class='flex-table-item flex-table-looser'>{{ torrent.uploadSpeed | bytes:2 }}/s</div>
+      -->
+      <div class='flex-table-item flex-table-tight center'>{{ torrent.progress | number:'1.0-2' }}%</div>
+      <div class='flex-table-item flex-table-tight center'>{{ torrent.ratio | number:'1.0-2' }}</div>
+    </div>
+  </label>
 </div>
 
 <!-- TODO: Add Label -->

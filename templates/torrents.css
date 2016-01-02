@@ -18,11 +18,79 @@
   color: #999;
 }
 
-.fit-content {
-  width: 1%;
-}
-
 .state {
   vertical-align: middle;
 }
 
+.flex-table {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.flex-table > .flex-table-row:first-child {
+  font-weight: bold;
+}
+
+.flex-table > .flex-table-row:first-child > .flex-table-item:not(:first-child) {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.flex-table-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  border-bottom: 1px solid #eee;
+}
+
+.flex-table-item {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0.75rem;
+}
+
+/* Takes up the minimum space */
+.flex-table-fit {
+  flex-grow: 0;
+}
+
+/* Takes up a 5em per column */
+.flex-table-tight {
+  flex-grow: 0;
+  min-width: 5em;
+  text-align: center;
+}
+
+.flex-table-looser {
+  flex-grow: 0;
+  min-width: 7em;
+  text-align: center;
+}
+
+/* Takes up as much space as possible */
+.flex-table-free {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="checkbox"]:checked ~ .flex-table-row {
+  background: #f5f5f5;
+}
+
+.flex-table-row:hover:not(:first-child) {
+  background: #F8F8F8;
+}
