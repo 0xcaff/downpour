@@ -7,8 +7,19 @@ import {suffix} from './bytes';
 export class ObjectFilterPipe implements PipeTransform {
   transform(value: any[], args: any[]): any {
     var queryString = args[0];
-    if (!queryString)
+    var sortBy = args[1];
+    var reverse = (args[2] ? -1 : 1);
+
+    if (!queryString && !sortBy)
       return value;
+
+    if (queryString === undefined)
+      queryString = '';
+
+    if (!sortBy && queryString !== undefined) {
+      sortBy = 'sortIndex';
+      reverse = -1;
+    }
 
     var ast = [];
     for (var i = 0; i < toFilterBy.length; i++) {
@@ -50,7 +61,15 @@ export class ObjectFilterPipe implements PipeTransform {
       }
       v.sortIndex = match(queryString, v.name);
       return v.sortIndex != -1;
-    }).sort((a, b) => b.sortIndex - a.sortIndex);
+    }).sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) {
+        return -1 * reverse;
+      } else if (a[sortBy] > b[sortBy]) {
+        return 1 * reverse;
+      } else {
+        return 0;
+      }
+    })
   }
 }
 

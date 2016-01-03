@@ -14,6 +14,8 @@ import {BytesPipe} from '../pipes/bytes';
 })
 export class TorrentsComponent extends AuthenticatedRoute {
   filter: string;
+  sortBy: string;
+  descending: boolean;
 
   constructor(ds: DelugeService, r: Router) {
     super(ds, r)
@@ -28,6 +30,19 @@ export class TorrentsComponent extends AuthenticatedRoute {
   ngOnDestroy() {
     this.ds.filter = this.filter;
     this.ds.syncStateInformation = [''];
+  }
+
+  sort(column: string, evt: Event) {
+    if (column == this.sortBy && this.descending !== undefined) {
+      this.descending = !this.descending;
+    } else {
+      if (column == '')
+        this.descending = undefined;
+      else
+        this.descending = true;
+
+      this.sortBy = column;
+    }
   }
 
   getSelected() {

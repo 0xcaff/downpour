@@ -90,5 +90,32 @@ describe('object filter pipe', () => {
     var r = op.transform(ta, ['label:DebIAN']);
     expect(r.length).toEqual(2);
   });
+
+  it('should be able to sort', () => {
+    var r = op.transform(ta, ['', 'name']);
+    expect(r[0]).toBe(ta[2]);
+  });
+
+  it('should be able to reverse sort', () => {
+    var r = op.transform(ta, ['', 'size', true]);
+    expect(r[0]).toBe(ta[1]);
+  });
+
+  it('should sort and fuzzy', () => {
+    var r = op.transform(ta, ['custom', 'size']);
+    expect(r[0]).toBe(ta[3]);
+  });
+
+  it('should sort and filter', () => {
+    var r = op.transform(ta, ['label: arch', 'size', true]);
+    expect(r.length).toEqual(2);
+    expect(r[0]).toBe(ta[2]);
+    expect(r[1]).toBe(ta[3]);
+  });
+
+  it('should sort filter and fuzzy', () => {
+    var r = op.transform(ta, ['label: arch arch', 'size', true]);
+    expect(r[0]).toBe(ta[2]);
+  });
 });
 
