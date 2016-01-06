@@ -85,3 +85,20 @@ export var MagnetTorrentRequest = {
   "info_hash": "3f19b149f53a50e14fc0b79926a391896eabab6f",
 }
 
+export var FileFolderTorrentRequest = {
+  "files_tree": {
+    "contents": {
+      "Test.file": {
+        "download": true,
+        "index": 31522526,
+        "path": "Test.file",
+        "length": 306,
+        "type": "file",
+      }
+    },
+    "type": "dir",
+  },
+  "name": "testingFolder",
+  "info_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+}
+

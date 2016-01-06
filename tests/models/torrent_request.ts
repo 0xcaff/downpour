@@ -1,9 +1,8 @@
 import {TorrentRequest, TorrentType} from 'app/models/torrent_request';
-import {SingleFileTorrentRequest, MultiFileTorrentRequest, MagnetTorrentRequest} from 'app/mock/torrent_request';
+import {SingleFileTorrentRequest, MultiFileTorrentRequest, MagnetTorrentRequest, FileFolderTorrentRequest} from 'app/mock/torrent_request';
 import {Configuration} from 'app/models/configuration';
 import {File, Directory} from 'app/models/tree';
 
-// TODO: Write Expectations
 describe('torrent request', () => {
   var tr;
   var cfg = new Configuration();
@@ -18,6 +17,16 @@ describe('torrent request', () => {
     expect(tr.tree.name).toEqual(sftr.name);
     expect(tr.hash).toEqual(sftr.info_hash);
     expect(tr.name).toEqual(sftr.name);
+  });
+
+  it('should unmarshall strange single file torrents', () => {
+    var tr = new TorrentRequest();
+    var fftr = FileFolderTorrentRequest;
+    tr.format = TorrentType.File;
+    tr.unmarshall(fftr);
+
+    expect(tr.tree instanceof File).toEqual(true);
+    expect(tr.tree.name).toEqual("Test.file");
   });
 
   it('should marshall a single file torrent', () => {

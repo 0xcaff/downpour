@@ -26,13 +26,18 @@ export class File extends Serializable {
 
   constructor(o: any, name?: string) {
     super(o);
-    if (o['size'] && !this.len) this.len = o['size'];
     if (name) {
       this.name = name;
-    } else {
+    } else if (o['path']) {
       var p = this.path.split('/');
       this.name = p[p.length - 1];
     }
+  }
+
+  unmarshall(o: Object) {
+    super.unmarshall(o);
+    if (o['size'] && !this.len)
+      this.len = o['size'];
   }
 }
 
@@ -44,10 +49,17 @@ export class Directory {
 
   private _download: boolean;
   get download(): boolean {
+    if (this._download === undefined)
+      this._download = (
+        !this.files.some((f) => !f.download)
+          &&
+        !this.directories.some((d) => !d.download)
+      );
     return this._download;
   }
 
   set download(d: boolean) {
+    if (d == this._download) return;
     for (var i = 0; i < this.files.length; i++) {
       this.files[i]['download'] = d;
     }
@@ -70,22 +82,30 @@ export class Directory {
     this._len = l;
   }
 
-  constructor(name: string, len?: number);
-  constructor(o: Object);
+  constructor(name: string)
+  constructor(fileTree: Object, name?: string)
+  constructor(fileTree: Object|string, name?: string) {
+    if (typeof fileTree === 'object') {
+      var children = Object.keys(fileTree);
+      if (name !== undefined) {
+        this.name = name;
+      } else {
+        this.name = children[0];
+        fileTree = fileTree[this.name]['contents'];
+        children = Object.keys(fileTree);
+      }
 
-  constructor(stringOrObject: any, len?: number) {
-    if (typeof stringOrObject == 'string') {
-      this.name = stringOrObject;
-      this.len = len;
-    } else if (typeof stringOrObject == 'object') {
-      var o: Object = stringOrObject;
-      var rootDir: string = Object.keys(o)[0];
-
-      this.name = rootDir;
-      this.len = o[rootDir]['length'];
-
-      this.download = o[rootDir]['download'];
-      this.unmarshall(o[rootDir]['contents']);
+      for (var i = 0; i < children.length; i++) {
+        var childName = children[i];
+        var child = fileTree[childName];
+        if (child['type'] == 'file') {
+          this.files.push(new File(child));
+        } else if (child['type'] == 'dir') {
+          this.directories.push(new Directory(child['contents'], childName));
+        }
+      }
+    } else if (typeof fileTree === 'string') {
+      this.name = fileTree;
     }
   }
 
@@ -102,33 +122,27 @@ export class Directory {
   flatten(): File[] {
     return this.getAllFiles().sort((a: File, b: File) => a.index - b.index);
   }
-
-  private unmarshall(obj: any) {
-    var keys = Object.keys(obj);
-    for (var i = 0; i < keys.length; i++) {
-      var key: string = keys[i];
-
-      if (obj[key]['type'] == 'file') {
-        var f = new File(obj[key], key);
-        this.files.push(f);
-      } else if (obj[key]['type'] == 'dir') {
-        var d: Directory = new Directory(key, obj[key]['length']);
-        d.unmarshall(obj[key]['contents']);
-        d.download = obj[key]['download'];
-        this.directories.push(d);
-      }
-    }
-  }
 }
 
-export function fromFilesTree(ft: Object): File|Directory {
+export function fromFilesTree(ft: Object, name?: string): File|Directory {
   if (ft['type'] == 'dir') {
-    return new Directory(ft['contents']);
-  } else {
-    var k = Object.keys(ft['contents'])[0];
-    var o = ft['contents'][k];
+    var children = Object.keys(ft['contents']);
+    var childName = children[0];
+    var child = ft['contents'][childName];
 
-    return new File(o, k);
+    if (name === undefined && children.length == 1) {
+      return fromFilesTree(child, childName);
+    } else {
+      return new Directory(ft['contents'], name);
+    }
+  } else {
+    if (name === undefined) {
+      var k = Object.keys(ft['contents'])[0];
+      var o = ft['contents'][k];
+      return fromFilesTree(o, k);
+    } else {
+      return new File(ft, name);
+    }
   }
 };
 
