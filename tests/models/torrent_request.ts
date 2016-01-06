@@ -42,7 +42,7 @@ describe('torrent request', () => {
     tr.unmarshall(mftr);
 
     expect(tr.tree instanceof Directory).toEqual(true);
-    expect(tr.tree.directories.length).toEqual(0);
+    expect(tr.tree.directories.length).toEqual(1);
     expect(tr.tree.files.length).toEqual(7);
     expect(tr.name).toEqual(mftr.name);
   });
@@ -50,7 +50,7 @@ describe('torrent request', () => {
   it('should marshall multi file torrents', () => {
     var r = tr.marshall(cfg);
 
-    expect(r['options']['file_priorities'].length).toEqual(7);
+    expect(r['options']['file_priorities'].length).toEqual(8);
   });
 
   it('should unmarshall magnet links', () => {

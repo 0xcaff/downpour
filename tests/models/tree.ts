@@ -27,6 +27,10 @@ describe('tree model', () => {
     expect(tree.directories[0].files.length).toEqual(3);
   });
 
+  it('should name the root directory correctly', () => {
+    expect(tree.name).toEqual('The Three Tenors - Christmas Album - (2015) - [FLAC] - [TFM]');
+  });
+
   it('should name files correctly', () => {
     expect(tree.files[0].name).toEqual('04. Wiegenlied.flac');
   });
@@ -79,8 +83,12 @@ describe('fileTree handling', () => {
     var r = fromFilesTree(mftr['files_tree']);
 
     expect(r instanceof Directory).toEqual(true);
-    expect(r.directories.length).toEqual(0);
     expect(r.files.length).toEqual(7);
+    expect(r.directories.length).toEqual(1);
+
+    expect(r.directories[0].name).toEqual("test_directory");
+    expect(r.directories[0].files.length).toEqual(1);
+    expect(r.directories[0].files[0].name).toEqual("testfile");
   });
 
   it('should be able to unmarshall fileTrees with single files', () => {
@@ -106,7 +114,12 @@ describe('flatTree handling', () => {
     var r = fromFlatTree(fs);
 
     expect(r instanceof Directory).toEqual(true);
+    expect(r.directories.length).toBeGreaterThan(0);
     expect(r.name).toEqual(fs[0]['path'].split('/')[0]);
+    expect(r.directories[0].directories.length).toBeGreaterThan(0);
+    expect(r.directories[0].name).toEqual("nested");
+    expect(r.directories[0].directories.length).toEqual(1);
+    expect(r.directories[0].directories[0].name).toEqual("test");
   });
 });
 

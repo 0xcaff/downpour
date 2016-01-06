@@ -22,6 +22,20 @@ export var MultiFileTorrentRequest = {
         "length": 4372948775,
         "type": "dir",
         "contents": {
+          "test_directory": {
+            "download": true,
+            "type": "dir",
+            "download": true,
+            "contents": {
+              "test_file": {
+                "download": true,
+                "path": "test_directory/testfile",
+                "length": 78,
+                "type": "file",
+                "index": 7
+              }
+            }
+          },
           "KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.sha1": {
             "download": true,
             "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/KNOPPIX_V7.6.0DVD-2015-11-21-EN.iso.sha1",

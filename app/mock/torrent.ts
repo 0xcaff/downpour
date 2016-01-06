@@ -1753,6 +1753,7 @@ export var MultiFileTorrent = {
     1,
     1,
     1,
+    1,
     1
   ],
   "label": "",
@@ -1805,6 +1806,12 @@ export var MultiFileTorrent = {
       "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/knoppix-cheatcodes.txt",
       "offset": 4372938703,
       "size": 10072
+    },
+    {
+      "index": 7,
+      "path": "KNOPPIX_V7.6.0DVD-2015-11-21-EN/nested/test/text.txt",
+      "offset": 4372938703,
+      "size": 10072
     }
   ],
   "total_done": 120733696,
@@ -1816,6 +1823,7 @@ export var MultiFileTorrent = {
   "stop_at_ratio": true,
   "file_progress": [
     0.02761283703148365,
+    0,
     0,
     0,
     0,
