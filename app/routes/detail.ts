@@ -3,17 +3,23 @@ import {Router, RouteParams} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
+
 import {Torrent} from '../models/torrent';
+
 import {BytesPipe} from '../pipes/bytes';
 import {DurationPipe} from '../pipes/duration';
+
 import {ProgressComponent} from '../components/progress';
 import {UiTabs, UiPane} from '../components/ui-tabs';
+import {CheckboxView} from '../components/checkbox';
+import {NumberInputView} from '../components/number';
+import {TextInputView} from '../components/text';
 
 // TOOO: Add Capability to Change a Torrents Label
 @Component({
   templateUrl: 'templates/detail.html',
   styleUrls: ['templates/detail.css'],
-  directives: [ProgressComponent, UiTabs, UiPane],
+  directives: [ProgressComponent, UiTabs, UiPane, CheckboxView, NumberInputView, TextInputView],
   pipes: [BytesPipe, DurationPipe],
 })
 export class TorrentDetailComponent extends AuthenticatedRoute {
@@ -81,5 +87,18 @@ var information = [
   'state',
   'comment',
   'total_peers',
+
+  // Configuration
+  'max_download_speed',
+  'max_upload_speed',
+  'max_connections',
+  'max_upload_slots',
+  'is_auto_managed',
+  'stop_at_ratio',
+  'stop_ratio',
+  'remove_at_ratio',
+  'prioritize_first_last',
+  'move_completed',
+  'move_completed_path'
 ];
 

@@ -120,3 +120,20 @@ input[type="checkbox"]:checked ~ .flex-table-row {
 .fa-chevron-down {
   transform: scale(1) rotate(0);
 }
+
+.navbar-text {
+  margin-left: 0;
+  text-align: center;
+}
+
+@media(max-width: 768px) {
+  .navbar-btn > button, .navbar-btn > .btn-group {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .navbar-btn > .btn-group > button {
+    width: 100%;
+  }
+}

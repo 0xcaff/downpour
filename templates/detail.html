@@ -160,6 +160,55 @@
       </tbody>
     </table>
   </template>
+
+  <template ui-pane title='Options'>
+    <h3>Options</h3>
+
+    <checkbox-view
+      [(model)]='ds.currentTorrent.configuration.managed'
+      title='Managed'></checkbox-view>
+
+    <speedinput-view
+      [(model)]='ds.currentTorrent.configuration.maximumDownloadSpeed'
+      title='Maximum Download Speed'></speedinput-view>
+
+    <speedinput-view
+      [(model)]='ds.currentTorrent.configuration.maximumUploadSpeed'
+      title='Maximum Upload Speed'></speedinput-view>
+
+    <numberinput-view
+      [(model)]='ds.currentTorrent.configuration.maximumConnections'
+      title='Maximum Connections'></numberinput-view>
+
+    <numberinput-view
+      [(model)]='ds.currentTorrent.configuration.maximumUploadSlots'
+      title='Maximum Upload Slots'></numberinput-view>
+
+    <numberinput-view
+      [(model)]='ds.currentTorrent.configuration.stopRatio'
+      [(checkbox)]='ds.currentTorrent.configuration.stopAtRatio'
+      addon='true'
+      title='Stop at Ratio'></numberinput-view>
+
+    <checkbox-view
+      [(model)]='ds.currentTorrent.configuration.removeAtRatio'
+      [disabled]='!ds.currentTorrent.configuration.stopAtRatio'
+      title='Remove at Ratio'></checkbox-view>
+
+    <textinput-view
+      [(model)]='ds.currentTorrent.configuration.completedPath'
+      [(checkbox)]='ds.currentTorrent.configuration.moveCompleted'
+      addon='true'
+      title='Move on Completion'></textinput-view>
+
+    <checkbox-view
+      [(model)]='ds.currentTorrent.configuration.prioritized'
+      title='Prioritize First and Last Pieces'></checkbox-view>
+
+    <button
+      class='btn btn-default pull-right'
+      (click)='ds.updateTorrentSettings()'>Submit</button>
+  </template>
 </ui-tabs>
 </div>
 

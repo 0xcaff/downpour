@@ -57,33 +57,56 @@
   </label>
 </div>
 
-<!-- TODO: Add Label -->
 <nav *ngIf='getSelected().length > 0' class='navbar navbar-default navbar-fixed-bottom'>
   <div class='container'>
     <div class="navbar-text">
-      {{ getSelected().length }} Selected
-      <a (click)='unselect()' href='javascript:false'>
-        <i class='fa fa-ban'></i>
+      <a (click)='unselect()' href='javascript:false' style='padding:.75rem'>
+        <i class='fa fa-ban fa-fw'></i>
       </a>
+      {{ getSelected().length }} Selected
     </div>
-    <div class='navbar-btn navbar-right btn-group dropup'>
+
+    <div class='navbar-btn navbar-right btn-toolbar'>
+      <!--
+      <div class='btn-group dropup'>
+        <button class='btn btn-default dropdown-toggle' data-toggle='dropdown'>
+          <i class='fa fa-tags'></i> Add Label
+          <i class='fa fa-caret-up'></i>
+        </button>
+
+        <ul class='dropdown-menu'>
+          <li *ngFor='#label of ds.state.labels'><a>{{ label }}</a></li>
+          <li class="divider"></li>
+          <li><a>Create New</a></li>
+        </ul>
+      </div>
+      -->
+
       <button class='btn btn-default' (click)='ds.pause(getSelected())'>
         <i class='fa fa-pause'></i> Pause
       </button>
-
       <button class='btn btn-default' (click)='ds.resume(getSelected())'>
         <i class='fa fa-play'></i> Resume
       </button>
 
-      <button class='btn btn-default' (click)='ds.remove(getSelected(), true)'>
-        <i class='fa fa-times'></i> Remove
-      </button>
-      <button class='btn btn-default dropdown-toggle' data-toggle='dropdown' style='height:34px'>
-        <span class='caret'></span>
-      </button>
-      <ul class='dropdown-menu'>
-        <li><a (click)='ds.remove(getSelected(), false)' style='cursor:pointer'>torrent only</a></li>
-      </ul>
+      <div class='btn-group dropup'>
+        <button class='btn btn-default dropdown-toggle' data-toggle='dropdown'>
+          <i class='fa fa-trash'></i> Remove
+          <i class='fa fa-caret-up'></i>
+        </button>
+        <ul class='dropdown-menu'>
+          <li>
+            <a
+              (click)='ds.remove(getSelected(), false)'
+              style='cursor:pointer'>Keep Files</a>
+          </li>
+          <li>
+            <a
+              (click)='ds.remove(getSelected(), true)'
+              style='cursor:pointer'>Discard Files</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
