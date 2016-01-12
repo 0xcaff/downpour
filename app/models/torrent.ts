@@ -78,12 +78,25 @@ export class Torrent extends Serializable {
   // The peers connected to.
   peers: ValueMap<Peer> = new ValueMap<Peer>((d, i) => d.ip);
 
-  constructor(o: Object, hash: string) {
-    super(o);
-    this.hash = hash;
+  configuration: TorrentConfiguration;
+
+  constructor(o: Object, hash: string)
+  constructor(hash: string)
+  constructor(o: string|Object, hash?: string) {
+    if (typeof o === 'string') {
+      hash = o;
+    } else if (typeof o === 'object') {
+      super(o);
+    }
+
+    if (hash)
+      this.hash = hash;
   }
 
-  unmarshall(o: Object = {}) {
+  unmarshall(o: Object) {
+    if (o === undefined)
+      return;
+
     super.unmarshall(o);
 
     if (o['peers']) {
@@ -110,6 +123,26 @@ export class Torrent extends Serializable {
         }
       }
     }
+
+    if (!this.configuration)
+      this.configuration = new TorrentConfiguration(o);
   }
 };
+
+export class TorrentConfiguration extends Serializable {
+  @prop("max_download_speed") maximumDownloadSpeed: number;
+  @prop("max_upload_speed") maximumUploadSpeed: number;
+  @prop("max_connections") maximumConnections: number;
+  @prop("max_upload_slots") maximumUploadSlots: number;
+
+  @prop("prioritize_first_last") prioritized: boolean;
+  @prop("is_auto_managed") managed: boolean;
+
+  @prop("stop_ratio") stopRatio: number;
+  @prop("stop_at_ratio") stopAtRatio: boolean;
+  @prop("remove_at_ratio") removeAtRatio: boolean;
+
+  @prop("move_completed") moveCompleted: boolean;
+  @prop("move_completed_path") completedPath: string;
+}
 

@@ -73,13 +73,14 @@ export class ObjectFilterPipe implements PipeTransform {
   }
 }
 
+// TODO: Make these case insensensitive
 var toFilterBy = [
   'label',
   'state',
   'tracker',
 ];
 
-// Support Duration
+// TODO: Support Duration
 var toCompareBy = [
   ['download', 'downloadSpeed', toBytes],
   ['upload', 'uploadSpeed', toBytes],

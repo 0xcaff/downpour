@@ -26,7 +26,7 @@ export class ConfigurationComponent extends AuthenticatedRoute {
 
   ngOnInit() {
     super.ngOnInit()
-      .then(ds => ds.getAllConfig())
+      .then(ds => ds.getConfiguration())
       .then(d => this.config = d);
   }
 

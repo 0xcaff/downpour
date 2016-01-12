@@ -31,7 +31,7 @@ export class AddTorrent extends AuthenticatedRoute {
 
   ngOnInit() {
     return super.ngOnInit()
-      .then(ds => ds.getConfig(config_keys))
+      .then(ds => ds.getConfiguration(config_keys))
       .then(d => this.config = d);
   }
 

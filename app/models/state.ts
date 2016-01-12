@@ -19,6 +19,7 @@ export class State extends Serializable {
   // Whether the webui backend is connected to a deluged instance.
   @prop connected: boolean;
   torrents: ValueMap<Torrent> = new ValueMap((v, i) => v.hash);
+  labels: string[];
 
   // TODO: Tests
   unmarshall(o: Object = {}) {
@@ -28,6 +29,10 @@ export class State extends Serializable {
       var nk = Object.keys(o['torrents']);
       for (var i = 0; i < nk.length; i++) {
         var torrentHash = nk[i];
+
+        if (Object.keys(o['torrents'][torrentHash]).length <= 0)
+          break;
+
         if (this.torrents.has(torrentHash)) {
           // Interection of the Client Torrents and Server Torrents
           // Update Torrent
@@ -49,6 +54,18 @@ export class State extends Serializable {
         }
       });
      }
+
+    if (!this.labels && o['filters'] && o['filters']['label']) {
+      this.labels = o['filters']['label']
+        .map(l => {
+          var lb = l[0];
+          if (lb == "")
+            return "Unlabeled";
+          else
+            return lb;
+        })
+        .filter(l => l != "All")
+    }
   }
 }
 

@@ -64,17 +64,15 @@ export class DelugeService {
   // Authenticates the client with the server, configuring the session.
   auth(serverURL: string, password: string): Promise<string|void> {
     return this.rpc('auth.login', [password], serverURL)
-      .then(
-        d => {
-          if (!d) {
-            return Promise.reject("Authentication Failed")
-          } else {
-            this.serverURL = serverURL;
-            this.authenticated = true;
-            return Promise.resolve()
-          }
+      .then(d => {
+        if (d) {
+          this.serverURL = serverURL;
+          this.authenticated = true;
+          return Promise.resolve()
+        } else {
+          return Promise.reject("Authentication Failed")
         }
-      )
+      })
   }
 
   // The information requested about each torrent every time sync is called.
@@ -140,17 +138,17 @@ export class DelugeService {
     })
   }
 
-  getConfig(params: string[] = []): Promise<Configuration> {
-    return this.rpc('core.get_config_values', [params])
-      .then(d => new Configuration(d));
+  getConfiguration(params: string[] = []): Promise<Configuration> {
+    if (params.length == 0) {
+      return this.rpc('core.get_config', [])
+        .then(d => new Configuration(d));
+    } else {
+      return this.rpc('core.get_config_values', [params])
+        .then(d => new Configuration(d));
+    }
   }
 
-  getAllConfig(): Promise<Configuration> {
-    return this.rpc('core.get_config', [])
-      .then(d => new Configuration(d));
-  }
-
-  setConfig(c: Configuration): Promise<void> {
+  setConfiguration(c: Configuration): Promise<void> {
     return this.rpc('core.set_config', [c.marshall()]);
   }
 
@@ -158,14 +156,24 @@ export class DelugeService {
   currentTorrent: Torrent;
 
   syncTorrent(hash: string): Promise<any> {
-    if (!this.currentTorrent) this.currentTorrent = new Torrent();
+    if (!this.currentTorrent)
+      this.currentTorrent = new Torrent(hash);
+
     return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
-      .then(d => this.currentTorrent.unmarshall(d));
+      .then(d => this.currentTorrent.unmarshall(d))
+      .then(_ => this.currentTorrent);
   }
 
   getTree(hash: string): Promise<Directory|File> {
     return this.rpc('web.get_torrent_files', [hash])
       .then(d => fromFilesTree(d));
+  }
+
+  updateTorrentSettings(t: Torrent): Promise<any> {
+    if (t === undefined)
+      t = this.currentTorrent;
+
+    return this.rpc('core.set_torrent_options', [[t.hash], t.configuration.marshall()])
   }
 }
 

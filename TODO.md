@@ -3,4 +3,20 @@
 - [ ] Add Interface to Modify Proxy's
 - [ ] Add Support to Add by Infohash
 - [ ] Make Selection Better
+- [ ] Optimize Change Detection
+- [ ] Add Support Set Torrent Options
+- [ ] Add Label Plugin Support
+- [ ] Modify Trackers
+- [ ] Better Hinting Everywhere
+- [ ] Stop it from eating bandwidth
+- [ ] Deep Link Detail View
+- [ ] Clean Up Files Detail View
+- [ ] Some Way to Interact with the Queue
+- [ ] Force Update Trackers
+- [ ] Force Recheck Torrents
+- [ ] Move Storage
+- [ ] Pretty Graphs
+- [ ] DHT Nodes
+- [ ] Connection Limit
+- [ ] Rewrite Input Elements
 

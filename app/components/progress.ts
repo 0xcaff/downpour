@@ -10,5 +10,14 @@ export class ProgressComponent {
   @Input() active: boolean;
   @Input() color: string;
   @Input() reverse: boolean;
+
+
+  // TODO: Make a less naive responsive color solution
+  get textColor(): string {
+    if (this.percentage > 50)
+      return "#eee";
+    else
+      return "#000";
+  }
 }
 

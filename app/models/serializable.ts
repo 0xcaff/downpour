@@ -16,7 +16,6 @@ export function prop(one: string|Object, two: string|void): PropertyDecorator|vo
   }
 }
 
-// TODO: Fix that this breaks object prototype.
 function serialize(target: Object, serializedkey: string, propertykey: string): void {
   if (!target.hasOwnProperty('__serialization__'))
     target['__serialization__'] = {};
