@@ -1,6 +1,6 @@
 - [ ] Add Interface to Connect to the Daemon
 - [ ] Add Interface to Manipulate Labels
-- [ ] Add Interface to Modify Proxy's
+- [ ] Add Interface to Modify Proxys
 - [ ] Add Support to Add by Infohash
 - [ ] Make Selection Better
 - [ ] Optimize Change Detection
@@ -19,4 +19,5 @@
 - [ ] DHT Nodes
 - [ ] Connection Limit
 - [ ] Rewrite Input Elements
+- [ ] Add Autocomplete
 
