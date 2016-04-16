@@ -37,25 +37,14 @@ export class DelugeService {
         credentials: 'include',
       }
     )
-      .then(r => {
-        if (r.ok)
-          return Promise.resolve(r)
-        else
-          return Promise.reject(r)
-      })
-      .catch(_ => Promise.reject('Request Failed'))
+      .catch(err => Promise.reject('Request Failed', err))
 
       .then(d => d.json())
-      .catch(d => {
-        if (d)
-          return Promise.reject(d);
-        else
-          Promise.reject("Failed to parse JSON")
-      })
+      .catch(err => Promise.reject("Failed to parse JSON", err))
 
       .then(d => {
         if (d.error)
-          return Promise.reject(d.error)
+          return Promise.reject("Error in Response", d.error)
         else
           return Promise.resolve(d.result)
       });
@@ -64,8 +53,8 @@ export class DelugeService {
   // Authenticates the client with the server, configuring the session.
   auth(serverURL: string, password: string): Promise<string|void> {
     return this.rpc('auth.login', [password], serverURL)
-      .then(d => {
-        if (d) {
+      .then(success => {
+        if (success) {
           this.serverURL = serverURL;
           this.authenticated = true;
           return Promise.resolve()

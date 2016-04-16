@@ -1,7 +1,7 @@
 export function prop(serializedkey: string): PropertyDecorator;
 export function prop(target: Object, propertykey: string): void;
 
-export function prop(one: string|Object, two: string|void): PropertyDecorator|void {
+export function prop(one: string|Object, two?: string): PropertyDecorator {
   if (typeof one == 'string') {
     var serializedkey: string = <string>one;
 
@@ -38,10 +38,10 @@ export class Serializable {
       var serializedKey = keys[i];
       var prettyKey = serial[serializedKey];
 
-      var lo = o;
+      var lo: any = o;
       var keySegments = serializedKey.split('.');
       for (var j = 0; j < keySegments.length && lo !== undefined; j++) {
-        var lo = lo[keySegments[j]];
+        lo = lo[keySegments[j]];
       }
 
       if (lo !== undefined)

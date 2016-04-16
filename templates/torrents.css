@@ -88,11 +88,11 @@
 }
 
 input[type="checkbox"]:checked ~ .flex-table-row {
-  background: #f5f5f5;
+  background: #eee;
 }
 
 .flex-table-row:hover:not(:first-child) {
-  background: #F8F8F8;
+  background: #f5f5f5;
 }
 
 .clickable {

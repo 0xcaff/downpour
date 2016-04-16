@@ -13,7 +13,7 @@ export class ConnectComponent {
   password: string;
   pending: boolean;
 
-  err: string;
+  err: Error;
   failed: boolean;
   failedServer: string;
 
@@ -26,14 +26,11 @@ export class ConnectComponent {
         localStorage.setItem('password', this.password);
         this.r.navigate(['Torrents']);
       })
-      .catch(d => {
+      .catch(err => {
         this.pending = false;
         this.failed = true;
         this.failedServer = this.serverURL;
-
-        if (d) {
-          this.err = d;
-        }
+        this.err = err;
       });
   }
 }

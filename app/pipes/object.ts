@@ -23,7 +23,7 @@ export class ObjectFilterPipe implements PipeTransform {
 
     var ast = [];
     for (var i = 0; i < toFilterBy.length; i++) {
-      var re = new RegExp(`${toFilterBy[i]}: ?(\\S+)`);
+      var re = new RegExp(`${toFilterBy[i]}: ?(\\S+)`, 'gi');
 
       queryString = queryString.replace(re, (match, p1) => {
         if (p1) ast.push([p1, toFilterBy[i]]);
