@@ -5,12 +5,14 @@ import {bootstrap} from 'angular2/platform/browser';
 import {provide} from 'angular2/core';
 
 import {DelugeService} from './services/deluge';
+import {MobileService} from './services/mediaquery';
 
 import {AppComponent} from './app';
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,
   DelugeService,
+  MobileService,
 
   // provide(DelugeService, {
   //   useFactory: () => {
