@@ -1,3 +1,4 @@
+///<reference path="../typings/globals/es6-shim/index.d.ts"/>
 import {ROUTER_PROVIDERS} from 'angular2/router';
 
 import {bootstrap} from 'angular2/platform/browser';

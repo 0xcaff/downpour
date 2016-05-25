@@ -1,10 +1,10 @@
-import {Injector} from 'angular2/core';
+import {ReflectiveInjector} from 'angular2/core';
 import {DelugeService} from 'app/services/deluge';
 
 describe('deluge service', () => {
   var ds;
 
-  var injector = Injector.resolveAndCreate([
+  var injector = ReflectiveInjector.resolveAndCreate([
     DelugeService,
   ]);
 

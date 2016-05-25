@@ -1,31 +1,30 @@
 import {Pipe, PipeTransform} from 'angular2/core';
 import {suffix} from './bytes';
 
+// TODO: Refactor and Preformance
 @Pipe({
   name: 'object',
 })
 export class ObjectFilterPipe implements PipeTransform {
-  transform(value: any[], args: any[]): any {
-    var queryString = args[0];
-    var sortBy = args[1];
-    var reverse = (args[2] ? -1 : 1);
+  transform(value: any[], query: string, sortBy: string, reverse: boolean): any {
+    var sortOrder: number = reverse ? -1 : 1
 
-    if (!queryString && !sortBy)
+    if (!query && !sortBy)
       return value;
 
-    if (queryString === undefined)
-      queryString = '';
+    if (query === undefined)
+      query = '';
 
-    if (!sortBy && queryString !== undefined) {
+    if (!sortBy && query !== undefined) {
       sortBy = 'sortIndex';
-      reverse = -1;
+      sortOrder = -1;
     }
 
     var ast = [];
     for (var i = 0; i < toFilterBy.length; i++) {
       var re = new RegExp(`${toFilterBy[i]}: ?(\\S+)`, 'gi');
 
-      queryString = queryString.replace(re, (match, p1) => {
+      query = query.replace(re, (match, p1) => {
         if (p1) ast.push([p1, toFilterBy[i]]);
         return '';
       });
@@ -34,7 +33,7 @@ export class ObjectFilterPipe implements PipeTransform {
     for (var i = 0; i < toCompareBy.length; i++) {
       var re = new RegExp(`${toCompareBy[i][0]} ?([><]) ?([\\d.]+)(\\w?b)?`, 'gi');
 
-      queryString = queryString.replace(re, (match, p1, p2, p3) => {
+      query = query.replace(re, (match, p1, p2, p3) => {
         if (match) {
           var normFunc = toCompareBy[i][2];
           var normalized;
@@ -59,13 +58,13 @@ export class ObjectFilterPipe implements PipeTransform {
           if (st[0] == '<' && st[1] <= v[st[2]]) return false;
         }
       }
-      v.sortIndex = match(queryString, v.name);
+      v.sortIndex = match(query, v.name);
       return v.sortIndex != -1;
     }).sort((a, b) => {
       if (a[sortBy] < b[sortBy]) {
-        return -1 * reverse;
+        return -1 * sortOrder;
       } else if (a[sortBy] > b[sortBy]) {
-        return 1 * reverse;
+        return 1 * sortOrder;
       } else {
         return 0;
       }

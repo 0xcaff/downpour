@@ -54,67 +54,67 @@ describe('object filter pipe', () => {
   ];
 
   it('should match with tags', () => {
-    var r = op.transform(ta, ['label: debian']);
+    var r = op.transform(ta, 'label: debian');
     expect(r.length).toEqual(2);
 
-    r = op.transform(ta, ['label: arch']);
+    r = op.transform(ta, 'label: arch');
     expect(r.length).toEqual(2);
   });
 
   it('should fuzzy search', () => {
-    var r = op.transform(ta, ['custom']);
+    var r = op.transform(ta, 'custom');
     expect(r[0]).toBe(ta[3]);
   });
 
   it('should match with tags and fuzzy searching', () => {
-    var r = op.transform(ta, ['k lnx label: debian']);
+    var r = op.transform(ta, 'k lnx label: debian');
     expect(r[0]).toBe(ta[0]);
   });
 
   it('should filter with size', () => {
-    var r = op.transform(ta, ['size > 5kb']);
+    var r = op.transform(ta, 'size > 5kb');
     expect(r.length).toEqual(3);
   });
 
   it('should filter with multiple sizes', () => {
-    var r = op.transform(ta, ['size > 10kb size < 20kb']);
+    var r = op.transform(ta, 'size > 10kb size < 20kb');
     expect(r.length).toEqual(1);
   });
 
   it('should filter by size and label', () => {
-    var r = op.transform(ta, ['label:debian size > 10kb']);
+    var r = op.transform(ta, 'label:debian size > 10kb');
     expect(r.length).toEqual(1);
   });
 
   it('should filter by label caseless', () => {
-    var r = op.transform(ta, ['label:DebIAN']);
+    var r = op.transform(ta, 'label:DebIAN');
     expect(r.length).toEqual(2);
   });
 
   it('should be able to sort', () => {
-    var r = op.transform(ta, ['', 'name']);
+    var r = op.transform(ta, '', 'name');
     expect(r[0]).toBe(ta[2]);
   });
 
   it('should be able to reverse sort', () => {
-    var r = op.transform(ta, ['', 'size', true]);
+    var r = op.transform(ta, '', 'size', true);
     expect(r[0]).toBe(ta[1]);
   });
 
   it('should sort and fuzzy', () => {
-    var r = op.transform(ta, ['custom', 'size']);
+    var r = op.transform(ta, 'custom', 'size');
     expect(r[0]).toBe(ta[3]);
   });
 
   it('should sort and filter', () => {
-    var r = op.transform(ta, ['label: arch', 'size', true]);
+    var r = op.transform(ta, 'label: arch', 'size', true);
     expect(r.length).toEqual(2);
     expect(r[0]).toBe(ta[2]);
     expect(r[1]).toBe(ta[3]);
   });
 
   it('should sort filter and fuzzy', () => {
-    var r = op.transform(ta, ['label: arch arch', 'size', true]);
+    var r = op.transform(ta, 'label: arch arch', 'size', true);
     expect(r[0]).toBe(ta[2]);
   });
 });

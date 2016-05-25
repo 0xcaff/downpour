@@ -5,9 +5,9 @@ import moment from 'moment';
   name: 'duration',
 })
 export class DurationPipe implements PipeTransform {
-  transform(value: number, args: string[] = ['ms']): string {
+  transform(value: number, units: string = 'ms'): string {
     if (!Number.isInteger(value)) return '\u221E';
-    return moment.duration(value, args[0]).humanize();
+    return moment.duration(value, units).humanize();
   }
 }
 

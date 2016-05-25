@@ -104,7 +104,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='#t of ds.currentTorrent.trackers.values'>
+          <tr *ngFor='var t of ds.currentTorrent.trackers.values'>
             <td>{{ t.tier }}</td>
             <td>{{ t.url }}</td>
           </tr>
@@ -126,7 +126,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='#p of ds.currentTorrent.peers.values'>
+          <tr *ngFor='var p of ds.currentTorrent.peers.values'>
             <td>{{ p.country }}</td>
             <td>{{ p.ip }}</td>
             <td>{{ p.downloadSpeed | bytes:2 }}/s</td>
@@ -154,7 +154,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor='#f of ds.currentTorrent.files'>
+        <tr *ngFor='var f of ds.currentTorrent.files'>
           <td>{{ f.path }}</td>
           <td>{{ f.len | bytes:2 }}</td>
           <td>{{ f.progress * 100 | number:'1.0-2' }}%</td>

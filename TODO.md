@@ -20,4 +20,5 @@
 - [ ] Connection Limit
 - [ ] Rewrite Input Elements
 - [ ] Add Autocomplete
+- [ ] Better Tests With DOM and Components
 

@@ -36,7 +36,7 @@
 
   <label
     style='font-weight:normal;margin:0'
-    *ngFor='#torrent of ds.state.torrents.values | object:filter:sortBy:descending'>
+    *ngFor='var torrent of ds.state.torrents.values | object:filter:sortBy:descending'>
     <input type='checkbox' style='display: none' [(ngModel)]='torrent.checked' />
     <div class='flex-table-row'>
       <div class='flex-table-item state flex-table-fit center' [ngSwitch]='torrent.state'>
@@ -75,7 +75,7 @@
         </button>
 
         <ul class='dropdown-menu'>
-          <li *ngFor='#label of ds.state.labels'><a>{{ label }}</a></li>
+          <li *ngFor='var label of ds.state.labels'><a>{{ label }}</a></li>
           <li class="divider"></li>
           <li><a>Create New</a></li>
         </ul>

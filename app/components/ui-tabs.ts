@@ -1,5 +1,6 @@
 import {Component, Directive, Input, QueryList,
         ViewContainerRef, TemplateRef, ContentChildren} from 'angular2/core';
+import {NgFor} from 'angular2/common';
 
 @Directive({
   selector: '[ui-pane]'
@@ -32,6 +33,7 @@ export class UiPane {
 
 @Component({
   selector: 'ui-tabs',
+  directives: [NgFor],
   template: `
     <div [class]='firstDivClasses'>
       <ul [class]='listClasses'>
