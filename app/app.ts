@@ -2,6 +2,8 @@ import {Component} from 'angular2/core';
 import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {ConnectComponent} from './routes/connect';
+import {InputDetectorComponent} from './components/input-detector';
+
 import {AddTorrent} from './routes/add';
 import {TorrentDetailComponent} from './routes/detail';
 import {TorrentsComponent} from './routes/torrents';
@@ -12,7 +14,7 @@ import {DelugeService} from './services/deluge';
 @Component({
   selector: 'deluge-app',
   templateUrl: 'templates/index.html',
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, InputDetectorComponent],
   pipes: [BytesPipe],
 })
 @RouteConfig([

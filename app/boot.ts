@@ -6,6 +6,7 @@ import {provide} from 'angular2/core';
 
 import {DelugeService} from './services/deluge';
 import {MobileService} from './services/mediaquery';
+import {InputDetectorService} from './services/input-detector';
 
 import {AppComponent} from './app';
 
@@ -13,6 +14,7 @@ bootstrap(AppComponent, [
   ROUTER_PROVIDERS,
   DelugeService,
   MobileService,
+  InputDetectorService,
 
   // provide(DelugeService, {
   //   useFactory: () => {
