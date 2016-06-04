@@ -23,4 +23,5 @@
 - [ ] Better Tests With DOM and Components
 - [ ] Real Build Pipeline
 - [ ] Stabilize Header
+- [ ] Batch Requests and Responses
 

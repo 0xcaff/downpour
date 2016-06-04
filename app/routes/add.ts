@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {Router} from 'angular2/router';
+import {Router, RouteParams} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';
@@ -25,14 +25,24 @@ export class AddTorrent extends AuthenticatedRoute {
   torrentRequest: TorrentRequest;
   config: Configuration;
 
-  constructor(public ds: DelugeService, public r: Router) {
+  constructor(public ds: DelugeService, public r: Router, public params: RouteParams) {
     super(ds, r);
   }
 
   ngOnInit() {
     return super.ngOnInit()
       .then(ds => ds.getConfiguration(config_keys))
-      .then(d => this.config = d);
+      .then(d => this.config = d)
+      .then(() => {
+        var requestedMagnet: string = this.params.get('magnet');
+        if (requestedMagnet) {
+          this.url = decodeURIComponent(requestedMagnet);
+          this.getTorrent();
+        } else {
+          navigator.registerProtocolHandler('magnet',
+            `${window.location.href}?magnet=%s`, "Downpour Magnet Link Handler");
+        }
+      });
   }
 
   // TODO: Multiple Uploads at Once Support
