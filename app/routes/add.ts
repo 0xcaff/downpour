@@ -63,18 +63,8 @@ export class AddTorrent extends AuthenticatedRoute {
     this.url = f.name;
     this.formDisabled = true;
 
-    var fd = new FormData();
-    fd.append('file', f);
-
-    return fetch(this.ds.serverURL + '/../upload', {
-      method: 'POST',
-      body: fd,
-      mode: 'cors',
-      credentials: 'include',
-    })
-      .then(d => d.json())
-      .then(d => this.ds.getInfo(d['files'][0], true))
-      .then(d => this.torrentRequest = d)
+    this.ds.getTorrentInfo(f)
+      .then(tr => this.torrentRequest = tr);
   }
 
   getTorrent() {
