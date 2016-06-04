@@ -31,7 +31,7 @@ export class ConfigurationComponent extends AuthenticatedRoute {
   }
 
   save() {
-    this.ds.setConfig(this.config)
+    this.ds.setConfiguration(this.config)
       .then(_ => this.r.navigate(['Torrents']));
   }
 }

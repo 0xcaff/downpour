@@ -37,14 +37,14 @@ export class DelugeService {
         credentials: 'include',
       }
     )
-      .catch(err => Promise.reject('Request Failed', err))
+      .catch(err => Promise.reject(`Request Failed: ${err}`))
 
       .then(d => d.json())
-      .catch(err => Promise.reject("Failed to parse JSON", err))
+      .catch(err => Promise.reject(`Failed to parse JSON: ${err}`))
 
       .then(d => {
         if (d.error)
-          return Promise.reject("Error in Response", d.error)
+          return Promise.reject(`Error in Response: ${d.error}`)
         else
           return Promise.resolve(d.result)
       });
@@ -82,6 +82,18 @@ export class DelugeService {
       });
   }
 
+  syncOnceInformation: string[];
+  currentTorrent: Torrent;
+
+  syncTorrent(hash: string): Promise<any> {
+    if (!this.currentTorrent)
+      this.currentTorrent = new Torrent(hash);
+
+    return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
+      .then(d => this.currentTorrent.unmarshall(d))
+      .then(_ => this.currentTorrent);
+  }
+
   pause(hashes: string[]): Promise<any> {
     return this.rpc('core.pause_torrent', [hashes])
   }
@@ -94,6 +106,18 @@ export class DelugeService {
     return Promise.all(hashes.map((v, i) => {
       return this.rpc('core.remove_torrent', [v, removeData]);
     }));
+  }
+
+  getTree(hash: string): Promise<Directory|File> {
+    return this.rpc('web.get_torrent_files', [hash])
+      .then(d => fromFilesTree(d));
+  }
+
+  updateTorrentSettings(t?: Torrent): Promise<any> {
+    if (t === undefined)
+      t = this.currentTorrent;
+
+    return this.rpc('core.set_torrent_options', [[t.hash], t.configuration.marshall()])
   }
 
   // Takes a URL, Magnet Link, or location on the remote server and returns a
@@ -127,6 +151,20 @@ export class DelugeService {
     })
   }
 
+  getTorrentInfo(f: File): Promise<TorrentRequest> {
+    var fd = new FormData();
+    fd.append('file', f);
+
+    return fetch(this.serverURL + '/../upload', {
+      method: 'POST',
+      body: fd,
+      mode: 'cors',
+      credentials: 'include',
+    })
+      .then(d => d.json())
+      .then(d => this.getInfo(d['files'][0], true));
+  }
+
   getConfiguration(params: string[] = []): Promise<Configuration> {
     if (params.length == 0) {
       return this.rpc('core.get_config', [])
@@ -139,30 +177,6 @@ export class DelugeService {
 
   setConfiguration(c: Configuration): Promise<void> {
     return this.rpc('core.set_config', [c.marshall()]);
-  }
-
-  syncOnceInformation: string[];
-  currentTorrent: Torrent;
-
-  syncTorrent(hash: string): Promise<any> {
-    if (!this.currentTorrent)
-      this.currentTorrent = new Torrent(hash);
-
-    return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
-      .then(d => this.currentTorrent.unmarshall(d))
-      .then(_ => this.currentTorrent);
-  }
-
-  getTree(hash: string): Promise<Directory|File> {
-    return this.rpc('web.get_torrent_files', [hash])
-      .then(d => fromFilesTree(d));
-  }
-
-  updateTorrentSettings(t: Torrent): Promise<any> {
-    if (t === undefined)
-      t = this.currentTorrent;
-
-    return this.rpc('core.set_torrent_options', [[t.hash], t.configuration.marshall()])
   }
 }
 
