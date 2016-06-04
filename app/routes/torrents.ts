@@ -2,13 +2,17 @@ import {Component} from 'angular2/core';
 import {Router, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {DelugeService} from '../services/deluge';
+import {MobileService} from '../services/mediaquery';
+import {InputDetectorService} from '../services/input-detector';
+
+import {Torrent} from '../models/torrent';
 import {AuthenticatedRoute} from './authenticated';
 import {ObjectFilterPipe} from '../pipes/object';
 import {BytesPipe} from '../pipes/bytes';
 
 @Component({
   templateUrl: 'templates/torrents.html',
-  styleUrls: ['templates/torrents.css'],
+  styleUrls: ['templates/torrents.css', 'css/dropdown-submenu.css'],
   directives: [ROUTER_DIRECTIVES],
   pipes: [ObjectFilterPipe, BytesPipe],
 })
@@ -16,9 +20,15 @@ export class TorrentsComponent extends AuthenticatedRoute {
   filter: string;
   sortBy: string;
   descending: boolean;
+  contextVisible: boolean;
+  y: number;
+  x: number;
 
-  constructor(ds: DelugeService, r: Router) {
-    super(ds, r)
+  constructor(
+    ds: DelugeService, r: Router, public mediaQuery: MobileService,
+    public ids: InputDetectorService
+  ) {
+    super(ds, r);
   }
 
   ngOnInit() {
@@ -51,6 +61,24 @@ export class TorrentsComponent extends AuthenticatedRoute {
 
   unselect() {
     this.ds.state.torrents.values.forEach(v => v.checked = false);
+  }
+
+  contextmenu(t: Torrent, evt: MouseEvent) {
+    // TODO: This assumes that if a mouse is available it is always being used.
+    if (evt.altKey || !this.ids.hasMouse) {
+      return;
+    }
+    evt.preventDefault();
+
+    this.contextVisible = true;
+    this.y = evt.pageY;
+    this.x = evt.pageX;
+
+    t.checked = true;
+  }
+
+  clickedOutside() {
+    this.contextVisible = false;
   }
 }
 

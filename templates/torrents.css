@@ -126,14 +126,10 @@ input[type="checkbox"]:checked ~ .flex-table-row {
   text-align: center;
 }
 
-@media(max-width: 768px) {
-  .navbar-btn > button, .navbar-btn > .btn-group {
-    width: 100%;
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .navbar-btn > .btn-group > button {
-    width: 100%;
+@media (max-width: 768px) {
+  .navbar-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 }
