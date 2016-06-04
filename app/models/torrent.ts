@@ -110,6 +110,7 @@ export class Torrent extends Serializable {
     if (o['files'] && !this.tree) {
       var t = fromFlatTree(o['files']);
       apply(t);
+      // TODO: Fix this
       this.files = getAllFiles(t);
       this.tree = t;
 

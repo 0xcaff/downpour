@@ -15,7 +15,6 @@ export class MediaQueryService {
 @Injectable()
 export class MobileService extends MediaQueryService {
   constructor() {
-    // 992px ?
     super('(max-width: 768px)');
   }
 }

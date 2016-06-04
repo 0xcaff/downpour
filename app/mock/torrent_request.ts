@@ -23,7 +23,6 @@ export var MultiFileTorrentRequest = {
         "type": "dir",
         "contents": {
           "test_directory": {
-            "download": true,
             "type": "dir",
             "download": true,
             "contents": {

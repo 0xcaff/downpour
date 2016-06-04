@@ -21,4 +21,6 @@
 - [ ] Rewrite Input Elements
 - [ ] Add Autocomplete
 - [ ] Better Tests With DOM and Components
+- [ ] Real Build Pipeline
+- [ ] Stabilize Header
 

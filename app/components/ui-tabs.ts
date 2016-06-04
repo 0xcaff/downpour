@@ -1,19 +1,15 @@
 import {Component, Directive, Input, QueryList,
-        ViewContainerRef, TemplateRef, ContentChildren} from 'angular2/core';
+        ViewContainerRef, TemplateRef, ContentChildren,
+        ChangeDetectionStrategy, ChangeDetectorRef} from 'angular2/core';
 import {NgFor} from 'angular2/common';
 
 @Directive({
-  selector: '[ui-pane]'
+  selector: '[ui-pane]',
 })
 export class UiPane {
   @Input() title: string;
-  viewContainer: ViewContainerRef;
-  templateRef: TemplateRef;
 
-  constructor(viewContainer: ViewContainerRef, templateRef: TemplateRef) {
-    this.viewContainer = viewContainer;
-    this.templateRef = templateRef;
-  }
+  constructor(public viewContainer: ViewContainerRef, public templateRef: TemplateRef) { }
 
   private _active:boolean = false;
   @Input() set active(active: boolean) {

@@ -18,7 +18,7 @@ export class State extends Serializable {
 
   // Whether the webui backend is connected to a deluged instance.
   @prop connected: boolean;
-  torrents: ValueMap<Torrent> = new ValueMap((v, i) => v.hash);
+  torrents: ValueMap<Torrent> = new ValueMap<Torrent>((v, i) => v.hash);
   labels: string[];
 
   // TODO: Tests
