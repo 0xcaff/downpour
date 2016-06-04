@@ -3,15 +3,16 @@
 <div class="input-group">
   <input type="text"
          class="form-control"
-         (drop)='getTorrentFromFile($event)'
-         [(ngModel)]='url'
          placeholder="magnet link or link to .torrent file"
+         [(ngModel)]='url'
+         (drop)='getTorrentFromFile($event)'
+         (keydown.enter)='getTorrent()'
+         (blur)='getTorrent()'
          [disabled]='formDisabled' />
   <span class="input-group-btn">
-    <button class="btn btn-default" type="button" (click)='getTorrent()'>Import Remote</button>
     <label class='btn btn-default'>
       <input type='file' style='display:none' (change)='getTorrentFromFile($event)' />
-      Import Local
+      Choose...
     </label>
   </span>
 </div>
@@ -21,13 +22,10 @@
     <div class='col-md-6'>
       <div class="panel panel-default" style='margin-top:2em'>
         <div class="panel-heading">
-          <h3 class="panel-title">Torrent Information <small style='color: #777'>({{ torrentRequest.hash }})</small></h3>
+          <h3 class="panel-title hide-extra">Torrent Information <small style='color:#777'>({{ torrentRequest.hash }})</small></h3>
         </div>
-        <ul class='list-group' style='
-          text-overflow: elipsis;
-          overflow: hidden;
-          white-space:nowrap;'>
-          <li class='list-group-item'>{{ torrentRequest.name }}</li>
+        <ul class='list-group'>
+          <li class='list-group-item hide-extra'>{{ torrentRequest.name }}</li>
         </ul>
         <div class="panel-body" *ngIf='torrentRequest.tree'>
           <tree-view *ngIf='torrentRequest.tree.directories' [tree]='torrentRequest.tree'></tree-view>

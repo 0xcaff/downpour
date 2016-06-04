@@ -1,0 +1,11 @@
+.hide-extra {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scroll-extra {
+  white-space: nowrap;
+  overflow-x: scroll;
+}
+

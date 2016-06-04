@@ -15,6 +15,7 @@ import {NumberInputView} from '../components/number';
 
 @Component({
   templateUrl: 'templates/add.html',
+  styleUrls: ['templates/add.css'],
   directives: [TreeComponent, FileView, CheckboxView, TextInputView,
     SpeedInputView, NumberInputView],
 })
@@ -50,8 +51,11 @@ export class AddTorrent extends AuthenticatedRoute {
     var f: File;
     if (e.type == 'change' && e.target.files[0]) {
       f = e.target.files[0];
-    } else if (e.type == 'drop' && e.dataTransfer.files[0]) {
-      f = e.dataTransfer.files[0];
+    } else if (e.type == 'drop') {
+      var dragEvent = <DragEvent>e;
+      if (dragEvent.dataTransfer.files[0]) {
+        f = e.dataTransfer.files[0];
+      }
     } else {
       return;
     }
