@@ -11,7 +11,7 @@
   },
   "author": "Martin Charles",
   "dependencies": {
-    "angular2": "2.0.0-beta.16",
+    "angular2": "2.0.0-beta.17",
     "bootstrap": "^3.3.6",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
@@ -19,7 +19,7 @@
     "jquery": "^2.1.4",
     "moment": "^2.10.6",
     "reflect-metadata": "^0.1.2",
-    "rxjs": "5.0.0-beta.2",
+    "rxjs": "5.0.0-beta.6",
     "systemjs": "0.19.6",
     "zone.js": "^0.6.10"
   },

@@ -36,7 +36,7 @@ export class UiPane {
         <li *ngFor="var pane of panes"
             (click)="select(pane)"
             [class.active]="pane.active">
-          <a href="javascript: false">{{pane.title}}</a>
+          <a style="cursor:pointer">{{pane.title}}</a>
         </li>
       </ul>
     </div>
