@@ -1,5 +1,5 @@
-import {Component} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
+import {Component} from '@angular/core';
+import {Router, RouteParams} from '@angular/router-deprecated';
 
 import {DelugeService} from '../services/deluge';
 import {AuthenticatedRoute} from './authenticated';

@@ -1,6 +1,6 @@
 import {Component, Directive, Input, QueryList,
         ViewContainerRef, TemplateRef, ContentChildren,
-        ChangeDetectionStrategy, ChangeDetectorRef} from 'angular2/core';
+        ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {NgFor} from 'angular2/common';
 
 @Directive({

@@ -1,4 +1,4 @@
-import {Component, Input} from 'angular2/core';
+import {Component, Input} from '@angular/core';
 
 import {Directory, File} from '../models/tree';
 import {FileView} from './file';

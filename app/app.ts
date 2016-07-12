@@ -1,5 +1,5 @@
-import {Component} from 'angular2/core';
-import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Component} from '@angular/core';
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from '@angular2/router-deprecated';
 
 import {ConnectComponent} from './routes/connect';
 import {InputDetectorComponent} from './components/input-detector';

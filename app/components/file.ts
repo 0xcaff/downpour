@@ -1,4 +1,4 @@
-import {Input, Component} from 'angular2/core';
+import {Input, Component} from '@angular/core';
 
 import {Directory, File} from '../models/tree';
 import {BytesPipe} from '../pipes/bytes';

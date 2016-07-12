@@ -1,8 +1,8 @@
 ///<reference path="../typings/globals/es6-shim/index.d.ts"/>
-import {ROUTER_PROVIDERS} from 'angular2/router';
+import {ROUTER_PROVIDERS} from '@angular/router-deprecated';
 
-import {bootstrap} from 'angular2/platform/browser';
-import {provide} from 'angular2/core';
+import {bootstrap} from '@angular/platform/browser-dynamic';
+import {provide} from '@angular/core';
 
 import {DelugeService} from './services/deluge';
 import {MobileService} from './services/mediaquery';
@@ -15,19 +15,5 @@ bootstrap(AppComponent, [
   DelugeService,
   MobileService,
   InputDetectorService,
-
-  // provide(DelugeService, {
-  //   useFactory: () => {
-  //     var ds = new DelugeService();
-  //     var s = localStorage.getItem('serverURL');
-  //     var pw = localStorage.getItem('password');
-
-  //     if (s && pw)
-  //       return ds.auth(s, pw)
-  //         .then(() => ds)
-  //     else
-  //       return ds;
-  //   },
-  // }),
 ]);
 

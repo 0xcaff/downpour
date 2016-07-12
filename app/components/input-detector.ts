@@ -1,4 +1,4 @@
-import {Component, Output, Renderer, EventEmitter} from 'angular2/core';
+import {Component, Output, Renderer, EventEmitter} from '@angular/core';
 import {InputDetectorService} from '../services/input-detector';
 
 @Component({

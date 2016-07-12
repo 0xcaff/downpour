@@ -1,4 +1,4 @@
-import {Input, Output, Component, EventEmitter} from 'angular2/core';
+import {Input, Output, Component, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'textinput-view',
