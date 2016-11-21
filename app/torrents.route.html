@@ -95,7 +95,11 @@
         <i *ngSwitchCase='"Error"' class='fa fa-exclamation fa-fw'></i>
         <i *ngSwitchCase='"Queued"' class='fa fa-circle-o fa-fw'></i>
       </div>
-      <div class='flex-table-item flex-table-free'><a [routerLink]='["TorrentDetail", {hash: torrent.hash}]'>{{ torrent.name }}</a></div>
+
+      <div class='flex-table-item flex-table-free'>
+        <a [routerLink]="['torrent', {hash: torrent.hash}]">{{ torrent.name }}</a>
+      </div>
+
       <!--
       <div class='flex-table-item flex-table-looser'>{{ torrent.downloadSpeed | bytes:2 }}/s</div>
       <div class='flex-table-item flex-table-looser'>{{ torrent.uploadSpeed | bytes:2 }}/s</div>

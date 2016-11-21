@@ -21,6 +21,10 @@ export class State extends Serializable {
   torrents: ValueMap<Torrent> = new ValueMap<Torrent>((v, i) => v.hash);
   labels: string[];
 
+  constructor() {
+    super();
+  }
+
   // TODO: Tests
   unmarshall(o: Object = {}) {
     super.unmarshall(o);

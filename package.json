@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "webpack --progress --display-error-details --config ./config/webpack.dev.js && webpack-dev-server --display-error-details --progress --config ./config/webpack.dev.js --inline --hot --content-base ./dist",
+    "dev": "webpack --watch --progress --display-error-details --config ./config/webpack.dev.js",
     "build": "webpack --config --progress config/webpack.dev.js",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
@@ -15,6 +15,7 @@
     "@angular/compiler": "~2.1.2",
     "@angular/core": "~2.1.2",
     "@angular/forms": "^2.1.2",
+    "@angular/http": "^2.2.1",
     "@angular/platform-browser": "~2.1.2",
     "@angular/platform-browser-dynamic": "~2.1.2",
     "@angular/router": "^3.1.2",

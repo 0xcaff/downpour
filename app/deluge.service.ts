@@ -1,4 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
 import { Torrent } from './models/torrent';
 import { ValueMap } from './models/map';
@@ -7,9 +9,19 @@ import { Configuration } from './models/configuration';
 import { File, Directory, fromFilesTree } from './models/tree';
 import { State } from './models/state';
 
+// TODO: More information
+export class DelugeError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = "DelugeError";
+  }
+}
+
 @Injectable()
 export class DelugeService {
-  // Do we have an authenticated session with the server.
+  constructor(private http: Http) { }
+
+  // Do we have an authenticated session with the server?
   authenticated: boolean;
 
   // The URL at which the JSON endpoint of the server is located at.
@@ -20,33 +32,40 @@ export class DelugeService {
 
   // Calls a method on the remote using the rpc protocol over json.
   // TODO: Support Sockets for Native App
-  rpc(method: string, payload: any, serverURL?: string): Promise<string|Object> {
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+  rpc(method: string, payload: any, serverURL?: string): Promise<Error|Object> {
+    let options = new RequestOptions({
+      withCredentials: true,
+    });
 
-    return fetch(
-      (serverURL ? serverURL : this.serverURL),
-      {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({
-          method: method,
-          params: payload,
-          id: this.id++,
-        }),
-        credentials: 'include',
-      }
-    )
-      .catch(err => Promise.reject(`Request Failed: ${err}`))
+    if (!serverURL)
+      serverURL = this.serverURL;
 
-      .then(d => d.json())
-      .catch(err => Promise.reject(`Failed to parse JSON: ${err}`))
+    return this.http.post(serverURL, {
+      method: method,
+      params: payload,
+      id: this.id++,
+    }, options)
+      .toPromise()
+      .then(resp => {
+        var body;
+        try {
+          body = resp.json();
+        } catch (err) {
+          if (err instanceof SyntaxError) {
+            // JSON Parse Error
+            console.error(`Not a JSON Endpoint: ${serverURL}`);
+            // console.error(`Recieved: ${resp.text()}`);
+            return Promise.reject(new Error("Didn't Get JSON"));
+          } else {
+            return Promise.reject(err);
+          }
+        }
 
-      .then(d => {
-        if (d.error)
-          return Promise.reject(`Error in Response: ${d.error}`)
-        else
-          return Promise.resolve(d.result)
+        if (body.error) {
+          return Promise.reject(new DelugeError(body.error));
+        }
+
+        return Promise.resolve(body.result);
       });
   }
 

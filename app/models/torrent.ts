@@ -73,10 +73,10 @@ export class Torrent extends Serializable {
   tree: Directory|File;
 
   // The trackers connected to.
-  trackers: ValueMap<Tracker> = new ValueMap<Tracker>((d, i) => d.url);
+  trackers: ValueMap<Tracker>;
 
   // The peers connected to.
-  peers: ValueMap<Peer> = new ValueMap<Peer>((d, i) => d.ip);
+  peers: ValueMap<Peer>;
 
   configuration: TorrentConfiguration;
 
@@ -85,12 +85,17 @@ export class Torrent extends Serializable {
   constructor(o: string|Object, hash?: string) {
     if (typeof o === 'string') {
       hash = o;
+      super();
     } else if (typeof o === 'object') {
       super(o);
     }
 
-    if (hash)
+    this.trackers = new ValueMap<Tracker>((d, i) => d.url);
+    this.peers = new ValueMap<Peer>((d, i) => d.ip);
+
+    if (hash) {
       this.hash = hash;
+    }
   }
 
   unmarshall(o: Object) {

@@ -31,6 +31,8 @@ export class TorrentsComponent {
   ngOnInit() {
     this.filter = this.ds.filter;
     this.ds.syncStateInformation = torrentProperties;
+
+    this.ds.sync();
   }
 
   ngOnDestroy() {

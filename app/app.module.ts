@@ -2,6 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { InputDetectorComponent } from './components/input-detector';
@@ -23,9 +24,12 @@ import { AuthService } from './auth.service';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
+
     RouterModule.forRoot([
       { path: 'connect', component: ConnectComponent },
-      { path: 'torrents', component: TorrentsComponent, /*canActivate: [AuthService]*/ },
+      { path: 'torrents', component: TorrentsComponent, canActivate: [AuthService] },
+      { path: '', redirectTo: 'torrents', pathMatch: 'full' },
       // { path: 'add', component: AddTorrent, canActivate: [AuthService] },
       // { path: 'torrents/:hash', component: TorrentDetailComponent, canActivate: [AuthService] },
       // { path: 'configuration', component: ConfigurationComponent, canActivate: [AuthService] },

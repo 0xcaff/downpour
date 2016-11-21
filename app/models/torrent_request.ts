@@ -20,6 +20,8 @@ export class TorrentRequest extends Serializable {
 
   format: TorrentType;
 
+  constructor() { super() }
+
   // TODO: move file type discovery into here
   unmarshall(d: Object) {
     super.unmarshall(d);
