@@ -9,11 +9,11 @@ import { Torrent } from './models/torrent';
 
 @Component({
   templateUrl: './torrents.route.html',
-  styleUrls: ['./torrents.route.css', '../../css/dropdown-submenu.css'],
+  styleUrls: ['./torrents.route.css', './dropdown-submenu.css'],
   providers: [
     MobileService,
-    InputDetectorService
-  ],
+    InputDetectorService,
+  ]
 })
 export class TorrentsComponent {
   filter: string;
