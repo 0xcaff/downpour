@@ -19,14 +19,14 @@
     </div>
     <div class='collapse navbar-collapse' id='navigation' *ngIf='ds.authenticated'>
       <ul class='navbar-nav nav'>
-        <li [class.active]='isCurrentRoute(["Torrents"])'>
-          <a [routerLink]="['Torrents']">Torrents</a>
+        <li routerLinkActive="active">
+          <a routerLink="/torrents">Torrents</a>
         </li>
-        <li [class.active]='isCurrentRoute(["AddTorrent"])'>
-          <a [routerLink]="['AddTorrent']">Add Torrent</a>
+        <li routerLinkActive="active">
+          <a routerLink="add">Add Torrent</a>
         </li>
-        <li [class.active]='isCurrentRoute(["Configuration"])'>
-          <a [routerLink]="['Configuration']">Configuration</a>
+        <li routerLinkActive="active">
+          <a routerLink="configuration">Configuration</a>
         </li>
       </ul>
 

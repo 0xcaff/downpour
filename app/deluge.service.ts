@@ -1,11 +1,11 @@
-import {Injectable, EventEmitter} from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
-import {Torrent} from '../models/torrent';
-import {ValueMap} from '../models/map';
-import {TorrentRequest, TorrentType} from '../models/torrent_request';
-import {Configuration} from '../models/configuration';
-import {File, Directory, fromFilesTree} from '../models/tree';
-import {State} from '../models/state';
+import { Torrent } from './models/torrent';
+import { ValueMap } from './models/map';
+import { TorrentRequest, TorrentType } from './models/torrent_request';
+import { Configuration } from './models/configuration';
+import { File, Directory, fromFilesTree } from './models/tree';
+import { State } from './models/state';
 
 @Injectable()
 export class DelugeService {

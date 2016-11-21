@@ -1,11 +1,11 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {suffix} from './bytes';
+import { Pipe, PipeTransform } from '@angular/core';
+import { suffix } from './bytes.pipe';
 
 // TODO: Refactor and Preformance
 @Pipe({
   name: 'object',
 })
-export class ObjectFilterPipe implements PipeTransform {
+export class ObjectPipe implements PipeTransform {
   transform(value: any[], query: string, sortBy: string, reverse: boolean): any {
     var sortOrder: number = reverse ? -1 : 1
 

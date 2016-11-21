@@ -1,17 +1,16 @@
-import {Component} from '@angular/core';
-import {Router, RouteParams} from '@angular/router-deprecated';
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import {DelugeService} from '../services/deluge';
-import {AuthenticatedRoute} from './authenticated';
-import {Configuration} from '../models/configuration';
-import {TorrentRequest, TorrentType} from '../models/torrent_request';
+import { DelugeService } from '../deluge.service';
+import { Configuration } from '../models/configuration';
+import { TorrentRequest, TorrentType } from '../models/torrent_request';
 
-import {TreeComponent} from '../components/tree';
-import {FileView} from '../components/file';
-import {CheckboxView} from '../components/checkbox';
-import {TextInputView} from '../components/text';
-import {SpeedInputView} from '../components/speed';
-import {NumberInputView} from '../components/number';
+import { TreeComponent } from '../components/tree';
+import { FileView } from '../components/file';
+import { CheckboxView } from '../components/checkbox';
+import { TextInputView } from '../components/text';
+import { SpeedInputView } from '../components/speed';
+import { NumberInputView } from '../components/number';
 
 @Component({
   templateUrl: 'templates/add.html',
@@ -19,30 +18,29 @@ import {NumberInputView} from '../components/number';
   directives: [TreeComponent, FileView, CheckboxView, TextInputView,
     SpeedInputView, NumberInputView],
 })
-export class AddTorrent extends AuthenticatedRoute {
+export class AddTorrent {
   url: string;
   formDisabled: boolean;
 
   torrentRequest: TorrentRequest;
   config: Configuration;
 
-  constructor(public ds: DelugeService, public r: Router, public params: RouteParams) {
-    super(ds, r);
-  }
+  constructor(private ds: DelugeService, private r: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    return super.ngOnInit()
-      .then(ds => ds.getConfiguration(config_keys))
+    return this.ds.getConfiguration(config_keys)
       .then(d => this.config = d)
       .then(() => {
-        var requestedMagnet: string = this.params.get('magnet');
-        if (requestedMagnet) {
-          this.url = decodeURIComponent(requestedMagnet);
-          this.getTorrent();
-        } else {
-          navigator.registerProtocolHandler('magnet',
-            `${window.location.href}?magnet=%s`, "Downpour Magnet Link Handler");
-        }
+        this.route.params.forEach((params: Params) => {
+            let magnet = params['magnet'];
+            if (magnet) {
+              this.url = decodeURIComponent(requestedMagnet);
+              this.getTorrent();
+            } else {
+              navigator.registerProtocolHandler('magnet',
+                `${window.location.href}?magnet=%s`, "Downpour Magnet Link Handler");
+            }
+        });
       });
   }
 
@@ -78,7 +76,7 @@ export class AddTorrent extends AuthenticatedRoute {
     var r = this.torrentRequest.marshall(this.config);
 
     this.ds.rpc('web.add_torrents', [[r]])
-      .then(_ => this.r.navigate(['Torrents']));
+      .then(_ => this.r.navigate(['torrents']));
   }
 }
 

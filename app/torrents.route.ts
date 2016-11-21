@@ -1,22 +1,21 @@
-import {Component} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {DelugeService} from '../services/deluge';
-import {MobileService} from '../services/mediaquery';
-import {InputDetectorService} from '../services/input-detector';
+import { DelugeService } from './deluge.service';
+import { MobileService } from './mediaquery.service';
+import { InputDetectorService } from './input-detector.service';
 
-import {Torrent} from '../models/torrent';
-import {AuthenticatedRoute} from './authenticated';
-import {ObjectFilterPipe} from '../pipes/object';
-import {BytesPipe} from '../pipes/bytes';
+import { Torrent } from './models/torrent';
 
 @Component({
-  templateUrl: 'templates/torrents.html',
-  styleUrls: ['templates/torrents.css', 'css/dropdown-submenu.css'],
-  directives: [ROUTER_DIRECTIVES],
-  pipes: [ObjectFilterPipe, BytesPipe],
+  templateUrl: './torrents.route.html',
+  styleUrls: ['./torrents.route.css', '../../css/dropdown-submenu.css'],
+  providers: [
+    MobileService,
+    InputDetectorService
+  ],
 })
-export class TorrentsComponent extends AuthenticatedRoute {
+export class TorrentsComponent {
   filter: string;
   sortBy: string;
   descending: boolean;
@@ -25,14 +24,11 @@ export class TorrentsComponent extends AuthenticatedRoute {
   x: number;
 
   constructor(
-    ds: DelugeService, r: Router, public mediaQuery: MobileService,
+    public r: Router, public ds: DelugeService, public mediaQuery: MobileService,
     public ids: InputDetectorService
-  ) {
-    super(ds, r);
-  }
+  ) { }
 
   ngOnInit() {
-    super.ngOnInit();
     this.filter = this.ds.filter;
     this.ds.syncStateInformation = torrentProperties;
   }

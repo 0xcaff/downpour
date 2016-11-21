@@ -32,7 +32,7 @@
   <li class='dropdown dropdown-submenu'>
     <a><i class='fa fa-tags fa-fw'></i> Label</a>
     <ul class='dropdown-menu'>
-      <li *ngFor='#label of ds.state.labels'><a>{{ label }}</a></li>
+      <li *ngFor='let label of ds.state.labels'><a>{{ label }}</a></li>
       <li class="divider"></li>
       <li><a><i class='fa fa-plus fa-fw'></i> Create New</a></li>
     </ul>
@@ -85,15 +85,15 @@
 
   <label
     style='font-weight:normal;margin:0'
-    *ngFor='var torrent of ds.state.torrents.values | object:filter:sortBy:descending'>
+    *ngFor='let torrent of ds.state.torrents.values | object:filter:sortBy:descending'>
     <input type='checkbox' style='display: none' [(ngModel)]='torrent.checked' />
     <div class='flex-table-row' (contextmenu)='contextmenu(torrent, $event)'>
       <div class='flex-table-item state flex-table-fit center' [ngSwitch]='torrent.state'>
-        <i *ngSwitchWhen='"Seeding"' class='fa fa-arrow-up fa-fw'></i>
-        <i *ngSwitchWhen='"Downloading"' class='fa fa-arrow-down fa-fw'></i>
-        <i *ngSwitchWhen='"Paused"' class='fa fa-pause fa-fw'></i>
-        <i *ngSwitchWhen='"Error"' class='fa fa-exclamation fa-fw'></i>
-        <i *ngSwitchWhen='"Queued"' class='fa fa-circle-o fa-fw'></i>
+        <i *ngSwitchCase='"Seeding"' class='fa fa-arrow-up fa-fw'></i>
+        <i *ngSwitchCase='"Downloading"' class='fa fa-arrow-down fa-fw'></i>
+        <i *ngSwitchCase='"Paused"' class='fa fa-pause fa-fw'></i>
+        <i *ngSwitchCase='"Error"' class='fa fa-exclamation fa-fw'></i>
+        <i *ngSwitchCase='"Queued"' class='fa fa-circle-o fa-fw'></i>
       </div>
       <div class='flex-table-item flex-table-free'><a [routerLink]='["TorrentDetail", {hash: torrent.hash}]'>{{ torrent.name }}</a></div>
       <!--
@@ -125,7 +125,7 @@
         </button>
 
         <ul class='dropdown-menu'>
-          <li *ngFor='var label of ds.state.labels'><a>{{ label }}</a></li>
+          <li *ngFor='let label of ds.state.labels'><a>{{ label }}</a></li>
           <li class="divider"></li>
           <li><a>Create New</a></li>
         </ul>

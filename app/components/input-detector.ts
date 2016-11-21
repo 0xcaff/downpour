@@ -1,9 +1,10 @@
-import {Component, Output, Renderer, EventEmitter} from '@angular/core';
-import {InputDetectorService} from '../services/input-detector';
+import { Component, Output, Renderer, EventEmitter } from '@angular/core';
+import { InputDetectorService } from '../input-detector.service';
 
 @Component({
   selector: 'input-detector',
   template: '<div style="display:none"></div>',
+  providers: [ InputDetectorService ],
 })
 export class InputDetectorComponent {
   @Output() hasTouch: EventEmitter<boolean> = new EventEmitter<boolean>();

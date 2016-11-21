@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router-deprecated';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {DelugeService} from '../services/deluge';
+import { DelugeService } from './deluge.service';
 
 @Component({
-  templateUrl: 'templates/connect.html',
+  templateUrl: './connect.route.html',
 })
 export class ConnectComponent {
   constructor(public ds: DelugeService, public r: Router) {}
@@ -24,7 +24,7 @@ export class ConnectComponent {
         this.pending = false;
         localStorage.setItem('serverURL', this.serverURL);
         localStorage.setItem('password', this.password);
-        this.r.navigate(['Torrents']);
+        return this.r.navigate(['torrents']);
       })
       .catch(err => {
         this.pending = false;
