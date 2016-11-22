@@ -9,9 +9,16 @@ import { InputDetectorComponent } from './input-detector.component';
 
 import { ConnectComponent } from './connect.route';
 import { TorrentsComponent } from './torrents.route';
+import { TorrentDetailComponent } from './detail.route';
 // import { AddTorrent } from './routes/add';
-// import { TorrentDetailComponent } from './routes/detail';
 // import { ConfigurationComponent } from './routes/configuration';
+
+import { ProgressComponent } from './components/progress';
+import { UiTabs, UiPane } from './components/ui-tabs';
+import { CheckboxView } from './components/checkbox';
+import { NumberInputView } from './components/number';
+import { TextInputView } from './components/text';
+import { SpeedInputView } from './components/speed';
 
 import { BytesPipe } from './bytes.pipe';
 import { DurationPipe } from './duration.pipe';
@@ -28,11 +35,27 @@ import { AuthService } from './auth.service';
     HttpModule,
 
     RouterModule.forRoot([
-      { path: 'connect', component: ConnectComponent },
-      { path: 'torrents', component: TorrentsComponent, canActivate: [AuthService] },
+      {
+        path: 'connect',
+        component: ConnectComponent
+      },
+      {
+        path: 'torrents',
+        canActivate: [AuthService],
+        children: [
+          {
+            path: ':hash',
+            component: TorrentDetailComponent,
+          },
+          {
+            path: '',
+            component: TorrentsComponent,
+          },
+        ],
+      },
+
       { path: '', redirectTo: 'torrents', pathMatch: 'full' },
       // { path: 'add', component: AddTorrent, canActivate: [AuthService] },
-      // { path: 'torrents/:hash', component: TorrentDetailComponent, canActivate: [AuthService] },
       // { path: 'configuration', component: ConfigurationComponent, canActivate: [AuthService] },
     ]),
   ],
@@ -40,12 +63,18 @@ import { AuthService } from './auth.service';
     // Components
     AppComponent,
     InputDetectorComponent,
+    ProgressComponent,
+    UiTabs, UiPane,
+    CheckboxView,
+    NumberInputView,
+    TextInputView,
+    SpeedInputView,
 
     // Routes
     ConnectComponent,
     TorrentsComponent,
+    TorrentDetailComponent,
     // AddTorrent,
-    // TorrentDetailComponent,
     // ConfigurationComponent,
 
     // Pipes

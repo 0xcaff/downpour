@@ -10,8 +10,9 @@ import '@angular/http';
 // RxJS
 import 'rxjs';
 import 'rxjs/Observable';
-import 'rxjs/operator/map';
-import 'rxjs/operator/toPromise';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/switchMap';
 
 // jquery
 import 'jquery';

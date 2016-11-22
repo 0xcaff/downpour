@@ -128,7 +128,7 @@
       </div>
 
       <div class='flex-table-item flex-table-free'>
-        <a [routerLink]="['torrent', {hash: torrent.hash}]">{{ torrent.name }}</a>
+        <a [routerLink]="[torrent.hash]">{{ torrent.name }}</a>
       </div>
 
       <!--
@@ -142,7 +142,8 @@
   </label>
 </div>
 
-<nav *ngIf='ids.hasTouch && getSelected().length > 0' class='navbar navbar-default navbar-fixed-bottom'>
+<nav *ngIf='ids.hasTouch && getSelected().length > 0' class='navbar
+    navbar-default navbar-fixed-bottom'>
   <div class='container'>
     <div class="navbar-text">
       <a (click)='unselect()' href='javascript:false' style='padding:.75rem'>
@@ -196,3 +197,4 @@
     </div>
   </div>
 </nav>
+

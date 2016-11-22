@@ -2,7 +2,7 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'textinput-view',
-  templateUrl: 'templates/components/textinput-view.html',
+  templateUrl: '../../templates/components/textinput-view.html',
   host: {
     'class': 'form-group',
     'style': 'display: block',

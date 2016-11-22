@@ -2,8 +2,8 @@ import {Input, Component} from '@angular/core';
 
 @Component({
   selector: 'progress-bar',
-  templateUrl: 'templates/components/progress-bar.html',
-  styleUrls: ['templates/components/progress-bar.css'],
+  templateUrl: '../../templates/components/progress-bar.html',
+  styleUrls: ['./progress-bar.css'],
 })
 export class ProgressComponent {
   @Input() percentage: number;

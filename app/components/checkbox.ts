@@ -2,7 +2,7 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'checkbox-view',
-  templateUrl: 'templates/components/checkbox-view.html',
+  templateUrl: '../../templates/components/checkbox-view.html',
   host: {
     'class': 'checkbox',
   },

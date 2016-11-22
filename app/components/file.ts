@@ -4,8 +4,8 @@ import {Directory, File} from '../models/tree';
 
 @Component({
   selector: 'file-view',
-  templateUrl:'templates/components/file-view.html',
-  styleUrls: ['templates/components/file-view.css'],
+  templateUrl:'../../templates/components/file-view.html',
+  styleUrls: ['./file-view.css'],
 })
 export class FileView {
   @Input() element: File|Directory;

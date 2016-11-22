@@ -2,7 +2,7 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'numberinput-view',
-  templateUrl: 'templates/components/numberinput-view.html',
+  templateUrl: '../../templates/components/numberinput-view.html',
   host: {
     'class': 'form-group',
     'style': 'display: block',

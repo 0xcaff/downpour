@@ -31,7 +31,7 @@ export class UiPane {
   template: `
     <div [class]='firstDivClasses'>
       <ul [class]='listClasses'>
-        <li *ngFor="var pane of panes"
+        <li *ngFor="let pane of panes"
             (click)="select(pane)"
             [class.active]="pane.active">
           <a style="cursor:pointer">{{pane.title}}</a>

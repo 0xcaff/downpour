@@ -5,8 +5,8 @@ import {FileView} from './file';
 
 @Component({
   selector: 'tree-view',
-  templateUrl:'templates/components/tree-view.html',
-  styleUrls: ['templates/components/tree-view.css'],
+  templateUrl:'../../templates/components/tree-view.html',
+  styleUrls: ['./tree-view.css'],
   directives: [TreeComponent, FileView],
   host: {
     'style': 'display:block',

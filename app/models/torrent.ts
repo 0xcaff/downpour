@@ -86,7 +86,7 @@ export class Torrent extends Serializable {
     if (typeof o === 'string') {
       hash = o;
       super();
-    } else if (typeof o === 'object') {
+    } else {
       super(o);
     }
 
