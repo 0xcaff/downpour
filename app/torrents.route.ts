@@ -12,7 +12,6 @@ import { Torrent } from './models/torrent';
   styleUrls: ['./torrents.route.css', './dropdown-submenu.css'],
   providers: [
     MobileService,
-    InputDetectorService,
   ]
 })
 export class TorrentsComponent {

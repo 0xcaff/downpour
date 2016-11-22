@@ -12,6 +12,37 @@
 </div>
 
 <!-- TODO: Componentilize -->
+<!--
+<dropdown-menu [y]='x' [x]='x' [visible]='visible'>
+  <li>
+    <a (click)='ds.pause(getSelected())'><i class='fa fa-pause fa-fw'></i> Pause</a>
+  </li>
+
+  <li>
+    <a (click)='ds.resume(getSelected())'><i class='fa fa-play fa-fw'></i> Resume</a>
+  </li>
+
+  <li class="divider"></li>
+
+  <li class='dropdown dropdown-submenu'>
+    <a><i class='fa fa-trash fa-fw'></i> Remove</a>
+    <ul class='dropdown-menu'>
+      <li>
+        <a
+          (click)='ds.remove(getSelected(), false)'
+          style='cursor:pointer'>Keep Files</a>
+      </li>
+
+      <li>
+        <a
+          (click)='ds.remove(getSelected(), true)'
+          style='cursor:pointer'>Discard Files</a>
+      </li>
+    </ul>
+  </li>
+</dropdown-menu>
+-->
+
 <ul class="dropdown-menu"
     [ngStyle]="{'top': y, 'left': x, 'display': contextVisible ? 'block' : 'none'}"
     (document:click)='clickedOutside()'>

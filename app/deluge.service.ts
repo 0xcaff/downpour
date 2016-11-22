@@ -27,11 +27,10 @@ export class DelugeService {
   // The URL at which the JSON endpoint of the server is located at.
   serverURL: string;
 
-  // Not really used, but required for a uniq val in rpc request.
+  // ID of the next RPC request.
   id: number = 0;
 
   // Calls a method on the remote using the rpc protocol over json.
-  // TODO: Support Sockets for Native App
   rpc(method: string, payload: any, serverURL?: string): Promise<Error|Object> {
     let options = new RequestOptions({
       withCredentials: true,
@@ -82,6 +81,21 @@ export class DelugeService {
         }
       })
   }
+
+  // poll(interval: number, method: string, payload: any) Observable<Object> {
+  //   Observable.fromPromise(this.rpc(method, payload))
+  //     .first()
+  //     .repeat();
+  // }
+
+  // poll(intervalSeconds: number): Observable<Object> {
+  //   // Every intervalSeconds
+  //   // If no request is in flight
+  //   //   Send A Request with Messages on messageQueue
+  //   //   Remove Messages from messageQueue
+  //   // else
+  //   //   wait for request to land
+  // }
 
   // The information requested about each torrent every time sync is called.
   // These are the values requested by default by the official deluge web client.

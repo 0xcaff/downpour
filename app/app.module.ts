@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { InputDetectorComponent } from './components/input-detector';
+import { InputDetectorComponent } from './input-detector.component';
 
 import { ConnectComponent } from './connect.route';
 import { TorrentsComponent } from './torrents.route';
@@ -17,6 +17,7 @@ import { BytesPipe } from './bytes.pipe';
 import { DurationPipe } from './duration.pipe';
 import { ObjectPipe } from './object.pipe';
 
+import { InputDetectorService } from './input-detector.service';
 import { DelugeService } from './deluge.service';
 import { AuthService } from './auth.service';
 
@@ -53,9 +54,10 @@ import { AuthService } from './auth.service';
     ObjectPipe
   ],
   providers: [
-    // TODO: Initialize from localstorage.
     DelugeService,
     AuthService,
+
+    InputDetectorService,
   ],
   bootstrap: [ AppComponent ],
 })
