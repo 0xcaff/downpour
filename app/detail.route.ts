@@ -15,19 +15,16 @@ export class TorrentDetailComponent {
     private router: Router) { }
 
   torrentId: string;
-  running: boolean;
 
   ngOnInit() {
-    this.running = true;
     this.ds.currentTorrent = null;
     this.route.params.subscribe(params => {
-      this.torrentId = params['hash']
+      this.torrentId = params['hash'];
       this.ds.syncTorrent(this.torrentId);
     });
   }
 
   ngOnDestroy() {
-    this.running = false;
   }
 
   get color(): string {

@@ -1,6 +1,6 @@
-import {Serializable, prop} from './serializable';
-import {ValueMap} from './map';
-import {Torrent} from './torrent';
+import { Serializable, prop } from './serializable';
+import { ValueMap } from './map';
+import { Torrent } from './torrent';
 
 export class State extends Serializable {
   @prop('stats.upload_protocol_rate') protocolUploadSpeed: number;
@@ -21,10 +21,6 @@ export class State extends Serializable {
   torrents: ValueMap<Torrent> = new ValueMap<Torrent>((v, i) => v.hash);
   labels: string[];
 
-  constructor() {
-    super();
-  }
-
   // TODO: Tests
   unmarshall(o: Object = {}) {
     super.unmarshall(o);
@@ -35,6 +31,7 @@ export class State extends Serializable {
         var torrentHash = nk[i];
 
         if (Object.keys(o['torrents'][torrentHash]).length <= 0)
+          // Assume All Torrents Are Empty
           break;
 
         if (this.torrents.has(torrentHash)) {

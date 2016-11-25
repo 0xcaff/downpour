@@ -3,8 +3,8 @@
 <hr />
 
 <div class="alert alert-danger" role="alert" *ngIf='failed'>
-  <span>Failed to Connect to <strong>{{failedServer}}</strong></span>
-  <span *ngIf='err'>with error <strong>{{err}}</strong></span>
+  <span>Failed to Connect to <strong>{{ failedServer }}</strong></span>
+  <span *ngIf='err'>with error <strong>{{ err }}</strong></span>
 </div>
 
 <!-- TODO: Input Validation -->
@@ -31,7 +31,9 @@
         required/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
-    <i *ngIf='pending' class="fa fa-circle-o-notch fa-spin" style="margin: 1em;"></i>
+    <span style='margin-left: 0.35em'>
+      <i *ngIf='pending' class="fa fa-circle-o-notch fa-spin" style="margin: 0.35em"></i>
+    </span>
 </form>
 </div>
 

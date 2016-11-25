@@ -19,6 +19,7 @@ import { CheckboxView } from './components/checkbox';
 import { NumberInputView } from './components/number';
 import { TextInputView } from './components/text';
 import { SpeedInputView } from './components/speed';
+import { ContextMenuComponent } from './context-menu.component';
 
 import { BytesPipe } from './bytes.pipe';
 import { DurationPipe } from './duration.pipe';
@@ -27,6 +28,7 @@ import { ObjectPipe } from './object.pipe';
 import { InputDetectorService } from './input-detector.service';
 import { DelugeService } from './deluge.service';
 import { AuthService } from './auth.service';
+import { StateService } from './state.service';
 
 @NgModule({
   imports: [
@@ -70,6 +72,8 @@ import { AuthService } from './auth.service';
     TextInputView,
     SpeedInputView,
 
+    ContextMenuComponent,
+
     // Routes
     ConnectComponent,
     TorrentsComponent,
@@ -85,6 +89,7 @@ import { AuthService } from './auth.service';
   providers: [
     DelugeService,
     AuthService,
+    StateService,
 
     InputDetectorService,
   ],

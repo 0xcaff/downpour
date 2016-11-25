@@ -22,9 +22,5 @@ export class Peer extends Serializable {
   // TODO: Something magical which allows deluge torrents to know about each
   // other?
   @prop seed;
-
-  constructor(o: Object) {
-    super(o);
-  }
 }
 

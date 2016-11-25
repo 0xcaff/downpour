@@ -45,7 +45,6 @@ export class Directory {
   files: File[] = new Array();
   directories: Directory[] = new Array();
   name: string;
-  len: number;
 
   private _download: boolean;
   get download(): boolean {

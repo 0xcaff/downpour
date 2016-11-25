@@ -26,10 +26,6 @@ function serialize(target: Object, serializedkey: string, propertykey: string): 
 export class Serializable {
   __serialization__: Object;
 
-  constructor(o: Object) {
-    this.unmarshall(o);
-  }
-
   unmarshall(o: Object = {}) {
     var serial = this['__serialization__'];
     var keys = Object.keys(serial);

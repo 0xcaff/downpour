@@ -1,3 +1,7 @@
+// This data structure pretends to be a map and an array while being neither and
+// having terrible complexity. JavaScript array's are implemented as hashmaps so
+// this basically is an array pretending to be a map pretending to be a map +
+// array.
 export class ValueMap<T> {
   values: T[] = [];
   accessor: accessorFunction;
@@ -6,6 +10,7 @@ export class ValueMap<T> {
     this.accessor = accessor;
   }
 
+  // TODO: O(n)
   has(key: string): boolean {
     return this.values.some((v, i, a) => key == this.accessor.apply(a, [v, i]));
   }
@@ -20,6 +25,7 @@ export class ValueMap<T> {
     }
   }
 
+  // TODO: O(n)
   set(key: string, value: T) {
     var r = this.runKey(key, function(v, i) {
       this[i] = value;
@@ -33,6 +39,7 @@ export class ValueMap<T> {
     this.values.push(value);
   }
 
+  // TODO: O(n)
   get(key: string): T {
     var r;
     this.runKey(key, (v, i) => {
@@ -56,7 +63,7 @@ export class ValueMap<T> {
   // information to bring this into the state of a. To use this function, T must
   // be serializable.
   // TODO: Tests
-  updateFromArray(a: Object[], objectAccessor: Function, createObject: Function) {
+  updateFromArray(a: Object[], objectAccessor: (value: Object, index: number) => T, createObject: (value: Object) => T) {
     for (var i = 0; i < a.length; i++) {
       var v = a[i];
       var k = objectAccessor.apply(a, [v, i]);
@@ -75,7 +82,8 @@ export class ValueMap<T> {
     });
   }
 
-  private runKey(key: string, doSomething: Function): boolean {
+  // TODO: O(n)
+  private runKey(key: string, doSomething: (value: Object, index: number) => void): boolean {
     return this.each((k, v, i) => {
       if (key == k) {
         doSomething.apply(this.values, [v, i]);      

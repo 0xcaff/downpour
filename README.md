@@ -1,16 +1,20 @@
 # downpour
 
-This is an interface for Deluge WebUI's API, built with bootstrap and angular2.
-Check out the images [here][images] and the demo video [here][video]!
+Downpour is an interface for Deluge WebUI's API, built with bootstrap and
+angular2. Check out the images [here][images] and the demo video [here][video]!
 
 ## Building
 
 To build, run the following command.
 
-    $ npm install && npm run tsc
+    $ yarn && yarn run build
+
+## Running
+After building, install [`http-server`][http-server] and run:
+
+    http-server -path dist -redirect index.html -proxy-from "/deluge/" -proxy-to "http://localhost:8112"
 
 ## Setting It Up
-
 Unfortunately, deluge removed an internal API which would have made installation
 as easy as installing a plugin. Currently the only way to run this is by setting
 up a reverse proxy to your deluge instance and hosting downpour as a single page
@@ -52,4 +56,5 @@ this better.
 
 [images]: https://github.com/caffinatedmonkey/downpour/tree/master/images
 [video]: https://www.youtube.com/watch?v=vjqBG-gBDBI
+[http-server]: https://github.com/caffinatedmonkey/http-server
 

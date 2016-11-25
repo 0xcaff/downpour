@@ -1,59 +1,23 @@
 <!-- TODO: Make footer stick at bottom of page on mobile -->
 
 <div style='margin-bottom:1em'>
-  <h3>Torrents <small>({{ ds.state.torrents.values.length }})</small></h3>
+  <h3>Torrents <small>({{ state.state.torrents.values.length }})</small></h3>
 </div>
 
 <div class="form-group">
-  <input [(ngModel)]='filter'
+  <input [ngModel]='state.filter' (ngModelChange)='filterChange($event)'
          placeholder="Search... (try filtering with label: music syntax, tracker and state also supported)"
          type="text"
          class="form-control" />
 </div>
 
-<!-- TODO: Componentilize -->
-<!--
-<dropdown-menu [y]='x' [x]='x' [visible]='visible'>
+<context-menu class='dropdown-menu'>
   <li>
     <a (click)='ds.pause(getSelected())'><i class='fa fa-pause fa-fw'></i> Pause</a>
   </li>
 
   <li>
     <a (click)='ds.resume(getSelected())'><i class='fa fa-play fa-fw'></i> Resume</a>
-  </li>
-
-  <li class="divider"></li>
-
-  <li class='dropdown dropdown-submenu'>
-    <a><i class='fa fa-trash fa-fw'></i> Remove</a>
-    <ul class='dropdown-menu'>
-      <li>
-        <a
-          (click)='ds.remove(getSelected(), false)'
-          style='cursor:pointer'>Keep Files</a>
-      </li>
-
-      <li>
-        <a
-          (click)='ds.remove(getSelected(), true)'
-          style='cursor:pointer'>Discard Files</a>
-      </li>
-    </ul>
-  </li>
-</dropdown-menu>
--->
-
-<ul class="dropdown-menu"
-    [ngStyle]="{'top': y, 'left': x, 'display': contextVisible ? 'block' : 'none'}"
-    (document:click)='clickedOutside()'>
-  <li>
-    <a (click)='ds.pause(getSelected())'>
-      <i class='fa fa-pause fa-fw'></i> Pause</a>
-  </li>
-
-  <li>
-    <a (click)='ds.resume(getSelected())'>
-      <i class='fa fa-play fa-fw'></i> Resume</a>
   </li>
 
   <li class="divider"></li>
@@ -73,31 +37,22 @@
   <li class='dropdown dropdown-submenu'>
     <a><i class='fa fa-trash fa-fw'></i> Remove</a>
     <ul class='dropdown-menu'>
-      <li>
-        <a
-          (click)='ds.remove(getSelected(), false)'
-          style='cursor:pointer'>Keep Files</a>
-      </li>
-
-      <li>
-        <a
-          (click)='ds.remove(getSelected(), true)'
-          style='cursor:pointer'>Discard Files</a>
-      </li>
+      <li><a (click)='ds.remove(getSelected(), false)'>Keep Files</a></li>
+      <li><a (click)='ds.remove(getSelected(), true)'>Discard Files</a></li>
     </ul>
   </li>
-</ul>
+</context-menu>
 
-
+<!-- TODO: Possibly switch to https://github.com/swimlane/angular2-data-table/ -->
 <div class='flex-table' style='margin-bottom:5em'>
   <div class='flex-table-row'>
     <div
       class='flex-table-item flex-table-fit center'
       (click)='sort("", $event)'
-      [class.clickable]='descending != undefined'>
+      [class.clickable]='state.descending != undefined'>
       <i class='fa fa-chevron-down fa-fw'
-         [class.rotate-180]='!descending'
-         [class.h]='descending == undefined'
+         [class.rotate-180]='!state.descending'
+         [class.h]='state.descending == undefined'
          style='transition: 0.3s transform'></i>
     </div>
 
@@ -116,7 +71,7 @@
 
   <label
     style='font-weight:normal;margin:0'
-    *ngFor='let torrent of ds.state.torrents.values | object:filter:sortBy:descending'>
+    *ngFor='let torrent of state.state.torrents.values | object:state.filter:state.sortBy:state.descending'>
     <input type='checkbox' style='display: none' [(ngModel)]='torrent.checked' />
     <div class='flex-table-row' (contextmenu)='contextmenu(torrent, $event)'>
       <div class='flex-table-item state flex-table-fit center' [ngSwitch]='torrent.state'>

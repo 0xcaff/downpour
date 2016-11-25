@@ -1,8 +1,8 @@
-import {Serializable, prop} from './serializable';
-import {Directory, File, fromFlatTree, getAllFiles} from './tree';
-import {ValueMap} from './map';
-import {Tracker} from './tracker';
-import {Peer} from './peer';
+import { Serializable, prop } from './serializable';
+import { Directory, File, fromFlatTree, getAllFiles } from './tree';
+import { ValueMap } from './map';
+import { Tracker } from './tracker';
+import { Peer } from './peer';
 
 export class Torrent extends Serializable {
   // The SHA-1 has of the torrent's bencoded information section. Commonly used
@@ -73,25 +73,23 @@ export class Torrent extends Serializable {
   tree: Directory|File;
 
   // The trackers connected to.
-  trackers: ValueMap<Tracker>;
+  trackers: ValueMap<Tracker> = new ValueMap<Tracker>((d, i) => d.url);
 
   // The peers connected to.
-  peers: ValueMap<Peer>;
+  peers: ValueMap<Peer> = new ValueMap<Peer>((d, i) => d.ip);
 
   configuration: TorrentConfiguration;
 
   constructor(o: Object, hash: string)
   constructor(hash: string)
   constructor(o: string|Object, hash?: string) {
+    super();
+
     if (typeof o === 'string') {
       hash = o;
-      super();
     } else {
-      super(o);
+      this.unmarshall(o);
     }
-
-    this.trackers = new ValueMap<Tracker>((d, i) => d.url);
-    this.peers = new ValueMap<Peer>((d, i) => d.ip);
 
     if (hash) {
       this.hash = hash;
@@ -105,29 +103,20 @@ export class Torrent extends Serializable {
     super.unmarshall(o);
 
     if (o['peers']) {
-      this.peers.updateFromArray(o['peers'], v => v.ip, v => new Peer(v));
+      this.peers.updateFromArray(o['peers'], v => v['ip'], v => new Peer(v));
     }
 
     if (o['trackers']) {
-      this.trackers.updateFromArray(o['trackers'], v => v.url, v => new Tracker(v));
+      this.trackers.updateFromArray(o['trackers'], v => v['url'], v => new Tracker(v));
     }
 
     if (o['files'] && !this.tree) {
       var t = fromFlatTree(o['files']);
-      apply(t);
+      apply(t, o);
+
       // TODO: Fix this
       this.files = getAllFiles(t);
       this.tree = t;
-
-      function apply(t: Directory|File) {
-        if (t instanceof File) {
-          var i = t.index;
-          t.priority = o['file_priorities'][i];
-          t.progress = o['file_progress'][i];
-        } else if (t instanceof Directory) {
-          t.getAllFiles().forEach(apply);
-        }
-      }
     }
 
     if (!this.configuration)
@@ -152,3 +141,12 @@ export class TorrentConfiguration extends Serializable {
   @prop("move_completed_path") completedPath: string;
 }
 
+function apply(t: Directory|File, o: Object) {
+  if (t instanceof File) {
+    var i = t.index;
+    t.priority = o['file_priorities'][i];
+    t.progress = o['file_progress'][i];
+  } else if (t instanceof Directory) {
+    t.getAllFiles().forEach(apply);
+  }
+}

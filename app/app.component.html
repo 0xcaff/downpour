@@ -12,12 +12,12 @@
       <a class="navbar-brand">
         <img src="../assets/deluge.svg" style="
           height: 100%;
-          display :inline;
+          display: inline;
           vertical-align: bottom;" />
         Downpour
       </a>
     </div>
-    <div class='collapse navbar-collapse' id='navigation' *ngIf='ds.authenticated'>
+    <div class='collapse navbar-collapse' id='navigation' *ngIf='state.authenticated'>
       <ul class='navbar-nav nav'>
         <li routerLinkActive="active">
           <a routerLink="/torrents">Torrents</a>
@@ -30,17 +30,17 @@
         </li>
       </ul>
 
-      <div *ngIf='ds.state.connected'>
+      <div *ngIf='state.state.connected'>
         <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrow-up'></i> {{ ds.state.uploadSpeed | bytes:2 }}/s
+          <i class='fa fa-arrow-up'></i> {{ state.state.uploadSpeed | bytes:2 }}/s
         </div>
 
         <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrow-down'></i> {{ ds.state.downloadSpeed | bytes:2 }}/s
+          <i class='fa fa-arrow-down'></i> {{ state.state.downloadSpeed | bytes:2 }}/s
         </div>
 
         <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrows-h'></i> {{ ds.state.connectionsCount }}
+          <i class='fa fa-arrows-h'></i> {{ state.state.connectionsCount }}
         </div>
       </div>
     </div>

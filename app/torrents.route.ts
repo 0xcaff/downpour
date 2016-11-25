@@ -1,109 +1,83 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { DelugeService } from './deluge.service';
-import { MobileService } from './mediaquery.service';
-import { InputDetectorService } from './input-detector.service';
+import { Subject } from 'rxjs/Subject';
 
+import { DelugeService, poll } from './deluge.service';
+import { InputDetectorService } from './input-detector.service';
+import { StateService, TorrentsComponentProperties, BasicProperties } from './state.service';
+
+import { ContextMenuComponent } from './context-menu.component';
 import { Torrent } from './models/torrent';
 
 @Component({
   templateUrl: './torrents.route.html',
   styleUrls: ['./torrents.route.css', './dropdown-submenu.css'],
-  providers: [
-    MobileService,
-  ]
 })
 export class TorrentsComponent {
-  filter: string;
-  sortBy: string;
-  descending: boolean;
-  contextVisible: boolean;
-  y: number;
-  x: number;
+  @ViewChild(ContextMenuComponent) contextMenu: ContextMenuComponent;
+
+  filterChanged: Subject<string> = new Subject();
 
   constructor(
-    public r: Router, public ds: DelugeService, public mediaQuery: MobileService,
-    public ids: InputDetectorService
-  ) { }
+    public r: Router, public ids: InputDetectorService, private state: StateService,
+    public ds: DelugeService,
+  ) {
+    this.filterChanged
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .subscribe((filter: string) => this.state.filter = filter);
+  }
+
+  filterChange(text: string) {
+    this.filterChanged.next(text);
+  }
 
   ngOnInit() {
-    this.filter = this.ds.filter;
-    this.ds.syncStateInformation = torrentProperties;
-
-    this.ds.sync();
+    this.state.stateProperties = TorrentsComponentProperties;
   }
 
   ngOnDestroy() {
-    this.ds.filter = this.filter;
-    this.ds.syncStateInformation = [''];
+    this.state.stateProperties = BasicProperties;
   }
 
+  // Handle clicks at the top of columns.
+  // TODO: Make this table a component.
   sort(column: string, evt: Event) {
-    if (column == this.sortBy && this.descending !== undefined) {
-      this.descending = !this.descending;
+    if (column == this.state.sortBy && this.state.descending !== undefined) {
+      this.state.descending = !this.state.descending;
     } else {
       if (column == '')
-        this.descending = undefined;
+        this.state.descending = undefined;
       else
-        this.descending = true;
+        this.state.descending = true;
 
-      this.sortBy = column;
+      this.state.sortBy = column;
     }
   }
 
+  // TODO: O(n)
   getSelected() {
-    return this.ds.state.torrents.values.filter((v, i) => v.checked).map(v => v.hash);
+    return this.state.state.torrents.values.filter((v, i) => v.checked).map(v => v.hash);
   }
 
+  // TODO: Selection Experience Sucks
+  // TODO: O(n)
   unselect() {
-    this.ds.state.torrents.values.forEach(v => v.checked = false);
+    this.state.state.torrents.values.forEach(v => v.checked = false);
   }
 
   contextmenu(t: Torrent, evt: MouseEvent) {
-    // TODO: This assumes that if a mouse is available it is always being used.
     if (evt.altKey || !this.ids.hasMouse) {
       return;
     }
-    evt.preventDefault();
 
-    this.contextVisible = true;
-    this.y = evt.pageY;
-    this.x = evt.pageX;
+    if (!t.checked) {
+      this.unselect();
+      t.checked = true;
+    }
 
-    t.checked = true;
-  }
-
-  clickedOutside() {
-    this.contextVisible = false;
+    this.contextMenu.handleContext(evt);
   }
 }
-
-var torrentProperties = [
-    // "queue",
-    "name",
-    // "total_wanted",
-    "state",
-    "progress",
-    // "num_seeds",
-    // "total_seeds",
-    // "num_peers",
-    // "total_peers",
-    "download_payload_rate",
-    "upload_payload_rate",
-    // "eta",
-    "ratio",
-    // "distributed_copies",
-    // "is_auto_managed",
-    // "time_added",
-    "tracker_host",
-    // "save_path",
-    // "total_done",
-    // "total_uploaded",
-    // "max_download_speed",
-    // "max_upload_speed",
-    // "seeds_peers_ratio",
-    "label",
-    "total_size",
-];
 

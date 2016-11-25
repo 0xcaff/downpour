@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -9,20 +9,21 @@ import { Configuration } from './models/configuration';
 import { File, Directory, fromFilesTree } from './models/tree';
 import { State } from './models/state';
 
-// TODO: More information
 export class DelugeError extends Error {
-  constructor(message?: string) {
-    super(message);
+  code: number;
+
+  constructor(rawError: Object) {
+    super(rawError['message']);
     this.name = "DelugeError";
+    this.message = rawError['message'];
+    this.code = rawError['code'];
   }
 }
 
+// TODO: Statelessness
 @Injectable()
 export class DelugeService {
   constructor(private http: Http) { }
-
-  // Do we have an authenticated session with the server?
-  authenticated: boolean;
 
   // The URL at which the JSON endpoint of the server is located at.
   serverURL: string;
@@ -31,7 +32,7 @@ export class DelugeService {
   id: number = 0;
 
   // Calls a method on the remote using the rpc protocol over json.
-  rpc(method: string, payload: any, serverURL?: string): Promise<Error|Object> {
+  rpc(method: string, payload: any, serverURL?: string): Observable<Object> {
     let options = new RequestOptions({
       withCredentials: true,
     });
@@ -44,100 +45,71 @@ export class DelugeService {
       params: payload,
       id: this.id++,
     }, options)
-      .toPromise()
-      .then(resp => {
+      .map(resp => {
         var body;
         try {
           body = resp.json();
         } catch (err) {
           if (err instanceof SyntaxError) {
             // JSON Parse Error
-            console.error(`Not a JSON Endpoint: ${serverURL}`);
+            // console.error(`Not a JSON Endpoint: ${serverURL}`);
             // console.error(`Recieved: ${resp.text()}`);
-            return Promise.reject(new Error("Didn't Get JSON"));
+            throw new Error("Didn't Get JSON");
           } else {
-            return Promise.reject(err);
+            throw err;
           }
         }
 
         if (body.error) {
-          return Promise.reject(new DelugeError(body.error));
+          throw new DelugeError(body.error);
         }
 
-        return Promise.resolve(body.result);
+        return body.result;
       });
   }
 
   // Authenticates the client with the server, configuring the session.
-  auth(serverURL: string, password: string): Promise<string|void> {
-    return this.rpc('auth.login', [password], serverURL)
-      .then(success => {
-        if (success) {
-          this.serverURL = serverURL;
-          this.authenticated = true;
-          return Promise.resolve()
-        } else {
-          return Promise.reject("Authentication Failed")
-        }
-      })
+  auth(serverURL: string, password: string): Observable<boolean> {
+    return this.rpc('auth.login', [password], serverURL);
   }
 
-  // poll(interval: number, method: string, payload: any) Observable<Object> {
-  //   Observable.fromPromise(this.rpc(method, payload))
-  //     .first()
-  //     .repeat();
-  // }
+  isAuthed(serverURL: string): Observable<boolean> {
+    return this.rpc('auth.check_session', [], serverURL);
+  }
 
-  // poll(intervalSeconds: number): Observable<Object> {
-  //   // Every intervalSeconds
-  //   // If no request is in flight
-  //   //   Send A Request with Messages on messageQueue
-  //   //   Remove Messages from messageQueue
-  //   // else
-  //   //   wait for request to land
-  // }
-
-  // The information requested about each torrent every time sync is called.
-  // These are the values requested by default by the official deluge web client.
-  syncStateInformation: string[] = [''];
-
-  state: State = new State();
-  stateChanged: EventEmitter<State> = new EventEmitter();
-
-  // Brings the service's state in sync with the remote's state.
+  // Bring state into the server's ui state.
   // TODO: Immutable or Observer?
-  sync(): Promise<State> {
-    return this.rpc('web.update_ui', [this.syncStateInformation, {}])
-      .then(d => {
-        this.state.unmarshall(d);
-        this.stateChanged.emit(this.state);
-        return this.state;
+  updateState(state: State, params: string[]): Observable<State> {
+    return this.rpc('web.update_ui', [params, {}])
+      .map(d => {
+        state.unmarshall(d);
+        return state;
       });
   }
 
-  syncOnceInformation: string[];
-  currentTorrent: Torrent;
+  // syncOnceInformation: string[];
+  // currentTorrent: Torrent;
 
-  syncTorrent(hash: string): Promise<any> {
-    if (!this.currentTorrent)
-      this.currentTorrent = new Torrent(hash);
+  // syncTorrent(hash: string): Observable<any> {
+  //   if (!this.currentTorrent)
+  //     this.currentTorrent = new Torrent(hash);
 
-    return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
-      .then(d => this.currentTorrent.unmarshall(d))
-      .then(_ => this.currentTorrent);
-  }
+  //   return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
+  //     .map(d => this.currentTorrent.unmarshall(d))
+  //     .map(_ => this.currentTorrent);
+  // }
 
-  pause(hashes: string[]): Promise<any> {
+  pause(hashes: string[]): Observable<any> {
     return this.rpc('core.pause_torrent', [hashes])
   }
 
-  resume(hashes: string[]): Promise<any> {
+  resume(hashes: string[]): Observable<any> {
     return this.rpc('core.resume_torrent', [hashes]);
   }
 
   remove(hashes: string[], removeData: boolean): Promise<any> {
     return Promise.all(hashes.map((v, i) => {
-      return this.rpc('core.remove_torrent', [v, removeData]);
+      return this.rpc('core.remove_torrent', [v, removeData]).toPromise();
     }));
   }
 
@@ -211,5 +183,25 @@ export class DelugeService {
   setConfiguration(c: Configuration): Promise<void> {
     return this.rpc('core.set_config', [c.marshall()]);
   }
+}
+
+// Continously poll, one response after another. Guarantees that request() will
+// be called no more than once per interval.
+export function poll(request: () => Observable<T>, interval: number): Observable<T> {
+  return request().expand(() => {
+    return Observable.combineLatest(
+      request(),
+      Observable.timer(interval),
+      (resp, _) => resp,
+  });
+
+  // return this.rpc(method, payload).take(1).expand(() => {
+  //   // After Both Occur, Send the next request
+  //   return Observable.combineLatest(
+  //     this.rpc(method, payload),
+  //     Observable.timer(1000),
+  //     (resp, _) => resp,
+  //   );
+  // });
 }
 

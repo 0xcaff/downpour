@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
-import { DelugeService } from './deluge.service';
+import { StateService } from './state.service';
 
 @Component({
   selector: 'deluge-app',
   templateUrl: 'app.component.html',
 })
 export class AppComponent {
-  constructor(public ds: DelugeService) { }
+  constructor(private state: StateService) { }
 }
 

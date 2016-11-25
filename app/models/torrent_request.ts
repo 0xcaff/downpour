@@ -42,9 +42,9 @@ export class TorrentRequest extends Serializable {
     } else if (this.tree instanceof File) {
       p = [+this.tree.download];
     }
-    r.path = this.path;
-    r.options = config.marshall();
-    r.options.file_priorities = p;
+    r['path'] = this.path;
+    r['options'] = config.marshall();
+    r['options']['file_priorities'] = p;
 
     return r;
   }
