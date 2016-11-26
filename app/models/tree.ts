@@ -1,4 +1,4 @@
-import {Serializable, prop} from './serializable';
+import { Serializable, prop } from './serializable';
 
 export class File extends Serializable {
   // Used to store whether or not the file should be downloaded, when
@@ -25,7 +25,8 @@ export class File extends Serializable {
   @prop progress: number;
 
   constructor(o: any, name?: string) {
-    super(o);
+    super();
+    this.unmarshall(o);
     if (name) {
       this.name = name;
     } else if (o['path']) {

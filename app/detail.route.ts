@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
-import { DelugeService } from './deluge.service';
+import { DelugeService, poll } from './deluge.service';
 
 import { Torrent } from './models/torrent';
 
@@ -11,36 +12,40 @@ import { Torrent } from './models/torrent';
   styleUrls: ['./detail.route.css'],
 })
 export class TorrentDetailComponent {
-  constructor(public ds: DelugeService, private route: ActivatedRoute,
-    private router: Router) { }
+  constructor(private delugeService: DelugeService, private route: ActivatedRoute, private router: Router) { }
 
-  torrentId: string;
+  pollSub: Subscription;
+  torrent: Torrent = new Torrent();
 
   ngOnInit() {
-    this.ds.currentTorrent = null;
     this.route.params.subscribe(params => {
-      this.torrentId = params['hash'];
-      this.ds.syncTorrent(this.torrentId);
+      let torrentId = params['hash'];
+      this.pollSub = poll(
+        () => this.delugeService.updateTorrent(this.torrent, torrentId, SingleTorrentSyncParams),
+        1000,
+      ).subscribe();
     });
   }
 
   ngOnDestroy() {
+    // Stop Polling
+    this.pollSub.unsubscribe();
   }
 
+  // TODO: Move to ui
   get color(): string {
-    var ct = this.ds.currentTorrent;
-    if (ct.state == 'Seeding')
+    if (this.torrent.state == 'Seeding')
       return 'green';
-    else if (ct.state == 'Error')
+    else if (this.torrent.state == 'Error')
       return 'red';
-    else if (ct.state == 'Queued')
+    else if (this.torrent.state == 'Queued')
       return 'orange';
-    else if (ct.state == 'Paused')
+    else if (this.torrent.state == 'Paused')
       return 'gray';
   }
 }
 
-var information = [
+var SingleTorrentSyncParams = [
   'name',
   'private',
   'label',

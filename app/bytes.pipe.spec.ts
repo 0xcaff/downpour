@@ -1,4 +1,4 @@
-import {BytesPipe} from 'app/pipes/bytes';
+import { BytesPipe } from './bytes.pipe';
 
 describe('bytes pipe', () => {
   var bp = new BytesPipe();
@@ -17,7 +17,7 @@ describe('bytes pipe', () => {
   });
 
   it('should format with precision', () => {
-    expect(bp.transform(1831982, [1])).toEqual('1.8 MB');
+    expect(bp.transform(1831982, 1)).toEqual('1.8 MB');
   });
 });
 

@@ -10,7 +10,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand">
-        <img src="../assets/deluge.svg" style="
+        <img src="../deluge.svg" style="
           height: 100%;
           display: inline;
           vertical-align: bottom;" />
@@ -31,15 +31,16 @@
       </ul>
 
       <div *ngIf='state.state.connected'>
-        <div class='navbar-text navbar-right'>
-          <i class='fa fa-arrow-up'></i> {{ state.state.uploadSpeed | bytes:2 }}/s
+        <div title='Connections' class='navbar-text navbar-right'>
+          <i class='fa fa-arrow-up'></i>
+          <span>{{ state.state.uploadSpeed | bytes:2 }}/s</span>
         </div>
 
-        <div class='navbar-text navbar-right'>
+        <div title='Download Speed' class='navbar-text navbar-right'>
           <i class='fa fa-arrow-down'></i> {{ state.state.downloadSpeed | bytes:2 }}/s
         </div>
 
-        <div class='navbar-text navbar-right'>
+        <div title='Upload Speed' class='navbar-text navbar-right'>
           <i class='fa fa-arrows-h'></i> {{ state.state.connectionsCount }}
         </div>
       </div>

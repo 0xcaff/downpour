@@ -3,24 +3,11 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Torrent } from './models/torrent';
-import { ValueMap } from './models/map';
-import { TorrentRequest, TorrentType } from './models/torrent_request';
+import { TorrentInformation, TorrentType, RawAddTorrentRequest } from './models/torrent-information';
 import { Configuration } from './models/configuration';
 import { File, Directory, fromFilesTree } from './models/tree';
 import { State } from './models/state';
 
-export class DelugeError extends Error {
-  code: number;
-
-  constructor(rawError: Object) {
-    super(rawError['message']);
-    this.name = "DelugeError";
-    this.message = rawError['message'];
-    this.code = rawError['code'];
-  }
-}
-
-// TODO: Statelessness
 @Injectable()
 export class DelugeService {
   constructor(private http: Http) { }
@@ -32,7 +19,7 @@ export class DelugeService {
   id: number = 0;
 
   // Calls a method on the remote using the rpc protocol over json.
-  rpc(method: string, payload: any, serverURL?: string): Observable<Object> {
+  rpc(method: string, payload: any, serverURL?: string): Observable<any> {
     let options = new RequestOptions({
       withCredentials: true,
     });
@@ -68,7 +55,7 @@ export class DelugeService {
       });
   }
 
-  // Authenticates the client with the server, configuring the session.
+  // Authenticates the client with the server.
   auth(serverURL: string, password: string): Observable<boolean> {
     return this.rpc('auth.login', [password], serverURL);
   }
@@ -87,17 +74,13 @@ export class DelugeService {
       });
   }
 
-  // syncOnceInformation: string[];
-  // currentTorrent: Torrent;
-
-  // syncTorrent(hash: string): Observable<any> {
-  //   if (!this.currentTorrent)
-  //     this.currentTorrent = new Torrent(hash);
-
-  //   return this.rpc('web.get_torrent_status', [hash, this.syncOnceInformation])
-  //     .map(d => this.currentTorrent.unmarshall(d))
-  //     .map(_ => this.currentTorrent);
-  // }
+  updateTorrent(torrent: Torrent, hash: string, params: string[]): Observable<Torrent> {
+    return this.rpc('web.get_torrent_status', [hash, params])
+      .map(raw => {
+        torrent.unmarshall(raw);
+        return torrent;
+      });
+  }
 
   pause(hashes: string[]): Observable<any> {
     return this.rpc('core.pause_torrent', [hashes])
@@ -113,95 +96,117 @@ export class DelugeService {
     }));
   }
 
-  getTree(hash: string): Promise<Directory|File> {
+  // Get a torrent's files.
+  getTree(hash: string): Observable<Directory|File> {
     return this.rpc('web.get_torrent_files', [hash])
-      .then(d => fromFilesTree(d));
+      .map(d => fromFilesTree(d));
   }
 
-  updateTorrentSettings(t?: Torrent): Promise<any> {
-    if (t === undefined)
-      t = this.currentTorrent;
+  // updateTorrentSettings(t?: Torrent): Promise<any> {
+  //   if (t === undefined)
+  //     t = this.currentTorrent;
 
-    return this.rpc('core.set_torrent_options', [[t.hash], t.configuration.marshall()])
+  //   return this.rpc('core.set_torrent_options', [[t.hash], t.configuration.marshall()])
+  // }
+
+  // Upload torrent files to the server for parsing and adding.
+  uploadTorrents(files: FileList): Observable<RawUploadsResponse> {
+    var formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      let file = files.item(i);
+      formData.append('file', file);
+    }
+
+    return this.http.post(this.serverURL + '/../upload', formData)
+      .map(resp => resp.json());
   }
 
-  // Takes a URL, Magnet Link, or location on the remote server and returns a
-  // TorrentRequest.
-  getInfo(url: string, serverFile: boolean = false): Promise<TorrentRequest> {
-    var ti = new TorrentRequest();
-    return (() => {
-      if (url.startsWith('magnet') && !serverFile) {
-        ti.format = TorrentType.Magnet;
-        ti.path = url;
-        return this.rpc('web.get_magnet_info', [url]);
-      } else {
-        ti.format = TorrentType.File;
+  // Get torrent information given a file path on the server to a torrent.
+  getTorrentInfo(serverPath: string): Observable<TorrentInformation> {
+    return this.rpc('web.get_torrent_info', [serverPath])
+      .map(raw => {
+        let torrentInfo = new TorrentInformation();
+        torrentInfo.path = serverPath;
+        torrentInfo.format = TorrentType.File;
+        torrentInfo.unmarshall(raw);
+        return torrentInfo;
+      });
+  }
 
-        return (() => {
-          if (!serverFile) {
-            return this.rpc('web.download_torrent_from_url', [url])
-          } else {
-            return Promise.resolve(url);
+  getTorrentInfoFromLink(link: string): Observable<TorrentInformation> {
+    if (link.startsWith('magnet')) {
+      // Magnet Link
+      return this.rpc('web.get_magnet_info', [link])
+        .map(raw => {
+          if (!raw) {
+            // Returns a bool false if request failed.
+            throw new Error("Not a valid torrent.");
           }
-        })()
-        .then(d => {
-          ti.path = d
-          return this.rpc('web.get_torrent_info', [d])
-        })
-      }
-    })()
-    .then(d => {
-      ti.unmarshall(d)
-      return ti;
-    })
-  }
 
-  getTorrentInfo(f: File): Promise<TorrentRequest> {
-    var fd = new FormData();
-    fd.append('file', f);
+          let torrentInfo = new TorrentInformation();
+          torrentInfo.path = link;
+          torrentInfo.format = TorrentType.Magnet;
+          torrentInfo.unmarshall(raw);
 
-    return fetch(this.serverURL + '/../upload', {
-      method: 'POST',
-      body: fd,
-      mode: 'cors',
-      credentials: 'include',
-    })
-      .then(d => d.json())
-      .then(d => this.getInfo(d['files'][0], true));
-  }
-
-  getConfiguration(params: string[] = []): Promise<Configuration> {
-    if (params.length == 0) {
-      return this.rpc('core.get_config', [])
-        .then(d => new Configuration(d));
+          return torrentInfo;
+        });
     } else {
-      return this.rpc('core.get_config_values', [params])
-        .then(d => new Configuration(d));
+      // Remote File, Fetch It
+      return this.rpc('web.download_torrent_from_url', [link])
+        .switchMap(serverPath => this.getTorrentInfo(serverPath));
     }
   }
 
-  setConfiguration(c: Configuration): Promise<void> {
+  addTorrent(request: RawAddTorrentRequest): Observable<any> {
+    return this.rpc('web.add_torrents', [[request]]);
+  }
+
+  getConfiguration(params: string[] = []): Observable<Configuration> {
+    return (() => {
+      if (params.length === 0) {
+        return this.rpc('core.get_config', [])
+      } else {
+        return this.rpc('core.get_config_values', [params])
+      }
+    })().map(raw => {
+      let conf = new Configuration();
+      conf.unmarshall(raw);
+      return conf;
+    });
+  }
+
+  setConfiguration(c: Configuration): Observable<void> {
     return this.rpc('core.set_config', [c.marshall()]);
+  }
+}
+
+export class DelugeError extends Error {
+  code: number;
+
+  constructor(rawError: Object) {
+    super(rawError['message']);
+    this.name = "DelugeError";
+    this.message = rawError['message'];
+    this.code = rawError['code'];
   }
 }
 
 // Continously poll, one response after another. Guarantees that request() will
 // be called no more than once per interval.
-export function poll(request: () => Observable<T>, interval: number): Observable<T> {
-  return request().expand(() => {
-    return Observable.combineLatest(
+export function poll<T>(request: () => Observable<T>, interval: number): Observable<T> {
+  return request().expand(() =>
+    Observable.combineLatest(
       request(),
       Observable.timer(interval),
       (resp, _) => resp,
-  });
+  ));
+}
 
-  // return this.rpc(method, payload).take(1).expand(() => {
-  //   // After Both Occur, Send the next request
-  //   return Observable.combineLatest(
-  //     this.rpc(method, payload),
-  //     Observable.timer(1000),
-  //     (resp, _) => resp,
-  //   );
-  // });
+export interface RawUploadsResponse {
+  // Paths of files on the server.
+  files: string[];
+
+  // Whether or not the upload was sucessful.
+  success: boolean;
 }
 

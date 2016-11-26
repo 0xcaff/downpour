@@ -1,15 +1,11 @@
-import {ReflectiveInjector} from '@angular/core';
-import {DelugeService} from 'app/services/deluge';
+import { Http } from '@angular/http';
+import { inject } from '@angular/core/testing';
+
+import { DelugeService } from './deluge.service';
 
 describe('deluge service', () => {
-  var ds;
-
-  var injector = ReflectiveInjector.resolveAndCreate([
-    DelugeService,
-  ]);
-
-  it('should create', () => {
-    ds = injector.get(DelugeService);
+  it('should create',
+    inject([Http, DelugeService], (http: Http, ds: DelugeService) => {
     expect(ds.rpc).not.toBeNull();
     expect(ds.auth).not.toBeNull();
     expect(ds.sync).not.toBeNull();

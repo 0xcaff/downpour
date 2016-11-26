@@ -1,46 +1,49 @@
-<h3 style='margin-top:0;'>Download Torrent</h3>
+<h3>Add Torrents</h3>
 
+<!-- TODO: UX -->
 <div class="input-group">
   <input type="text"
          class="form-control"
          placeholder="magnet link or link to .torrent file"
          [(ngModel)]='url'
-         (drop)='getTorrentFromFile($event)'
-         (keydown.enter)='getTorrent()'
-         (blur)='getTorrent()'
-         [disabled]='formDisabled' />
+         (drop)='fileDropped($event)'
+         (keydown.enter)='fromUrl(url)'
+         (blur)='fromUrl(url)' />
   <span class="input-group-btn">
     <label class='btn btn-default'>
-      <input type='file' style='display:none' (change)='getTorrentFromFile($event)' />
+      <input type='file' style='display:none' (change)='fileSelected($event)' multipe/>
       Choose...
     </label>
   </span>
 </div>
 
-<div *ngIf='torrentRequest && config' class="clearfix" style='margin-bottom: 1em'>
+<div *ngIf='config' class='clearfix' style='margin-bottom: 1em'>
   <div class='row'>
-    <div class='col-md-6'>
-      <div class="panel panel-default" style='margin-top:2em'>
+    <div class='col-md-9'>
+      <div *ngFor='let torrent of torrents' class="panel panel-default" style='margin-top:2em'>
+
         <div class="panel-heading">
-          <h3 class="panel-title hide-extra">Torrent Information <small style='color:#777'>({{ torrentRequest.hash }})</small></h3>
+          <h3 class="panel-title hide-extra">Files <small style='color:#777'>({{ torrent.hash }})</small></h3>
         </div>
+
         <ul class='list-group'>
-          <li class='list-group-item hide-extra'>{{ torrentRequest.name }}</li>
+          <li class='list-group-item hide-extra'>{{ torrent.name }}</li>
         </ul>
-        <div class="panel-body" *ngIf='torrentRequest.tree'>
-          <tree-view *ngIf='torrentRequest.tree.directories' [tree]='torrentRequest.tree'></tree-view>
-          <file-view *ngIf='!torrentRequest.tree.directories' [element]='torrentRequest.tree'></file-view>
+        <div class="panel-body" *ngIf='torrent.tree'>
+          <tree-view *ngIf='torrent.tree.directories' [tree]='torrent.tree'></tree-view>
+          <file-view *ngIf='!torrent.tree.directories' [element]='torrent.tree'></file-view>
         </div>
       </div>
     </div>
 
-    <div class='col-md-6'>
+    <div class='col-md-3'>
     <div class="panel panel-default" style='margin-top:2em'>
       <div class="panel-heading">
         <h3 class="panel-title">Options</h3>
       </div>
 
       <div class="panel-body">
+        <!-- TODO: Refactor Config View -->
         <speedinput-view
           [(model)]='config.maximumDownloadSpeedPerTorrent'
           title='Maximum Download Speed Per Torrent'></speedinput-view>
@@ -78,6 +81,7 @@
     </div>
     </div>
   </div>
-  <button class="btn btn-default pull-right" type="button" (click)='addTorrent()'>Continue</button>
+
+  <button class="btn btn-default pull-right" type="button" (click)='addTorrents()'>Continue</button>
 </div>
 

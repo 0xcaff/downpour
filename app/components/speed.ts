@@ -10,7 +10,7 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 })
 export class SpeedInputView {
   @Input() model: string;
-  @Output() modelChange: EventEmitter = new EventEmitter();
+  @Output() modelChange: EventEmitter<number> = new EventEmitter();
 
   @Input() title: string;
 }

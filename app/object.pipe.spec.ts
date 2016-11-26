@@ -1,4 +1,4 @@
-import {ObjectFilterPipe, match} from 'app/pipes/object';
+import { ObjectPipe, match } from './object.pipe';
 
 describe('string matcher function', () => {
   it('should match multiple words', () => {
@@ -17,7 +17,7 @@ describe('string matcher function', () => {
 });
 
 describe('object filter pipe', () => {
-  var op = new ObjectFilterPipe();
+  var op = new ObjectPipe();
   var ta = [
     {
       hash: 'abc',

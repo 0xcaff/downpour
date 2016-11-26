@@ -2,11 +2,11 @@
   <input type='checkbox' class='tree' [(ngModel)]='tree.open' />
   <file-view [element]='tree'></file-view>
   <ul>
-    <li *ngFor='var t of tree.directories'>
+    <li *ngFor='let t of tree.directories'>
       <tree-view [tree]="t"></tree-view>
     </li>
 
-    <li *ngFor='var t of tree.files'>
+    <li *ngFor='let t of tree.files'>
       <label>
         <file-view [element]='t'></file-view>
       </label>

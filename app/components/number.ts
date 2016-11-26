@@ -10,10 +10,10 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 })
 export class NumberInputView {
   @Input() model: string;
-  @Output() modelChange: EventEmitter = new EventEmitter();
+  @Output() modelChange: EventEmitter<number> = new EventEmitter();
 
   @Input() checkbox: string;
-  @Output() checkboxChange: EventEmitter = new EventEmitter();
+  @Output() checkboxChange: EventEmitter<boolean> = new EventEmitter();
 
   @Input() title: string;
   @Input() addon: boolean;

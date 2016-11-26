@@ -1,8 +1,9 @@
-import {Serializable, prop} from './serializable';
-import {Directory, File, fromFilesTree} from './tree';
-import {Configuration} from './configuration';
+import { Serializable, prop } from './serializable';
+import { Directory, File, fromFilesTree } from './tree';
+import { Configuration } from './configuration';
 
-export class TorrentRequest extends Serializable {
+// Holds information about a torrent file before it is added.
+export class TorrentInformation extends Serializable {
   // The name of the torrent as returned from the server. For magnet links, this
   // name is the name supplied as a parameter of the magnet link. If a name
   // cannot be determined, the hash is returned as the name.
@@ -20,9 +21,6 @@ export class TorrentRequest extends Serializable {
 
   format: TorrentType;
 
-  constructor() { super() }
-
-  // TODO: move file type discovery into here
   unmarshall(d: Object) {
     super.unmarshall(d);
 
@@ -32,22 +30,33 @@ export class TorrentRequest extends Serializable {
   }
 
   // Returns the data for a request to start a torrent.
-  marshall(config: Configuration): Object {
-    var r = {};
-    var p;
-    if (this.format == TorrentType.Magnet) {
-      p = [];
-    } else if (this.tree instanceof Directory) {
-      p = this.tree.flatten().map(d => +d.download);
-    } else if (this.tree instanceof File) {
-      p = [+this.tree.download];
-    }
-    r['path'] = this.path;
-    r['options'] = config.marshall();
-    r['options']['file_priorities'] = p;
+  marshallWithConfig(config: Configuration): RawAddTorrentRequest {
+    let priorities: number[];
 
-    return r;
+    if (this.format == TorrentType.Magnet) {
+      priorities = [];
+    } else if (this.tree instanceof Directory) {
+      priorities = this.tree.flatten().map(d => +d.download);
+    } else if (this.tree instanceof File) {
+      priorities = [+this.tree.download];
+    }
+
+    let options = config.marshall();
+    options['file_priorities'] = priorities;
+
+    return {
+      path: this.path,
+      options: options,
+    }
   }
+}
+
+export interface RawAddTorrentRequest {
+    // The path of the torrent file on the server.
+    path: string;
+
+    // Configuration Options
+    options: Object;
 }
 
 export enum TorrentType {

@@ -1,13 +1,13 @@
-import {Input, Component} from '@angular/core';
+import { Input, Component } from '@angular/core';
 
-import {Directory, File} from '../models/tree';
+import { Directory, File } from '../models/tree';
 
 @Component({
   selector: 'file-view',
-  templateUrl:'../../templates/components/file-view.html',
-  styleUrls: ['./file-view.css'],
+  templateUrl: './file.html',
+  styleUrls: ['./file.css'],
 })
-export class FileView {
+export class FileComponent {
   @Input() element: File|Directory;
   @Input() open: boolean;
 }

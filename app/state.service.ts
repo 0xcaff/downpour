@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 
 import { DelugeService, poll } from './deluge.service';
 
-// import { Torrent } from './models/torrent';
-// import { ValueMap } from './models/map';
-// import { TorrentRequest, TorrentType } from './models/torrent_request';
-// import { Configuration } from './models/configuration';
-// import { File, Directory, fromFilesTree } from './models/tree';
 import { State } from './models/state';
 
 // A container for global application state.
@@ -40,12 +36,14 @@ export class StateService {
   // Information wanted in state.
   stateProperties: string[] = BasicProperties;
 
+  pollUpdates: Subject<State> = new Subject();
+
   // Start updating state.
   pollState() {
     this.stateSubscription = poll(
        () => this.delugeService.updateState(this.state, this.stateProperties),
        1000,
-     ).subscribe();
+     ).subscribe(this.pollUpdates);
   }
 }
 

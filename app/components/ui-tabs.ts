@@ -1,6 +1,5 @@
-import {Component, Directive, Input, QueryList,
-        ViewContainerRef, TemplateRef, ContentChildren,
-        ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import { Component, Directive, Input, QueryList, ViewContainerRef, TemplateRef,
+  ContentChildren } from '@angular/core';
 
 @Directive({
   selector: '[ui-pane]',
@@ -8,9 +7,9 @@ import {Component, Directive, Input, QueryList,
 export class UiPane {
   @Input() title: string;
 
-  constructor(public viewContainer: ViewContainerRef, public templateRef: TemplateRef) { }
+  constructor(public viewContainer: ViewContainerRef, public templateRef: TemplateRef<any>) { }
 
-  private _active:boolean = false;
+  private _active: boolean = false;
   @Input() set active(active: boolean) {
     if (active == this._active) {
       return

@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { Subject } from 'rxjs/Subject';
 
 import { DelugeService, poll } from './deluge.service';
@@ -13,6 +12,7 @@ import { Torrent } from './models/torrent';
 @Component({
   templateUrl: './torrents.route.html',
   styleUrls: ['./torrents.route.css', './dropdown-submenu.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TorrentsComponent {
   @ViewChild(ContextMenuComponent) contextMenu: ContextMenuComponent;
@@ -21,12 +21,14 @@ export class TorrentsComponent {
 
   constructor(
     public r: Router, public ids: InputDetectorService, private state: StateService,
-    public ds: DelugeService,
+    public ds: DelugeService, private ref: ChangeDetectorRef,
   ) {
     this.filterChanged
       .debounceTime(300)
       .distinctUntilChanged()
       .subscribe((filter: string) => this.state.filter = filter);
+
+    this.state.pollUpdates.subscribe(() => this.ref.markForCheck());
   }
 
   filterChange(text: string) {
@@ -35,6 +37,7 @@ export class TorrentsComponent {
 
   ngOnInit() {
     this.state.stateProperties = TorrentsComponentProperties;
+    this.ref.markForCheck();
   }
 
   ngOnDestroy() {

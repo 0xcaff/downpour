@@ -1,30 +1,24 @@
 <div
   class='clearfix'
-  *ngIf='ds.currentTorrent && ds.currentTorrent.name'
+  *ngIf='torrent && torrent.name'
   style='margin-bottom:1em;'>
 
 <div class="row" style='margin-bottom:1em'>
   <p class="col-md-11">
-    {{ ds.currentTorrent.name }}
-    <i *ngIf='ds.currentTorrent.priv' class="fa fa-lock text-muted"></i>
+    {{ torrent.name }}
+    <i *ngIf='torrent.priv' class="fa fa-lock text-muted"></i>
   </p>
-  <p class="col-md-1 text-right" *ngIf='ds.currentTorrent.label'>
-    <span class="label label-default" style='display:block'>{{ ds.currentTorrent.label }}</span>
+  <p class="col-md-1 text-right" *ngIf='torrent.label'>
+    <span class="label label-default" style='display:block'>{{ torrent.label }}</span>
   </p>
 </div>
 
 <progress-bar
-  [active]='
-  (
-    ds.currentTorrent.state == "Downloading" && ds.currentTorrent.downloadSpeed > 0
-  ) || (
-    ds.currentTorrent.state == "Seeding" && ds.currentTorrent.uploadSpeed > 0
-  )'
+  [active]='(torrent.state == "Downloading" && torrent.downloadSpeed > 0) ||
+    (torrent.state == "Seeding" && torrent.uploadSpeed > 0)'
   [color]='color'
-  [percentage]='ds.currentTorrent.progress'
-  [reverse]='
-    ds.currentTorrent.state == "Seeding" && ds.currentTorrent.uploadSpeed > 0
-  '></progress-bar>
+  [percentage]='torrent.progress'
+  [reverse]='torrent.state == "Seeding" && torrent.uploadSpeed > 0'></progress-bar>
 
 <ui-tabs listClasses='nav nav-tabs nav-justified'>
   <template ui-pane title='General' active='true'>
@@ -32,59 +26,59 @@
       <div class="row">
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Time Active:</div>
-          <div class="pull-right">{{ ds.currentTorrent.timeActive | duration:'s' }}</div>
+          <div class="pull-right">{{ torrent.timeActive | duration:'s' }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Remaining:</div>
-          <div class="pull-right">{{ ds.currentTorrent.timeRemaining | duration:'s' }}</div>
+          <div class="pull-right">{{ torrent.timeRemaining | duration:'s' }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Added:</div>
-          <div class="pull-right">{{ ds.currentTorrent.timeAdded * 1000 | date:"EEEE, MMMM d, y hh" }}</div>
+          <div class="pull-right">{{ torrent.timeAdded * 1000 | date:"EEEE, MMMM d, y hh" }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Downloaded:</div>
-          <div class="pull-right">{{ ds.currentTorrent.totalDownloaded | bytes:2 }}</div>
+          <div class="pull-right">{{ torrent.totalDownloaded | bytes:2 }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Uploaded:</div>
-          <div class="pull-right">{{ ds.currentTorrent.totalUploaded | bytes:2 }}</div>
+          <div class="pull-right">{{ torrent.totalUploaded | bytes:2 }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Ratio:</div>
-          <div class="pull-right">{{ ds.currentTorrent.ratio | number:'1.0-2' }}</div>
+          <div class="pull-right">{{ torrent.ratio | number:'1.0-2' }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Download Speed:</div>
-          <div class="pull-right">{{ ds.currentTorrent.downloadSpeed | bytes:2 }}/s</div>
+          <div class="pull-right">{{ torrent.downloadSpeed | bytes:2 }}/s</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Upload Speed:</div>
-          <div class="pull-right">{{ ds.currentTorrent.uploadSpeed | bytes:2 }}/s</div>
+          <div class="pull-right">{{ torrent.uploadSpeed | bytes:2 }}/s</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Peers:</div>
-          <div class="pull-right">{{ ds.currentTorrent.peersCount }}</div>
+          <div class="pull-right">{{ torrent.peersCount }}</div>
         </div>
 
         <div class="col-md-4 clearfix">
           <div class="pull-left text-muted">Size:</div>
-          <div class="pull-right">{{ ds.currentTorrent.size | bytes:2 }}</div>
+          <div class="pull-right">{{ torrent.size | bytes:2 }}</div>
         </div>
       </div>
 
-      <div class='clearfix' *ngIf='ds.currentTorrent.comment'>
+      <div class='clearfix' *ngIf='torrent.comment'>
         <hr />
         <div class="pull-left text-muted">Comment:</div>
-        <div class='pull-right'>{{ ds.currentTorrent.comment }}</div>
+        <div class='pull-right'>{{ torrent.comment }}</div>
       </div>
     </div>
   </template>
@@ -94,8 +88,8 @@
     <!-- TODO: Verified -->
     <!-- TODO: Updating -->
     <!-- TODO: Send Stats -->
-    <div *ngIf='ds.currentTorrent.trackers.values.length > 0'>
-      <h3>Trackers <small>({{ ds.currentTorrent.trackers.values.length }})</small></h3>
+    <div *ngIf='torrent.trackers.values.length > 0'>
+      <h3>Trackers <small>({{ torrent.trackers.values.length }})</small></h3>
       <table class='table table-striped'>
         <thead>
           <tr>
@@ -104,7 +98,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let t of ds.currentTorrent.trackers.values'>
+          <tr *ngFor='let t of torrent.trackers.values'>
             <td>{{ t.tier }}</td>
             <td>{{ t.url }}</td>
           </tr>
@@ -112,8 +106,8 @@
       </table>
     </div>
 
-    <div *ngIf='ds.currentTorrent.peers.values.length > 0'>
-      <h3>Peers <small>({{ ds.currentTorrent.peers.values.length }})</small></h3>
+    <div *ngIf='torrent.peers.values.length > 0'>
+      <h3>Peers <small>({{ torrent.peers.values.length }})</small></h3>
       <table class='table table-striped'>
         <thead>
           <tr>
@@ -126,7 +120,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let p of ds.currentTorrent.peers.values'>
+          <tr *ngFor='let p of torrent.peers.values'>
             <td>{{ p.country }}</td>
             <td>{{ p.ip }}</td>
             <td>{{ p.downloadSpeed | bytes:2 }}/s</td>
@@ -143,7 +137,7 @@
     <!-- TODO: Collapse -->
     <!-- TODO: Download Path -->
     <!-- TODO: Adjustable Priority -->
-    <h3>Files <small>({{ ds.currentTorrent.files.length }})</small></h3>
+    <h3>Files <small>({{ torrent.files.length }})</small></h3>
     <table class='table table-striped'>
       <thead>
         <tr>
@@ -154,7 +148,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor='let f of ds.currentTorrent.files'>
+        <tr *ngFor='let f of torrent.files'>
           <td>{{ f.path }}</td>
           <td>{{ f.len | bytes:2 }}</td>
           <td>{{ f.progress * 100 | number:'1.0-2' }}%</td>
@@ -167,46 +161,46 @@
   <template ui-pane title='Options'>
     <h3>Options</h3>
 
-    <checkbox-view
-      [(model)]='ds.currentTorrent.configuration.managed'
-      title='Managed'></checkbox-view>
-
     <speedinput-view
-      [(model)]='ds.currentTorrent.configuration.maximumDownloadSpeed'
+      [(model)]='torrent.configuration.maximumDownloadSpeed'
       title='Maximum Download Speed'></speedinput-view>
 
     <speedinput-view
-      [(model)]='ds.currentTorrent.configuration.maximumUploadSpeed'
+      [(model)]='torrent.configuration.maximumUploadSpeed'
       title='Maximum Upload Speed'></speedinput-view>
 
     <numberinput-view
-      [(model)]='ds.currentTorrent.configuration.maximumConnections'
+      [(model)]='torrent.configuration.maximumConnections'
       title='Maximum Connections'></numberinput-view>
 
     <numberinput-view
-      [(model)]='ds.currentTorrent.configuration.maximumUploadSlots'
+      [(model)]='torrent.configuration.maximumUploadSlots'
       title='Maximum Upload Slots'></numberinput-view>
 
     <numberinput-view
-      [(model)]='ds.currentTorrent.configuration.stopRatio'
-      [(checkbox)]='ds.currentTorrent.configuration.stopAtRatio'
+      [(model)]='torrent.configuration.stopRatio'
+      [(checkbox)]='torrent.configuration.stopAtRatio'
       addon='true'
       title='Stop at Ratio'></numberinput-view>
 
     <checkbox-view
-      [(model)]='ds.currentTorrent.configuration.removeAtRatio'
-      [disabled]='!ds.currentTorrent.configuration.stopAtRatio'
+      [(model)]='torrent.configuration.removeAtRatio'
+      [disabled]='!torrent.configuration.stopAtRatio'
       title='Remove at Ratio'></checkbox-view>
 
     <textinput-view
-      [(model)]='ds.currentTorrent.configuration.completedPath'
-      [(checkbox)]='ds.currentTorrent.configuration.moveCompleted'
+      [(model)]='torrent.configuration.completedPath'
+      [(checkbox)]='torrent.configuration.moveCompleted'
       addon='true'
       title='Move on Completion'></textinput-view>
 
     <checkbox-view
-      [(model)]='ds.currentTorrent.configuration.prioritized'
+      [(model)]='torrent.configuration.prioritized'
       title='Prioritize First and Last Pieces'></checkbox-view>
+
+    <checkbox-view
+      [(model)]='torrent.configuration.managed'
+      title='Managed'></checkbox-view>
 
     <button
       class='btn btn-default pull-right'

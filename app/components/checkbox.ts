@@ -1,4 +1,4 @@
-import {Input, Output, Component, EventEmitter} from '@angular/core';
+import { Input, Output, Component, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'checkbox-view',
@@ -9,7 +9,7 @@ import {Input, Output, Component, EventEmitter} from '@angular/core';
 })
 export class CheckboxView {
   @Input() model: boolean;
-  @Output() modelChange: EventEmitter = new EventEmitter();
+  @Output() modelChange: EventEmitter<boolean> = new EventEmitter();
 
   @Input() title: string;
   @Input() disabled: boolean;

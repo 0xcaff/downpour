@@ -80,22 +80,6 @@ export class Torrent extends Serializable {
 
   configuration: TorrentConfiguration;
 
-  constructor(o: Object, hash: string)
-  constructor(hash: string)
-  constructor(o: string|Object, hash?: string) {
-    super();
-
-    if (typeof o === 'string') {
-      hash = o;
-    } else {
-      this.unmarshall(o);
-    }
-
-    if (hash) {
-      this.hash = hash;
-    }
-  }
-
   unmarshall(o: Object) {
     if (o === undefined)
       return;
@@ -112,7 +96,7 @@ export class Torrent extends Serializable {
 
     if (o['files'] && !this.tree) {
       var t = fromFlatTree(o['files']);
-      apply(t, o);
+      getApply(o)(t);
 
       // TODO: Fix this
       this.files = getAllFiles(t);
@@ -141,12 +125,17 @@ export class TorrentConfiguration extends Serializable {
   @prop("move_completed_path") completedPath: string;
 }
 
-function apply(t: Directory|File, o: Object) {
-  if (t instanceof File) {
-    var i = t.index;
-    t.priority = o['file_priorities'][i];
-    t.progress = o['file_progress'][i];
-  } else if (t instanceof Directory) {
-    t.getAllFiles().forEach(apply);
+function getApply(o: Object): (t: Directory|File) => void {
+  var apply = (t: Directory|File) => {
+    if (t instanceof File) {
+      var i = t.index;
+      t.priority = o['file_priorities'][i];
+      t.progress = o['file_progress'][i];
+    } else if (t instanceof Directory) {
+      t.getAllFiles().forEach(apply);
+    }
   }
+
+  return apply;
 }
+
