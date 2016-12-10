@@ -1,4 +1,3 @@
-- [ ] Add Interface to Connect to the Daemon
 - [ ] Add Label Plugin Support
 - [ ] Add Interface to Modify Proxys
 - [ ] Make Selection Better

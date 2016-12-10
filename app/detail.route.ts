@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { DelugeService, poll } from './deluge.service';
 
@@ -22,7 +23,7 @@ export class TorrentDetailComponent {
       let torrentId = params['hash'];
       this.pollSub = poll(
         () => this.delugeService.updateTorrent(this.torrent, torrentId, SingleTorrentSyncParams),
-        1000,
+        Observable.timer(1000),
       ).subscribe();
     });
   }

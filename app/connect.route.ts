@@ -42,7 +42,7 @@ export class ConnectComponent implements OnInit {
         if (this.auth.oldUrl) {
           this.r.navigate([this.auth.oldUrl]);
         } else {
-          this.r.navigate(['torrents']);
+          this.r.navigate(['']);
         }
       }, err => {
         this.failed = true;

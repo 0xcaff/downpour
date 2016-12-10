@@ -11,6 +11,7 @@ import { ConnectComponent } from './connect.route';
 import { TorrentsComponent } from './torrents.route';
 import { AddTorrentComponent } from './add.route';
 import { TorrentDetailComponent } from './detail.route';
+import { DaemonComponent } from './daemon.route';
 // import { ConfigurationComponent } from './routes/configuration';
 
 import { ProgressComponent } from './components/progress';
@@ -43,28 +44,41 @@ import { StateService } from './state.service';
         path: 'connect',
         component: ConnectComponent
       },
+
+      // Authenticated Routes
       {
-        path: 'torrents',
+        path: '',
         canActivate: [AuthService],
         children: [
           {
-            path: ':hash',
-            component: TorrentDetailComponent,
+            path: 'torrents',
+            children: [
+              {
+                path: ':hash',
+                component: TorrentDetailComponent,
+              },
+              {
+                path: '',
+                component: TorrentsComponent,
+              },
+            ],
+          },
+          {
+            path: 'add',
+            component: AddTorrentComponent,
+          },
+          {
+            path: 'daemon',
+            component: DaemonComponent,
           },
           {
             path: '',
-            component: TorrentsComponent,
+            redirectTo: 'torrents',
+            pathMatch: 'full'
           },
+          // { path: 'configuration', component: ConfigurationComponent, canActivate: [AuthService] },
         ],
       },
-      {
-        path: 'add',
-        component: AddTorrentComponent,
-        canActivate: [AuthService]
-        // TODO: Child routes for add by magnet link and torrent info hash.
-      },
-      // { path: 'configuration', component: ConfigurationComponent, canActivate: [AuthService] },
-      { path: '', redirectTo: 'torrents', pathMatch: 'full' },
     ]),
   ],
   declarations: [
@@ -86,6 +100,7 @@ import { StateService } from './state.service';
     TorrentsComponent,
     TorrentDetailComponent,
     AddTorrentComponent,
+    DaemonComponent,
     // ConfigurationComponent,
 
     // Pipes

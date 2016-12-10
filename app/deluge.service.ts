@@ -7,6 +7,7 @@ import { TorrentInformation, TorrentType, RawAddTorrentRequest } from './models/
 import { Configuration } from './models/configuration';
 import { File, Directory, fromFilesTree } from './models/tree';
 import { State } from './models/state';
+import { Daemon } from './models/daemon';
 
 @Injectable()
 export class DelugeService {
@@ -184,6 +185,65 @@ export class DelugeService {
   setConfiguration(c: Configuration): Observable<void> {
     return this.rpc('core.set_config', [c.marshall()]);
   }
+
+  getDaemons(): Observable<Daemon[]> {
+    return this.rpc('web.get_hosts', [])
+      .map(rawDaemons => {
+        return rawDaemons.map(rawDaemon => new Daemon(rawDaemon));
+      });
+  }
+
+  updateDaemon(daemon: Daemon): Observable<Daemon> {
+    return this.rpc('web.get_host_status', [daemon.id])
+      .map(rawDaemon => {
+        daemon.unmarshall(rawDaemon);
+        return daemon;
+      });
+  }
+
+  addDaemon(address: string, port: string, username: string, password: string): Observable<void> {
+    return this.rpc('web.add_host', [address, port, username, password])
+      .map(result => {
+        if (!result) {
+          throw new Error("Invalid Host");
+        }
+      });
+  }
+
+  removeDaemon(id: string): Observable<void> {
+    return this.rpc('web.remove_host', [id])
+      .map(result => {
+        if (!result) {
+          throw new Error("Failed to remove daemon");
+        }
+      });
+  }
+
+  stopDaemon(id: string): Observable<void> {
+    return this.rpc('web.stop_daemon', [id])
+      .map(result => {
+        if (!result) {
+          throw new Error("Failed to stop daemon");
+        }
+      });
+  }
+
+  startDaemon(port: number) {
+    // TODO:
+  }
+
+  connectDaemon(id: string): Observable<void> {
+    return this.rpc('web.connect', [id]);
+  }
+
+  disconnect(): Observable<void> {
+    return this.rpc('web.disconnect', [])
+      .map(result => {
+        if (!result) {
+          throw new Error("Failed to disconnect");
+        }
+      });
+  }
 }
 
 export class DelugeError extends Error {
@@ -197,13 +257,13 @@ export class DelugeError extends Error {
   }
 }
 
-// Continously poll, one response after another. Guarantees that request() will
-// be called no more than once per interval.
-export function poll<T>(request: () => Observable<T>, interval: number): Observable<T> {
+// Continously poll. After both the request is completed and timer fires, makes
+// the next request.
+export function poll<T>(request: () => Observable<T>, timer: Observable<any>): Observable<T> {
   return request().expand(() =>
     Observable.combineLatest(
       request(),
-      Observable.timer(interval),
+      timer,
       (resp, _) => resp,
   ));
 }

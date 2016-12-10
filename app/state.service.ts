@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
@@ -10,7 +11,13 @@ import { State } from './models/state';
 // A container for global application state.
 @Injectable()
 export class StateService {
-  constructor(private delugeService: DelugeService) { }
+  constructor(private delugeService: DelugeService, private router: Router) {
+    this.pollUpdates.subscribe(state => {
+      if (state && state.connected === false && this.router.url !== '/daemon') {
+        this.router.navigate(['/daemon']);
+      }
+    });
+  }
 
   // Set to true by AuthService after authentication is confirmed. Should be set
   // to false when a authntication check is necessary.
@@ -43,7 +50,7 @@ export class StateService {
     // TODO: Backoff if download speed is slow or no state is being viewed.
     this.stateSubscription = poll(
        () => this.delugeService.updateState(this.state, this.stateProperties),
-       1000,
+       Observable.timer(2500),
      ).subscribe(this.pollUpdates);
   }
 }
