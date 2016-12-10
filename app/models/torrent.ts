@@ -87,11 +87,19 @@ export class Torrent extends Serializable {
     super.unmarshall(o);
 
     if (o['peers']) {
-      this.peers.updateFromArray(o['peers'], v => v['ip'], v => new Peer(v));
+      this.peers.updateFromArray(o['peers'], v => v['ip'], v => {
+        let peer = new Peer();
+        peer.unmarshall(v);
+        return peer;
+      });
     }
 
     if (o['trackers']) {
-      this.trackers.updateFromArray(o['trackers'], v => v['url'], v => new Tracker(v));
+      this.trackers.updateFromArray(o['trackers'], v => v['url'], v => {
+        let tracker = new Tracker();
+        tracker.unmarshall(v);
+        return tracker;
+      });
     }
 
     if (o['files'] && !this.tree) {

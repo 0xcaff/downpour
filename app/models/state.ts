@@ -43,7 +43,10 @@ export class State extends Serializable {
         } else {
           // Torrents only on the Server
           // Add Torrent
-          this.torrents.add(new Torrent(o['torrents'][torrentHash], torrentHash));
+          let torrent = new Torrent();
+          torrent.hash = torrentHash;
+          torrent.unmarshall(o['torrents'][torrentHash]);
+          this.torrents.add(torrent);
         }
       }
 
@@ -56,16 +59,20 @@ export class State extends Serializable {
       });
      }
 
+    // Populate Labels
     if (!this.labels && o['filters'] && o['filters']['label']) {
       this.labels = o['filters']['label']
-        .map(l => {
-          var lb = l[0];
-          if (lb == "")
-            return "Unlabeled";
-          else
-            return lb;
-        })
-        .filter(l => l != "All")
+        .reduce((labels, labelObject) => {
+          let [text, id] = labelObject;
+          if (text == "") {
+            text = "unlabeled";
+          } else if (text == "All") {
+            return labels;
+          }
+
+          labels.push(text);
+          return labels;
+        }, []);
     }
   }
 }

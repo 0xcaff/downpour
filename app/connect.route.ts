@@ -29,7 +29,11 @@ export class ConnectComponent implements OnInit {
     this.pending = true;
     this.ds.auth(this.serverURL, this.password)
       .finally(() => this.pending = false)
-      .subscribe(() => {
+      .map(success => {
+        if (!success) {
+          throw new Error("Invalid Credentials");
+        }
+      }).subscribe(() => {
         localStorage.setItem('serverURL', this.serverURL);
 
         // TODO: Remember password option.

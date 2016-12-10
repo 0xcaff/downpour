@@ -1,5 +1,5 @@
-import {ValueMap} from 'app/models/map';
-import {Serializable, prop} from 'app/models/serializable';
+import { ValueMap } from './map';
+import { Serializable, prop } from './serializable';
 
 class X extends Serializable {
   @prop('key') hash: string;
@@ -19,7 +19,7 @@ describe('valuemap model', () => {
     expect(t.values[0]).toBe(d);
   });
 
-  it('should be able to add values by setting', () => {
+  it('should add values by setting', () => {
     var a = {hash: '54', information: 'top secret'};
     t.set('54', a)
     expect(t.get('54')).toBe(a);
@@ -45,7 +45,7 @@ describe('valuemap model', () => {
     expect(t.get('123')).toBe(s);
   });
 
-  it('should be able to check whether it has a value', () => {
+  it('should check whether it has a value', () => {
     expect(t.has('123')).toEqual(true);
     expect(t.has('1')).toEqual(false);
   });
@@ -60,14 +60,18 @@ describe('valuemap model', () => {
     });
   });
 
-  it('should be able to update from an array of objects', () => {
+  it('should update from an array of objects', () => {
     var m = new ValueMap<X>(d => d.hash);
     var y = [
       {key: 'lsdkaj', some_value: 'daskdjal'},
       {key: 'special', some_value: 'honeypot'},
     ];
 
-    m.updateFromArray(y, (v, i) => v.key, v => new X(v));
+    m.updateFromArray(y, (v, i) => v.key , v => {
+      let x = new X()
+      x.unmarshall(v);
+      return x;
+    });
     console.log(m);
 
     expect(m.values.length).toBe(2);

@@ -1,7 +1,8 @@
-import {MockTree} from 'app/mock/tree';
-import {SingleFileTorrentRequest, MultiFileTorrentRequest} from 'app/mock/torrent_request';
-import {SingleFileTorrent, MultiFileTorrent} from 'app/mock/torrent';
-import {Directory, File, fromFilesTree, fromFlatTree, getAllFiles} from 'app/models/tree';
+import { MockTree } from './tree.mock';
+import { SingleFileTorrentRequest, MultiFileTorrentRequest } from './torrent-information.mock';
+import { SingleFileTorrent, MultiFileTorrent } from './torrents.mock';
+
+import { Directory, File, fromFilesTree, fromFlatTree, getAllFiles } from './tree';
 
 describe('tree model', () => {
   var tree: Directory;
@@ -54,23 +55,23 @@ describe('tree model', () => {
     expect(tree.directories[0].files[0].download).toEqual(false);
   });
 
-  it('should be able to flatten to the correct length', () => {
+  it('should flatten to the correct length', () => {
     expect(tree.flatten().length).toEqual(17);
   });
 
-  it('should be able to flatten a directory correctly', () => {
+  it('should flatten a directory correctly', () => {
     var files = tree.flatten()
     for (var i = 0; i < files.length; i++) {
       expect(files[i].index).toEqual(i);
     }
   });
 
-  it('should be able to get the length of its children', () => {
+  it('should get the length of its children', () => {
     expect(tree.len).toEqual(230566199);
     expect(tree.directories[0].len).toEqual(49940930);
   });
 
-  it('should be able to calculate the length of its children', () => {
+  it('should calculate the length of its children', () => {
     tree.len = undefined;
     expect(tree.len).toEqual(230566199);
     expect(tree.directories[0].len).toEqual(49940930);
@@ -78,7 +79,7 @@ describe('tree model', () => {
 });
 
 describe('fileTree handling', () => {
-  it('should be able to unmarshall fileTrees with multiple files', () => {
+  it('should unmarshall fileTrees with multiple files', () => {
     var mftr = MultiFileTorrentRequest;
     var r = fromFilesTree(mftr['files_tree']);
 
@@ -91,7 +92,7 @@ describe('fileTree handling', () => {
     expect(r.directories[0].files[0].name).toEqual("testfile");
   });
 
-  it('should be able to unmarshall fileTrees with single files', () => {
+  it('should unmarshall fileTrees with single files', () => {
     var sft = SingleFileTorrentRequest;
     var r = fromFilesTree(sft['files_tree']);
 
@@ -101,7 +102,7 @@ describe('fileTree handling', () => {
 });
 
 describe('flatTree handling', () => {
-  it('should be able to unmarshall single file flatTrees', () => {
+  it('should unmarshall single file flatTrees', () => {
     var fs = SingleFileTorrent['files'];
     var r = fromFlatTree(fs);
 
@@ -109,7 +110,7 @@ describe('flatTree handling', () => {
     expect(r.name).toEqual(fs[0]['path']);
   });
 
-  it('should be able to unmarshall multi file flatTrees', () => {
+  it('should unmarshall multi file flatTrees', () => {
     var fs = MultiFileTorrent['files'];
     var r = fromFlatTree(fs);
 
@@ -124,14 +125,14 @@ describe('flatTree handling', () => {
 });
 
 describe('getAllFiles', () => {
-  it('should be able to get all files from a single file torrent', () => {
+  it('should get all files from a single file torrent', () => {
     var r = fromFlatTree(SingleFileTorrent['files']);
     var af = getAllFiles(r)
 
     expect(af.length).toEqual(1);
   });
 
-  it('should be able to get all files from a multi file torrent', () => {
+  it('should get all files from a multi file torrent', () => {
     var fs = MultiFileTorrent['files'];
     var r = getAllFiles(fromFlatTree(fs));
 

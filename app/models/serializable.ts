@@ -23,7 +23,7 @@ function serialize(target: Object, serializedkey: string, propertykey: string): 
   target['__serialization__'][serializedkey] = propertykey;
 }
 
-export class Serializable {
+export abstract class Serializable {
   __serialization__: Object;
 
   unmarshall(o: Object = {}) {

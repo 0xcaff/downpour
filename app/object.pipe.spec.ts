@@ -91,12 +91,12 @@ describe('object filter pipe', () => {
     expect(r.length).toEqual(2);
   });
 
-  it('should be able to sort', () => {
+  it('should sort', () => {
     var r = op.transform(ta, '', 'name');
     expect(r[0]).toBe(ta[2]);
   });
 
-  it('should be able to reverse sort', () => {
+  it('should reverse sort', () => {
     var r = op.transform(ta, '', 'size', true);
     expect(r[0]).toBe(ta[1]);
   });

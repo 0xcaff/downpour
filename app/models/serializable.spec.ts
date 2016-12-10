@@ -1,4 +1,4 @@
-import {prop, Serializable} from 'app/models/serializable';
+import { prop, Serializable } from './serializable';
 
 class Test extends Serializable {
   @prop('special') t: number;
@@ -9,8 +9,9 @@ class Test extends Serializable {
   constructor(o: string);
 
   constructor(o: any) {
+    super();
     if (typeof o == 'object') {
-      super(o);
+      super.unmarshall(o);
     } else if (typeof o == 'string') {
       this.a = o;
       this.t = 1;
@@ -50,7 +51,7 @@ describe('serializable model', () => {
 
   it("shoudn't apply extra properties as undefined", () => {
     var t: Test = new Test({special: 1, extra: 'random'});
-    expect(t.extra).not.toBeDefined();
+    expect(t['extra']).not.toBeDefined();
   });
 
   it('should deserialize with dot properties', () => {

@@ -6,7 +6,7 @@ import { suffix } from './bytes.pipe';
   name: 'object',
 })
 export class ObjectPipe implements PipeTransform {
-  transform(value: any[], query: string, sortBy: string, reverse: boolean): any {
+  transform(value: any[], query?: string, sortBy?: string, reverse?: boolean): any {
     var sortOrder: number = reverse ? -1 : 1
 
     if (!query && !sortBy)

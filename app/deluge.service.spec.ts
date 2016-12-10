@@ -1,31 +1,55 @@
-import { Http } from '@angular/http';
-import { inject } from '@angular/core/testing';
+import { HttpModule, Http, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
+import { async, inject, TestBed } from '@angular/core/testing';
 
 import { DelugeService } from './deluge.service';
 
 describe('deluge service', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        DelugeService,
+
+        MockBackend,
+        BaseRequestOptions,
+        {
+          provide: Http,
+          useFactory: (backend, options) => new Http(backend, options),
+          deps: [MockBackend, BaseRequestOptions]
+        }
+      ],
+      imports: [HttpModule],
+    });
+  });
+
   it('should create',
-    inject([Http, DelugeService], (http: Http, ds: DelugeService) => {
+    inject([DelugeService], (ds: DelugeService) => {
     expect(ds.rpc).not.toBeNull();
     expect(ds.auth).not.toBeNull();
-    expect(ds.sync).not.toBeNull();
-  });
+  }));
 
-  it('should authenticate', (done) => {
-    ds.auth('http://drone.lan/deluge/json', 'deluge')
-      .catch(fail)
-      .then(() => {
-        expect(ds.authenticated).toBe(true);
-        expect(ds.serverURL).not.toBeNull();
-      })
-      .then(done)
-  });
+  it('should authenticate',
+    async(inject([MockBackend, DelugeService], (mockBackend, delugeService) => {
+    mockBackend.connections.subscribe(conn => {
+      let respOpts = new ResponseOptions({ body: {"id": 10, "result": true, "error": null} });
+      conn.mockRespond(new Response(respOpts));
+    });
 
-  it('should sync', (done) => {
-    ds.sync()
+    delugeService.auth('http://drone.lan/deluge/json', 'topSecretPassword')
       .catch(fail)
-      .then(d => expect(ds.state.torrents.values.length).toBeGreaterThan(0))
-      .then(done)
-  });
+      .subscribe(success => expect(success).toBe(true));
+  })));
+
+  it('should fail to authenticate',
+    async(inject([MockBackend, DelugeService], (mockBackend, delugeService) => {
+    mockBackend.connections.subscribe(conn => {
+      let respOpts = new ResponseOptions({ body: {"id": 10, "result": false, "error": null} });
+      conn.mockRespond(new Response(respOpts));
+    });
+
+    delugeService.auth('http://drone.lan/deluge/json', 'topSecretPassword')
+      .catch(fail)
+      .subscribe(success => expect(success).toBe(false));
+  })));
 });
 

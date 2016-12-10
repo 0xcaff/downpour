@@ -1,14 +1,14 @@
-import {TorrentRequest, TorrentType} from 'app/models/torrent_request';
-import {SingleFileTorrentRequest, MultiFileTorrentRequest, MagnetTorrentRequest, FileFolderTorrentRequest} from 'app/mock/torrent_request';
-import {Configuration} from 'app/models/configuration';
-import {File, Directory} from 'app/models/tree';
+import { TorrentInformation, TorrentType } from './torrent-information';
+import { SingleFileTorrentRequest, MultiFileTorrentRequest, MagnetTorrentRequest, FileFolderTorrentRequest } from './torrent-information.mock';
+import { Configuration } from './configuration';
+import { File, Directory } from './tree';
 
 describe('torrent request', () => {
   var tr;
   var cfg = new Configuration();
 
   it('should unmarshall single file torrents', () => {
-    tr = new TorrentRequest();
+    tr = new TorrentInformation();
     var sftr = SingleFileTorrentRequest;
     tr.format = TorrentType.File;
     tr.unmarshall(sftr);
@@ -20,7 +20,7 @@ describe('torrent request', () => {
   });
 
   it('should unmarshall strange single file torrents', () => {
-    var tr = new TorrentRequest();
+    var tr = new TorrentInformation();
     var fftr = FileFolderTorrentRequest;
     tr.format = TorrentType.File;
     tr.unmarshall(fftr);
@@ -30,13 +30,13 @@ describe('torrent request', () => {
   });
 
   it('should marshall a single file torrent', () => {
-    var r = tr.marshall(cfg);
+    var r = tr.marshallWithConfig(cfg);
 
     expect(r['options']['file_priorities'].length).toEqual(1);
   });
 
   it('should unmarshall multi file torrents', () => {
-    tr = new TorrentRequest();
+    tr = new TorrentInformation();
     var mftr = MultiFileTorrentRequest;
     tr.format = TorrentType.File;
     tr.unmarshall(mftr);
@@ -48,13 +48,13 @@ describe('torrent request', () => {
   });
 
   it('should marshall multi file torrents', () => {
-    var r = tr.marshall(cfg);
+    var r = tr.marshallWithConfig(cfg);
 
     expect(r['options']['file_priorities'].length).toEqual(8);
   });
 
   it('should unmarshall magnet links', () => {
-    tr = new TorrentRequest();
+    tr = new TorrentInformation();
     var mtr = MagnetTorrentRequest;
     tr.format = TorrentType.Magnet;
     tr.unmarshall(mtr);
@@ -63,7 +63,7 @@ describe('torrent request', () => {
   });
 
   it('should marshall magnet links', () => {
-    var r = tr.marshall(cfg);
+    var r = tr.marshallWithConfig(cfg);
 
     expect(r['options']['file_priorities'].length).toEqual(0);
   });
