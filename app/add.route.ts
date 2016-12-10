@@ -5,9 +5,9 @@ import { DelugeService } from './deluge.service';
 import { Configuration } from './models/configuration';
 import { TorrentInformation, TorrentType } from './models/torrent-information';
 
+import { Observable } from 'rxjs/Observable';
+
 // TODO: Handle Adding Duplicates
-// TODO: Handle Removal
-// TODO: Handle Actual Addition
 // TODO: Add With Cookies
 @Component({
   templateUrl: 'add.route.html',
@@ -16,23 +16,30 @@ import { TorrentInformation, TorrentType } from './models/torrent-information';
 export class AddTorrentComponent {
   torrents: TorrentInformation[] = [];
   config: Configuration;
+  url: string;
 
   constructor(private ds: DelugeService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     (<any>navigator).registerProtocolHandler('magnet',
-      `${window.location.href}/magnet/%s`, "Downpour Magnet Link Handler");
+      `${window.location.href};magnet=%s`, "Downpour Magnet Link Handler");
 
-    // TODO: Add to app.module.ts
     this.route.params.subscribe(params => {
       let magnetLink = params['magnet'];
       if (magnetLink) {
         this.fromUrl(magnetLink);
+        this.url = magnetLink;
+      }
+
+      let infoHash = params['infohash'];
+      if (infoHash) {
+        let magnet = `magnet:?xt=urn:btih:${infoHash}`;
+        this.fromUrl(magnet);
       }
     });
 
     return this.ds.getConfiguration(config_keys)
-      .subscribe(defaultConfig => this.config = defaultConfig);;
+      .subscribe(defaultConfig => this.config = defaultConfig);
   }
 
   fileDropped(e: DragEvent) {
@@ -42,29 +49,46 @@ export class AddTorrentComponent {
     }
   }
 
-  // TODO: Handle repeat selections
   fileSelected(e: Event) {
     // File Input Changed
     let input = <HTMLInputElement>e.target;
     if (input.files) {
       this.sendFiles(input.files);
     }
+    input.value = null;
   }
 
   // Uploads torrent files to server for adding.
   sendFiles(files: FileList) {
+    let currentInfos: TorrentInformation[] = [];
+    for (let i = 0; i < files.length; i++) {
+      let file = files.item(i);
+      let info = new TorrentInformation();
+      info.source = file.name;
+      currentInfos.push(info);
+    }
+
+    // Add To UI
+    this.torrents.push(...currentInfos);
+
     this.ds.uploadTorrents(files)
+      .catch(error => currentInfos.forEach(info => info.error = error.message || error.toString()))
       .subscribe(resp => {
         if (!resp.success) {
-          // TODO: Handle
+          currentInfos.forEach(
+            info => info.error = "Failed to upload torrent to server."
+          );
+
           return;
         }
 
-        for (let file of resp.files) {
-          this.ds.getTorrentInfo(file)
-            .subscribe(info => this.torrents.push(info));
+        for (let i = 0; i < resp.files.length; i++) {
+          let file = resp.files[i];
+          this.ds.getTorrentInfo(file, currentInfos[i])
+            .catch(error => currentInfos[i].error = error.message || error.toString())
+            .subscribe();
         }
-      });
+      })
   }
 
   fromUrl(link: string) {
@@ -73,13 +97,32 @@ export class AddTorrentComponent {
       return;
     }
 
-    // TODO: Handle Error
-    this.ds.getTorrentInfoFromLink(link)
-      .subscribe(torrentInfo => this.torrents.push(torrentInfo));
+    this.url = '';
+
+    let info = new TorrentInformation();
+    info.source = link;
+    this.torrents.push(info);
+
+    this.ds.getTorrentInfoFromLink(link, info)
+      .catch(error => info.error = error.message || error.toString())
+      .subscribe();
   }
 
   addTorrents() {
-    console.log(this.torrents);
+    let requests = this.torrents.reduce((result, torrentRequest) => {
+      if (!torrentRequest.path) {
+        // Unpopulated Torrent
+        return result;
+      }
+
+      let raw = torrentRequest.marshallWithConfig(this.config);
+      result.push(raw);
+
+      return result;
+    }, []);
+
+    this.ds.addTorrents(requests)
+      .subscribe(() => this.router.navigate(['/']));
   }
 }
 

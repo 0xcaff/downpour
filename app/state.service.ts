@@ -40,6 +40,7 @@ export class StateService {
 
   // Start updating state.
   pollState() {
+    // TODO: Backoff if download speed is slow or no state is being viewed.
     this.stateSubscription = poll(
        () => this.delugeService.updateState(this.state, this.stateProperties),
        1000,

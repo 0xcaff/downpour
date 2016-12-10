@@ -11,28 +11,62 @@
          (blur)='fromUrl(url)' />
   <span class="input-group-btn">
     <label class='btn btn-default'>
-      <input type='file' style='display:none' (change)='fileSelected($event)' multipe/>
+      <input type='file' style='display:none' (change)='fileSelected($event)' multiple/>
       Choose...
     </label>
   </span>
 </div>
 
+<!--
+<div class="alert alert-info alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <strong>Torrent already exists!</strong>
+  The torrent you are trying to add is already in the queue to be added.
+</div>
+-->
+
 <div *ngIf='config' class='clearfix' style='margin-bottom: 1em'>
   <div class='row'>
     <div class='col-md-9'>
-      <div *ngFor='let torrent of torrents' class="panel panel-default" style='margin-top:2em'>
-
+      <div *ngFor='let torrent of torrents; let index = index' class="panel panel-default" style='margin-top:2em'>
         <div class="panel-heading">
-          <h3 class="panel-title hide-extra">Files <small style='color:#777'>({{ torrent.hash }})</small></h3>
+          <h3 class="panel-title hide-extra">
+            <span *ngIf='!torrent.hash'>{{ torrent.source }}</span>
+            <span *ngIf='torrent.name'>{{ torrent.name }}</span>
+
+            <i class='fa fa-close pull-right'
+               style='color:#555;cursor:pointer;'
+               (click)='torrents.splice(index, 1)'></i>
+            <!-- TODO: This click handler needs to be rewritten -->
+          </h3>
         </div>
 
-        <ul class='list-group'>
-          <li class='list-group-item hide-extra'>{{ torrent.name }}</li>
+        <ul class='list-group' *ngIf='torrent.hash'>
+          <li class='list-group-item hide-extra'>
+            Files <small style='color:#777'>({{ torrent.hash }})</small>
+          </li>
         </ul>
-        <div class="panel-body" *ngIf='torrent.tree'>
-          <tree-view *ngIf='torrent.tree.directories' [tree]='torrent.tree'></tree-view>
-          <file-view *ngIf='!torrent.tree.directories' [element]='torrent.tree'></file-view>
+
+        <div class="panel-body" *ngIf='(!torrent.error && !torrent.hash) || torrent.error || torrent.tree'>
+          <div class="progress" *ngIf='!torrent.error && !torrent.hash'>
+            <div
+              class="progress-bar progress-bar-success progress-bar-striped active"
+              style="width:100%"></div>
+          </div>
+
+          <div *ngIf='torrent.error' class="alert alert-danger" style="margin:0">
+            <strong>Something bad has happened!</strong> {{ torrent.error }}
+          </div>
+
+          <div *ngIf='torrent.tree'>
+            <tree-view *ngIf='torrent.tree.directories' [tree]='torrent.tree'></tree-view>
+            <file-view *ngIf='!torrent.tree.directories' [element]='torrent.tree'></file-view>
+          </div>
         </div>
+
       </div>
     </div>
 
@@ -82,6 +116,10 @@
     </div>
   </div>
 
-  <button class="btn btn-default pull-right" type="button" (click)='addTorrents()'>Continue</button>
+  <button
+    class="btn btn-default pull-right"
+    type="button"
+    (click)='addTorrents()'>Add</button>
+
 </div>
 

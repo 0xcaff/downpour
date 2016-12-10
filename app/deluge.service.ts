@@ -122,10 +122,13 @@ export class DelugeService {
   }
 
   // Get torrent information given a file path on the server to a torrent.
-  getTorrentInfo(serverPath: string): Observable<TorrentInformation> {
+  getTorrentInfo(serverPath: string, torrentInfo: TorrentInformation): Observable<TorrentInformation> {
     return this.rpc('web.get_torrent_info', [serverPath])
       .map(raw => {
-        let torrentInfo = new TorrentInformation();
+        if (!raw) {
+          throw new Error("Not a valid torrent.");
+        }
+
         torrentInfo.path = serverPath;
         torrentInfo.format = TorrentType.File;
         torrentInfo.unmarshall(raw);
@@ -133,17 +136,16 @@ export class DelugeService {
       });
   }
 
-  getTorrentInfoFromLink(link: string): Observable<TorrentInformation> {
+  getTorrentInfoFromLink(link: string, torrentInfo: TorrentInformation): Observable<TorrentInformation> {
     if (link.startsWith('magnet')) {
       // Magnet Link
       return this.rpc('web.get_magnet_info', [link])
         .map(raw => {
           if (!raw) {
             // Returns a bool false if request failed.
-            throw new Error("Not a valid torrent.");
+            throw new Error("Not a valid magnet link.");
           }
 
-          let torrentInfo = new TorrentInformation();
           torrentInfo.path = link;
           torrentInfo.format = TorrentType.Magnet;
           torrentInfo.unmarshall(raw);
@@ -153,12 +155,16 @@ export class DelugeService {
     } else {
       // Remote File, Fetch It
       return this.rpc('web.download_torrent_from_url', [link])
-        .switchMap(serverPath => this.getTorrentInfo(serverPath));
+        .switchMap(serverPath => this.getTorrentInfo(serverPath, torrentInfo));
     }
   }
 
-  addTorrent(request: RawAddTorrentRequest): Observable<any> {
-    return this.rpc('web.add_torrents', [[request]]);
+  addTorrents(requests: RawAddTorrentRequest[]): Observable<void> {
+    return this.rpc('web.add_torrents', [requests])
+      .map(resp => {
+        if (!resp)
+          throw new Error("Adding Torrents Failed");
+      });
   }
 
   getConfiguration(params: string[] = []): Observable<Configuration> {

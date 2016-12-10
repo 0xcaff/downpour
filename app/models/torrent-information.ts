@@ -21,6 +21,12 @@ export class TorrentInformation extends Serializable {
 
   format: TorrentType;
 
+  // Description of where the torrent came from. Could be a file path or URL.
+  source: string;
+
+  // Populated if something has gone wrong.
+  error: string;
+
   unmarshall(d: Object) {
     super.unmarshall(d);
 

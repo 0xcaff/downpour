@@ -80,6 +80,9 @@ export class Torrent extends Serializable {
 
   configuration: TorrentConfiguration;
 
+  // A value used by the ui for torrent selection and manipulation.
+  checked: boolean;
+
   unmarshall(o: Object) {
     if (o === undefined)
       return;

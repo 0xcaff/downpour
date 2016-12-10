@@ -1,7 +1,6 @@
 - [ ] Add Interface to Connect to the Daemon
 - [ ] Add Label Plugin Support
 - [ ] Add Interface to Modify Proxys
-- [ ] Add Support to Add by Infohash
 - [ ] Make Selection Better
 - [ ] Optimize Change Detection
 - [ ] Add Support Set Torrent Options
@@ -21,5 +20,4 @@
 - [ ] Add Autocomplete
 - [ ] Better Tests With DOM and Components
 - [ ] Real Build Pipeline
-- [x] Stabilize Header
 
