@@ -23,6 +23,7 @@ import { NumberInputView } from './components/number';
 import { TextInputView } from './components/text';
 import { SpeedInputView } from './components/speed';
 import { ContextMenuComponent } from './context-menu.component';
+import { LoadingComponent } from './loading.component';
 
 import { BytesPipe } from './bytes.pipe';
 import { DurationPipe } from './duration.pipe';
@@ -94,6 +95,7 @@ import { StateService } from './state.service';
     TreeComponent,
     ContextMenuComponent,
     FileComponent,
+    LoadingComponent,
 
     // Routes
     ConnectComponent,

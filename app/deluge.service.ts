@@ -71,6 +71,7 @@ export class DelugeService {
     return this.rpc('web.update_ui', [params, {}])
       .map(d => {
         state.unmarshall(d);
+        state.params = params;
         return state;
       });
   }

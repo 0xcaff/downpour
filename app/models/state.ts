@@ -21,6 +21,9 @@ export class State extends Serializable {
   torrents: ValueMap<Torrent> = new ValueMap<Torrent>((v, i) => v.hash);
   labels: string[];
 
+  // Parameters used to request this state.
+  params: string[];
+
   // TODO: Tests
   unmarshall(o: Object = {}) {
     super.unmarshall(o);
@@ -29,10 +32,6 @@ export class State extends Serializable {
       var nk = Object.keys(o['torrents']);
       for (var i = 0; i < nk.length; i++) {
         var torrentHash = nk[i];
-
-        if (Object.keys(o['torrents'][torrentHash]).length <= 0)
-          // Assume All Torrents Are Empty
-          break;
 
         if (this.torrents.has(torrentHash)) {
           // Interection of the Client Torrents and Server Torrents

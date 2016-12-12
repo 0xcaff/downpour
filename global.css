@@ -1,0 +1,53 @@
+.rain {
+  overflow: hidden;
+  display: flex;
+  height: 10em;
+  width: 10em;
+}
+
+.rain .drop {
+  flex: 1;
+  height: 1em;
+  background: blue;
+  animation: 0.7s fall cubic-bezier(0.25, 0, 1, 0.8) infinite;
+}
+
+.rain .drop:nth-child(5n+1) {
+  animation-delay: -400ms;
+}
+
+.rain .drop:nth-child(5n+2) {
+  animation-delay: 0;
+}
+
+.rain .drop:nth-child(5n+3) {
+  animation-delay: -200ms;
+}
+
+.rain .drop:nth-child(5n+4) {
+  animation-delay: -100ms;
+}
+
+.rain .drop:nth-child(5n+5) {
+  animation-delay: -300ms;
+}
+
+@keyframes fall {
+  from {
+    margin-top: -1em;
+  }
+  to {
+    margin-top: 11em;
+  }
+}
+
+.loading {
+  margin: 0 auto;
+  width: min-content;
+}
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+

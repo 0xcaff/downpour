@@ -43,8 +43,10 @@
   </li>
 </context-menu>
 
+<loading-component *ngIf='loading'></loading-component>
+
 <!-- TODO: Possibly switch to https://github.com/swimlane/angular2-data-table/ -->
-<div class='flex-table' style='margin-bottom:5em'>
+<div class='flex-table' style='margin-bottom:5em' *ngIf='!loading'>
   <div class='flex-table-row'>
     <div
       class='flex-table-item flex-table-fit center'
