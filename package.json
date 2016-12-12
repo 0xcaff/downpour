@@ -31,6 +31,7 @@
     "zone.js": "^0.6.26"
   },
   "devDependencies": {
+    "@types/chai": "^3.4.34",
     "@types/core-js": "^0.9.34",
     "@types/jasmine": "^2.5.36",
     "@types/node": "^6.0.46",

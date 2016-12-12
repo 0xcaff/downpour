@@ -44,7 +44,8 @@ export class DaemonComponent implements OnInit {
 
   connect(daemon: Daemon) {
     if (daemon.status === "Connected") {
-      this.ds.disconnect().catch(err => console.error(err)).subscribe()
+      // TODO: Handle Error
+      this.ds.disconnect().subscribe()
       return;
     }
 

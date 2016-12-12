@@ -72,7 +72,6 @@ export class AddTorrentComponent {
     this.torrents.push(...currentInfos);
 
     this.ds.uploadTorrents(files)
-      .catch(error => currentInfos.forEach(info => info.error = error.message || error.toString()))
       .subscribe(resp => {
         if (!resp.success) {
           currentInfos.forEach(
@@ -88,7 +87,9 @@ export class AddTorrentComponent {
             .catch(error => currentInfos[i].error = error.message || error.toString())
             .subscribe();
         }
-      })
+      }, err =>
+        currentInfos.forEach(info => info.error = err.message || err.toString())
+      );
   }
 
   fromUrl(link: string) {
