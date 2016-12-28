@@ -187,11 +187,39 @@ export class DelugeService {
     return this.rpc('core.set_config', [c.marshall()]);
   }
 
-  getDaemons(): Observable<Daemon[]> {
+  updateDaemons(daemons: Map<string, Daemon>): Observable<Daemon[]> {
+    let daemonsArr = null;
     return this.rpc('web.get_hosts', [])
       .map(rawDaemons => {
-        return rawDaemons.map(rawDaemon => new Daemon(rawDaemon));
-      });
+        // Copy Map
+        let oldDaemons = new Map(daemons.entries());
+
+        daemons.clear();
+
+        for (let rawDaemon of rawDaemons) {
+          let [id] = rawDaemon;
+          let daemon = null;
+          if (oldDaemons.has(id)) {
+            daemon = oldDaemons.get(id);
+            daemon.unmarshall(rawDaemon);
+          } else {
+            daemon = new Daemon(rawDaemon);
+          }
+
+          daemons.set(id, daemon);
+        }
+
+        return daemons;
+      }).switchMap(daemonsMap => {
+        daemonsArr = Array.from(daemonsMap.values());
+        if (daemonsArr.length === 0) {
+          return Observable.from([undefined]);
+        } else {
+          return Observable.forkJoin(
+            daemonsArr.map(daemon => this.updateDaemon(daemon))
+          );
+        }
+      }).map(() => daemonsArr);
   }
 
   updateDaemon(daemon: Daemon): Observable<Daemon> {
@@ -229,8 +257,8 @@ export class DelugeService {
       });
   }
 
-  startDaemon(port: number) {
-    // TODO:
+  startDaemon(port: number): Observable<void> {
+    return this.rpc('web.start_daemon', [port]);
   }
 
   connectDaemon(id: string): Observable<void> {

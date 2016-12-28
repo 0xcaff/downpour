@@ -1,8 +1,9 @@
-<!-- TODO: Transative States -->
-
 <div class="col-md-6" style="margin: 0 auto; float: none;">
 <h1>Connect to Daemon</h1>
-<table class='table'>
+<loading-component *ngIf='loading'></loading-component>
+
+<div *ngIf='!loading'>
+<table class='table table-condensed'>
   <thead>
     <tr>
       <th style="width:1%">Status</th>
@@ -12,32 +13,128 @@
   </thead>
   <tbody>
     <tr *ngFor='let daemon of daemons'>
-      <td [ngSwitch]='daemon.status' [title]='daemon.status' class='text-center'>
+      <td
+        [ngSwitch]='daemon.status'
+        [title]='daemon.status'
+        class='text-center'
+        style='vertical-align:middle'>
+
         <i *ngSwitchCase='"Online"' class='fa fa-check fa-fw'></i>
         <i *ngSwitchCase='"Offline"' class='fa fa-times fa-fw'></i>
         <i *ngSwitchCase='"Connected"' class='fa fa-plug fa-fw'></i>
+        <i *ngSwitchCase='"Loading"' class='fa fa-spin fa-circle-o-notch fa-fw'></i>
       </td>
 
-      <td>{{ daemon.address }}:{{ daemon.port }}</td>
-      <td>{{ daemon.version }}</td>
+      <td style='vertical-align:middle'>{{ daemon.address }}:{{ daemon.port }}</td>
+      <td style='vertical-align:middle'>{{ daemon.version }}</td>
 
-      <td class='text-center'>
-        <i (click)='connect(daemon)' title='Connect/Disconnect' class='fa fa-plug fa-fw'></i>
+      <td class='text-center' style='vertical-align:middle'>
+        <i
+          title='Connect/Disconnect'
+          class='fa fa-plug fa-fw'
+          (click)='toggleConnection(daemon)'></i>
       </td>
 
-      <td class='text-center'>
-        <i class='fa fa-stop fa-fw' title='Stop' (click)='ds.stopDaemon(daemon.id).subscribe()'></i>
+      <td class='text-center' style='vertical-align:middle'>
+        <i
+          title='Stop'
+          class='fa fa-stop fa-fw'
+          (click)='stopDaemon(daemon)'></i>
       </td>
 
-      <td class='text-center'>
-        <i class='fa fa-times fa-fw' title='Remove' (click)='ds.removeDaemon(daemon.id).subscribe()'></i>
+      <td class='text-center' style='vertical-align:middle'>
+        <i
+          title='Remove'
+          class='fa fa-times fa-fw'
+          (click)='removeDaemon(daemon)'></i>
       </td>
     </tr>
   </tbody>
 </table>
 
-<!-- TODO: Implement Me -->
-<button class="btn btn-default pull-right">Add Host</button>
-<button class="btn btn-default pull-right" style='margin-right:1em'>Start Local Daemon</button>
+<button
+  class="btn btn-default pull-right"
+  data-toggle="modal"
+  data-target="#add-host">Add Host</button>
+
+<button
+  class="btn btn-default pull-right"
+  data-toggle='modal'
+  data-target='#start-local'
+  style='margin-right:1em'>Start Local Daemon</button>
+
+</div>
+</div>
+
+<!-- TODO: Better modal system -->
+<div class='modal' id="add-host" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+
+        <h4 class="modal-title">Add Host</h4>
+      </div>
+
+      <div class="modal-body">
+        <textinput-view
+          [(model)]='hostAddress'
+          title='Address'
+          placeholder='localhost'></textinput-view>
+
+        <numberinput-view
+          [(model)]='hostPort'
+          title='Port'
+          placeholder='58846'></numberinput-view>
+
+        <textinput-view
+          [(model)]='hostUsername'
+          title='Username'
+          placeholder='localclient'></textinput-view>
+
+        <textinput-view
+          [(model)]='hostPassword'
+          type='password'
+          title='Password'></textinput-view>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button
+          (click)='addDaemon(hostAddress, hostPort, hostUsername, hostPassword)'
+          type="button"
+          class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class='modal' id="start-local" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+
+        <h4 class="modal-title">Start Local Daemon</h4>
+      </div>
+
+      <div class="modal-body">
+        <numberinput-view
+          [(model)]='localPort'
+          title='Port'></numberinput-view>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button
+          (click)='startDaemon(localPort)'
+          type="button"
+          class="btn btn-primary">Start</button>
+      </div>
+    </div>
+  </div>
 </div>
 

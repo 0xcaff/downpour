@@ -33,6 +33,7 @@ import { InputDetectorService } from './input-detector.service';
 import { DelugeService } from './deluge.service';
 import { AuthService } from './auth.service';
 import { StateService } from './state.service';
+import { ConnectionService } from './connection.service';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { StateService } from './state.service';
         children: [
           {
             path: 'torrents',
+            canActivate: [ConnectionService],
             children: [
               {
                 path: ':hash',
@@ -66,6 +68,7 @@ import { StateService } from './state.service';
           },
           {
             path: 'add',
+            canActivate: [ConnectionService],
             component: AddTorrentComponent,
           },
           {
@@ -114,6 +117,7 @@ import { StateService } from './state.service';
     DelugeService,
     AuthService,
     StateService,
+    ConnectionService,
 
     InputDetectorService,
   ],

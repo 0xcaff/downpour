@@ -5,15 +5,17 @@ import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
 import { DelugeService, poll } from './deluge.service';
+import { ConnectionService } from './connection.service';
 
 import { State } from './models/state';
 
 // A container for global application state.
 @Injectable()
 export class StateService {
-  constructor(private delugeService: DelugeService, private router: Router) {
+  constructor(private delugeService: DelugeService, private router: Router, private connService: ConnectionService) {
     this.pollUpdates.subscribe(state => {
       if (state && state.connected === false && this.router.url !== '/daemon') {
+        this.connService.needsConnection = true;
         this.router.navigate(['/daemon']);
       }
     });
@@ -47,6 +49,11 @@ export class StateService {
 
   // Start updating state.
   pollState() {
+    if (this.stateSubscription && !this.stateSubscription.closed) {
+      // Only alow one pollState at a time.
+      return;
+    }
+
     // TODO: Backoff if download speed is slow or no state is being viewed.
     this.stateSubscription = poll(
        () => this.delugeService.updateState(this.state, this.stateProperties),

@@ -5,7 +5,8 @@
          class="form-control"
          [ngModel]='model'
          (ngModelChange)='modelChange.next($event)'
-         [disabled]='addon && !checkbox' />
+         [disabled]='addon && !checkbox'
+         [placeholder]='placeholder || ""'/>
   <span class='input-group-addon' *ngIf='addon'>
     <input
       type='checkbox'

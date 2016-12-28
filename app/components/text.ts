@@ -17,6 +17,8 @@ export class TextInputView {
 
   @Input() title: string;
   @Input() addon: boolean;
+  @Input() placeholder: string;
+  @Input() type: string;
 
   private _slug: string;
   get slug(): string {

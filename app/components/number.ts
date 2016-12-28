@@ -17,5 +17,6 @@ export class NumberInputView {
 
   @Input() title: string;
   @Input() addon: boolean;
+  @Input() placeholder: string;
 }
 
