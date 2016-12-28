@@ -7,7 +7,7 @@
 - [ ] Better Hinting Everywhere
 - [ ] Stop it from eating bandwidth
 - [ ] Deep Link Detail View
-- [ ] Clean Up Files Detail View
+- [ ] Clean Up Files Detail View (Waiting for display: grid)
 - [ ] Some Way to Interact with the Queue
 - [ ] Force Update Trackers
 - [ ] Force Recheck Torrents
@@ -19,4 +19,9 @@
 - [ ] Add Autocomplete
 - [ ] Better Tests With DOM and Components
 - [ ] Real Build Pipeline
+
+- [ ] Cache Data for Faster Page Load
+- [ ] Complete DaemonView
+- [ ] File Tree In Detail View
+- [ ] OverView
 
