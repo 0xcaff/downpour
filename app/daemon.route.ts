@@ -92,11 +92,9 @@ export class DaemonComponent implements OnInit {
 
           // Redirect if needed
           if (this.connService.needsConnection) {
-            this.r.navigate([this.connService.oldUrl]).then(success => {
-              if (success) {
-                this.connService.needsConnection = false;
-              }
-            });
+            this.connService.needsConnection = false;
+
+            this.r.navigate([this.connService.oldUrl]);
           }
         })
     }

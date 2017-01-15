@@ -7,6 +7,7 @@ import { DelugeService, poll } from './deluge.service';
 
 import { Torrent } from './models/torrent';
 
+// TODO: Show state at 0% somehow
 // TODO: Add Capability to Change a Torrent's Label
 @Component({
   templateUrl: './detail.route.html',

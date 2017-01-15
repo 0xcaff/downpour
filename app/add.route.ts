@@ -21,8 +21,10 @@ export class AddTorrentComponent {
   constructor(private ds: DelugeService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    (<any>navigator).registerProtocolHandler('magnet',
-      `${window.location.href};magnet=%s`, "Downpour Magnet Link Handler");
+    if ((<any>navigator).registerProtocolHandler) {
+      (<any>navigator).registerProtocolHandler('magnet',
+        `${window.location.href};magnet=%s`, "Downpour Magnet Link Handler");
+    }
 
     this.route.params.subscribe(params => {
       let magnetLink = params['magnet'];
